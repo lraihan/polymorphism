@@ -1,0 +1,15 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "CI Pipeline - Test, Analyze, Build",
+			"type": "shell",
+			"command": "flutter test && flutter analyze && flutter build web --no-tree-shake-icons",
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": [
+				"$dart-flutter"
+			]
+		}
+	]
+}
