@@ -6,10 +6,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Set preferred orientations
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   runApp(const PolymorphismApp());
 }
@@ -19,12 +16,9 @@ class PolymorphismApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(
-        title: 'Polymorphism',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        debugShowCheckedModeBanner: false,
-        routerConfig: AppRouter.instance,
-      );
+    title: 'Polymorphism',
+    theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple), useMaterial3: true),
+    debugShowCheckedModeBanner: false,
+    routerConfig: AppRouter.instance,
+  );
 }
