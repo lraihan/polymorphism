@@ -1,13 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:polymorphism/main.dart';
+import 'package:get/get.dart';
+import 'package:polymorphism/shell/app_shell.dart';
 
 void main() {
+  tearDown(() {
+    // Clean up GetX controllers after each test
+    Get.reset();
+  });
+
   testWidgets('App starts and shows home page', (tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const PolymorphismApp());
+    await tester.pumpWidget(const AppShell());
 
-    // Verify that the app shows the home page.
+    // Wait for preloader to finish and show home page
+    await tester.pump(const Duration(milliseconds: 2500));
+    await tester.pumpAndSettle();
+
+    // Verify that the app shows the home page after preloader.
     expect(find.text('Home Page'), findsOneWidget);
   });
 }

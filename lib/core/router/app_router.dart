@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:polymorphism/core/pages/not_found_page.dart';
 import 'package:polymorphism/core/router/app_routes.dart';
@@ -18,56 +19,86 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.homePath,
         name: AppRoutes.home,
-        builder: (context, state) => HomePage(section: state.uri.queryParameters[AppRoutes.sectionParam]),
+        pageBuilder:
+            (context, state) => _buildPageWithTransition(
+              context,
+              state,
+              HomePage(section: state.uri.queryParameters[AppRoutes.sectionParam]),
+            ),
       ),
       GoRoute(
         path: AppRoutes.projectsPath,
         name: AppRoutes.projects,
-        builder:
-            (context, state) => ProjectsPage(
-              searchQuery: state.uri.queryParameters[AppRoutes.searchQuery],
-              category: state.uri.queryParameters[AppRoutes.categoryFilter],
+        pageBuilder:
+            (context, state) => _buildPageWithTransition(
+              context,
+              state,
+              ProjectsPage(
+                searchQuery: state.uri.queryParameters[AppRoutes.searchQuery],
+                category: state.uri.queryParameters[AppRoutes.categoryFilter],
+              ),
             ),
       ),
       GoRoute(
         path: AppRoutes.galleryPath,
         name: AppRoutes.gallery,
-        builder:
-            (context, state) => GalleryPage(
-              searchQuery: state.uri.queryParameters[AppRoutes.searchQuery],
-              tag: state.uri.queryParameters[AppRoutes.tagFilter],
+        pageBuilder:
+            (context, state) => _buildPageWithTransition(
+              context,
+              state,
+              GalleryPage(
+                searchQuery: state.uri.queryParameters[AppRoutes.searchQuery],
+                tag: state.uri.queryParameters[AppRoutes.tagFilter],
+              ),
             ),
       ),
       GoRoute(
         path: AppRoutes.playgroundPath,
         name: AppRoutes.playground,
-        builder:
-            (context, state) => PlaygroundPage(
-              demo: state.uri.queryParameters[AppRoutes.demoParam],
-              category: state.uri.queryParameters[AppRoutes.categoryFilter],
+        pageBuilder:
+            (context, state) => _buildPageWithTransition(
+              context,
+              state,
+              PlaygroundPage(
+                demo: state.uri.queryParameters[AppRoutes.demoParam],
+                category: state.uri.queryParameters[AppRoutes.categoryFilter],
+              ),
             ),
       ),
       GoRoute(
         path: AppRoutes.caseStudiesPath,
         name: AppRoutes.caseStudies,
-        builder: (context, state) => CaseStudiesPage(category: state.uri.queryParameters[AppRoutes.categoryFilter]),
+        pageBuilder:
+            (context, state) => _buildPageWithTransition(
+              context,
+              state,
+              CaseStudiesPage(category: state.uri.queryParameters[AppRoutes.categoryFilter]),
+            ),
       ),
       GoRoute(
         path: AppRoutes.timelinePath,
         name: AppRoutes.timeline,
-        builder:
-            (context, state) => TimelinePage(
-              year: state.uri.queryParameters[AppRoutes.yearParam],
-              filter: state.uri.queryParameters[AppRoutes.filterParam],
+        pageBuilder:
+            (context, state) => _buildPageWithTransition(
+              context,
+              state,
+              TimelinePage(
+                year: state.uri.queryParameters[AppRoutes.yearParam],
+                filter: state.uri.queryParameters[AppRoutes.filterParam],
+              ),
             ),
       ),
       GoRoute(
         path: AppRoutes.contactPath,
         name: AppRoutes.contact,
-        builder:
-            (context, state) => ContactPage(
-              subject: state.uri.queryParameters[AppRoutes.subjectParam],
-              message: state.uri.queryParameters[AppRoutes.messageParam],
+        pageBuilder:
+            (context, state) => _buildPageWithTransition(
+              context,
+              state,
+              ContactPage(
+                subject: state.uri.queryParameters[AppRoutes.subjectParam],
+                message: state.uri.queryParameters[AppRoutes.messageParam],
+              ),
             ),
       ),
 
@@ -101,10 +132,22 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.notFoundPath,
         name: AppRoutes.notFound,
-        builder: (context, state) => const NotFoundPage(),
+        pageBuilder: (context, state) => _buildPageWithTransition(context, state, const NotFoundPage()),
       ),
     ],
   );
 
   static GoRouter get instance => _router;
+
+  // Helper method to create page transitions
+  static CustomTransitionPage _buildPageWithTransition(BuildContext context, GoRouterState state, Widget child) {
+    return CustomTransitionPage(
+      key: state.pageKey,
+      child: child,
+      transitionDuration: const Duration(milliseconds: 300),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(opacity: CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic), child: child);
+      },
+    );
+  }
 }

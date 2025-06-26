@@ -23,10 +23,11 @@ class AppSpacing {
 }
 
 /// Application motion duration constants
-class AppMotion {      // Motion durations
-      static const Duration fast = Duration(milliseconds: 200);
-      static const Duration medium = Duration(milliseconds: 400);
-      static const Duration slow = Duration(milliseconds: 600);
+class AppMotion {
+  // Motion durations
+  static const Duration fast = Duration(milliseconds: 200);
+  static const Duration medium = Duration(milliseconds: 400);
+  static const Duration slow = Duration(milliseconds: 600);
 }
 
 /// Application theme configuration
@@ -45,7 +46,7 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: AppColors.bgDark,
-      
+
       // Typography using Google Fonts
       textTheme: TextTheme(
         // Display text - Playfair Display
@@ -67,7 +68,7 @@ class AppTheme {
           letterSpacing: 0,
           color: AppColors.textPrimary,
         ),
-        
+
         // Headlines - Playfair Display
         headlineLarge: GoogleFonts.playfairDisplay(
           fontSize: 32,
@@ -87,7 +88,7 @@ class AppTheme {
           letterSpacing: 0,
           color: AppColors.textPrimary,
         ),
-        
+
         // Titles - Inter
         titleLarge: GoogleFonts.inter(
           fontSize: 22,
@@ -107,7 +108,7 @@ class AppTheme {
           letterSpacing: 0.1,
           color: AppColors.textPrimary,
         ),
-        
+
         // Body text - Inter
         bodyLarge: GoogleFonts.inter(
           fontSize: 16,
@@ -127,7 +128,7 @@ class AppTheme {
           letterSpacing: 0.4,
           color: AppColors.textPrimary,
         ),
-        
+
         // Labels - Inter
         labelLarge: GoogleFonts.inter(
           fontSize: 14,
@@ -148,11 +149,11 @@ class AppTheme {
           color: AppColors.textPrimary,
         ),
       ),
-      
+
       // Disable splash and highlight effects
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.transparent,
-      
+
       // App bar theme
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.bgDark,
@@ -165,30 +166,23 @@ class AppTheme {
           color: AppColors.textPrimary,
         ),
       ),
-      
+
       // Button themes
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.accent,
           foregroundColor: AppColors.textPrimary,
           elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.sm),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.lg,
-            vertical: AppSpacing.md,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.sm)),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
         ),
       ),
-      
+
       // Card theme
       cardTheme: CardThemeData(
         color: AppColors.glassSurface,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.md),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.md)),
       ),
     );
   }

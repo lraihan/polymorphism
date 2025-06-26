@@ -28,24 +28,4 @@ dev_dependencies:
 flutter:
   assets: 
     - assets/images/
-  fonts: 
-    - family: Nunito
-      fonts: 
-        - asset: assets/fonts/Nunito-Regular.ttf
-        - asset: assets/fonts/Nunito-Italic.ttf
-          style: italic
-        - asset: assets/fonts/Nunito-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Nunito-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Nunito-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Nunito-BoldItalic.ttf
-          weight: 700
-        - asset: assets/fonts/Nunito-Black.ttf
-          weight: 900
-          style: italic
-        - asset: assets/fonts/Nunito-BlackItalic.ttf
-          weight: 900
-          style: italic
   uses-material-design: true
