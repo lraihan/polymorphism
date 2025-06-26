@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ContactPage extends StatelessWidget {
-  const ContactPage({
-    super.key,
-    this.subject,
-    this.message,
-  });
+  const ContactPage({super.key, this.subject, this.message});
 
   final String? subject;
   final String? message;
@@ -23,11 +19,7 @@ class ContactPage extends StatelessWidget {
       }
       displayText += ' (${params.join(', ')})';
     }
-    
-    return Scaffold(
-      body: Center(
-        child: Text(displayText),
-      ),
-    );
+
+    return Scaffold(body: Center(child: Text(displayText)));
   }
 }

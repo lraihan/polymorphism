@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PlaygroundPage extends StatelessWidget {
-  const PlaygroundPage({
-    super.key,
-    this.demo,
-    this.category,
-  });
+  const PlaygroundPage({super.key, this.demo, this.category});
 
   final String? demo;
   final String? category;
@@ -23,11 +19,7 @@ class PlaygroundPage extends StatelessWidget {
       }
       displayText += ' (${params.join(', ')})';
     }
-    
-    return Scaffold(
-      body: Center(
-        child: Text(displayText),
-      ),
-    );
+
+    return Scaffold(body: Center(child: Text(displayText)));
   }
 }

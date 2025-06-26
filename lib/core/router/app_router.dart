@@ -18,56 +18,57 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.homePath,
         name: AppRoutes.home,
-        builder: (context, state) => HomePage(
-          section: state.uri.queryParameters[AppRoutes.sectionParam],
-        ),
+        builder: (context, state) => HomePage(section: state.uri.queryParameters[AppRoutes.sectionParam]),
       ),
       GoRoute(
         path: AppRoutes.projectsPath,
         name: AppRoutes.projects,
-        builder: (context, state) => ProjectsPage(
-          searchQuery: state.uri.queryParameters[AppRoutes.searchQuery],
-          category: state.uri.queryParameters[AppRoutes.categoryFilter],
-        ),
+        builder:
+            (context, state) => ProjectsPage(
+              searchQuery: state.uri.queryParameters[AppRoutes.searchQuery],
+              category: state.uri.queryParameters[AppRoutes.categoryFilter],
+            ),
       ),
       GoRoute(
         path: AppRoutes.galleryPath,
         name: AppRoutes.gallery,
-        builder: (context, state) => GalleryPage(
-          searchQuery: state.uri.queryParameters[AppRoutes.searchQuery],
-          tag: state.uri.queryParameters[AppRoutes.tagFilter],
-        ),
+        builder:
+            (context, state) => GalleryPage(
+              searchQuery: state.uri.queryParameters[AppRoutes.searchQuery],
+              tag: state.uri.queryParameters[AppRoutes.tagFilter],
+            ),
       ),
       GoRoute(
         path: AppRoutes.playgroundPath,
         name: AppRoutes.playground,
-        builder: (context, state) => PlaygroundPage(
-          demo: state.uri.queryParameters[AppRoutes.demoParam],
-          category: state.uri.queryParameters[AppRoutes.categoryFilter],
-        ),
+        builder:
+            (context, state) => PlaygroundPage(
+              demo: state.uri.queryParameters[AppRoutes.demoParam],
+              category: state.uri.queryParameters[AppRoutes.categoryFilter],
+            ),
       ),
       GoRoute(
         path: AppRoutes.caseStudiesPath,
         name: AppRoutes.caseStudies,
-        builder: (context, state) => CaseStudiesPage(
-          category: state.uri.queryParameters[AppRoutes.categoryFilter],
-        ),
+        builder: (context, state) => CaseStudiesPage(category: state.uri.queryParameters[AppRoutes.categoryFilter]),
       ),
       GoRoute(
         path: AppRoutes.timelinePath,
         name: AppRoutes.timeline,
-        builder: (context, state) => TimelinePage(
-          year: state.uri.queryParameters[AppRoutes.yearParam],
-          filter: state.uri.queryParameters[AppRoutes.filterParam],
-        ),
+        builder:
+            (context, state) => TimelinePage(
+              year: state.uri.queryParameters[AppRoutes.yearParam],
+              filter: state.uri.queryParameters[AppRoutes.filterParam],
+            ),
       ),
       GoRoute(
         path: AppRoutes.contactPath,
         name: AppRoutes.contact,
-        builder: (context, state) => ContactPage(
-          subject: state.uri.queryParameters[AppRoutes.subjectParam],
-          message: state.uri.queryParameters[AppRoutes.messageParam],
-        ),
+        builder:
+            (context, state) => ContactPage(
+              subject: state.uri.queryParameters[AppRoutes.subjectParam],
+              message: state.uri.queryParameters[AppRoutes.messageParam],
+            ),
       ),
 
       // Future parameterized routes (scaffolded for easy addition)

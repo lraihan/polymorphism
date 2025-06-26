@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:polymorphism/core/router/app_router.dart';
+import 'package:polymorphism/core/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +18,7 @@ class PolymorphismApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp.router(
     title: 'Polymorphism',
-    theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple), useMaterial3: true),
+    theme: AppTheme.darkTheme,
     debugShowCheckedModeBanner: false,
     routerConfig: AppRouter.instance,
   );

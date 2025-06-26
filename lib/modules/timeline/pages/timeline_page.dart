@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TimelinePage extends StatelessWidget {
-  const TimelinePage({
-    super.key,
-    this.year,
-    this.filter,
-  });
+  const TimelinePage({super.key, this.year, this.filter});
 
   final String? year;
   final String? filter;
@@ -23,11 +19,7 @@ class TimelinePage extends StatelessWidget {
       }
       displayText += ' (${params.join(', ')})';
     }
-    
-    return Scaffold(
-      body: Center(
-        child: Text(displayText),
-      ),
-    );
+
+    return Scaffold(body: Center(child: Text(displayText)));
   }
 }
