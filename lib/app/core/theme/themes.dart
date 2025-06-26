@@ -1,0 +1,75 @@
+import 'package:flutter/material.dart';
+import 'package:project_master_template/app/core/theme/color_themes.dart';
+
+ThemeData lightTheme = ThemeData(
+  splashColor: Colors.transparent,
+  scaffoldBackgroundColor: whiteColor.shade300,
+  primaryColor: primaryColor,
+  shadowColor: primaryColor.withAlpha((0.2 * 255).toInt()),
+  cardTheme: CardThemeData(
+    elevation: 6,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+    shadowColor: primaryColor.withAlpha((0.2 * 255).toInt()),
+  ),
+  colorScheme: ColorScheme.fromSwatch(
+    accentColor: secondaryColor,
+  ).copyWith(primary: primaryColor, secondary: secondaryColor),
+  fontFamily: 'Nunito',
+  iconTheme: IconThemeData(color: primaryColor),
+  textTheme: const TextTheme(
+    displayLarge: TextStyle(fontWeight: FontWeight.w900, fontSize: 56),
+    displayMedium: TextStyle(fontWeight: FontWeight.w900, fontSize: 42),
+    displaySmall: TextStyle(fontWeight: FontWeight.w900, fontSize: 32),
+    headlineLarge: TextStyle(fontWeight: FontWeight.w700, fontSize: 24),
+    headlineMedium: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
+    headlineSmall: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+    titleLarge: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+    titleMedium: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+    titleSmall: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+    labelLarge: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+    labelMedium: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+    labelSmall: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+    bodyLarge: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
+    bodyMedium: TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
+    bodySmall: TextStyle(fontWeight: FontWeight.normal, fontSize: 12),
+  ).apply(displayColor: blackColor, bodyColor: blackColor, decorationColor: blackColor),
+  appBarTheme: AppBarTheme(color: whiteColor.shade300),
+);
+
+ThemeData darkTheme = ThemeData(
+  splashColor: Colors.transparent,
+  scaffoldBackgroundColor: blackColor.shade800,
+  primaryColor: primaryColor,
+  shadowColor: blackColor.withAlpha((0.3 * 255).toInt()),
+  cardTheme: CardThemeData(
+    elevation: 6,
+    color: blackColor.shade700,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+    shadowColor: blackColor.withAlpha((0.3 * 255).toInt()),
+  ),
+  colorScheme: ColorScheme.fromSwatch(brightness: Brightness.dark, accentColor: secondaryColor).copyWith(
+    primary: primaryColor,
+    secondary: secondaryColor,
+    surface: blackColor.shade700,
+  ),
+  fontFamily: 'Nunito',
+  iconTheme: IconThemeData(color: whiteColor.shade300),
+  textTheme: const TextTheme(
+    displayLarge: TextStyle(fontWeight: FontWeight.w900, fontSize: 56),
+    displayMedium: TextStyle(fontWeight: FontWeight.w900, fontSize: 42),
+    displaySmall: TextStyle(fontWeight: FontWeight.w900, fontSize: 32),
+    headlineLarge: TextStyle(fontWeight: FontWeight.w700, fontSize: 24),
+    headlineMedium: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
+    headlineSmall: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+    titleLarge: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+    titleMedium: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+    titleSmall: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+    labelLarge: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+    labelMedium: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+    labelSmall: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+    bodyLarge: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
+    bodyMedium: TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
+    bodySmall: TextStyle(fontWeight: FontWeight.normal, fontSize: 12),
+  ).apply(displayColor: whiteColor.shade300, bodyColor: whiteColor.shade300, decorationColor: whiteColor.shade300),
+  appBarTheme: AppBarTheme(backgroundColor: blackColor.shade800, foregroundColor: whiteColor.shade300, elevation: 0),
+);
