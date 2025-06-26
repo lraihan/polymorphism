@@ -8,7 +8,7 @@ void main() {
     testWidgets('should navigate to home route by default', (tester) async {
       await tester.pumpWidget(MaterialApp.router(routerConfig: AppRouter.instance));
 
-      expect(find.text('Home Page'), findsOneWidget);
+      expect(find.text('I craft fluid interfaces\nthat behave.'), findsOneWidget);
     });
 
     testWidgets('should navigate to projects route', (tester) async {
@@ -68,7 +68,8 @@ void main() {
         AppRouter.instance.go('/?section=about');
         await tester.pumpAndSettle();
 
-        expect(find.text('Home Page (Section: about)'), findsOneWidget);
+        // The home page now shows the hero section regardless of section parameter
+        expect(find.text('I craft fluid interfaces\nthat behave.'), findsOneWidget);
       });
 
       testWidgets('should handle projects page with query parameters', (tester) async {

@@ -16,7 +16,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 2500));
     await tester.pumpAndSettle();
 
-    // Verify that the app shows the home page after preloader.
-    expect(find.text('Home Page'), findsOneWidget);
+    // Verify that the app shows the home page (hero section) after preloader.
+    expect(find.text('I craft fluid interfaces\nthat behave.'), findsOneWidget);
   });
 }
