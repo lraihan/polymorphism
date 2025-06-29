@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:polymorphism/core/router/app_router.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
+import 'package:polymorphism/shared/navbar/navbar.dart';
 import 'package:polymorphism/shared/widgets/preloader_orb.dart';
 import 'package:polymorphism/shell/controllers/app_shell_controller.dart';
 
@@ -33,10 +34,18 @@ class _MainApp extends StatelessWidget {
   const _MainApp();
 
   @override
-  Widget build(BuildContext context) => MaterialApp.router(
-    title: 'Polymorphism',
-    theme: AppTheme.darkTheme,
-    debugShowCheckedModeBanner: false,
-    routerConfig: AppRouter.instance,
-  );
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: 'Polymorphism',
+      theme: AppTheme.darkTheme,
+      debugShowCheckedModeBanner: false,
+      routerConfig: AppRouter.instance,
+      builder: (context, child) {
+        return Scaffold(
+          backgroundColor: AppColors.bgDark,
+          body: Column(children: [const Navbar(), Expanded(child: child ?? const SizedBox.shrink())]),
+        );
+      },
+    );
+  }
 }
