@@ -9,6 +9,18 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: SingleChildScrollView(child: Column(children: const [HeroSection(), ProjectsSection()])));
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: const HeroSection(),
+            ),
+            const ProjectsSection(),
+          ],
+        ),
+      ),
+    );
   }
 }
