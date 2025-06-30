@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:polymorphism/modules/home/hero_section.dart';
+import 'package:polymorphism/modules/home/projects_section.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key, this.section});
@@ -7,6 +8,7 @@ class HomePage extends StatelessWidget {
   final String? section;
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(body: LayoutBuilder(builder: (context, constraints) => const HeroSection()));
+  Widget build(BuildContext context) {
+    return Scaffold(body: SingleChildScrollView(child: Column(children: const [HeroSection(), ProjectsSection()])));
+  }
 }
