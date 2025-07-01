@@ -5,6 +5,7 @@ class AppRoutes {
   static const String projects = 'projects';
   static const String gallery = 'gallery';
   static const String playground = 'playground';
+  static const String lab = 'lab';
   static const String caseStudies = 'case-studies';
   static const String timeline = 'timeline';
   static const String contact = 'contact';
@@ -15,6 +16,7 @@ class AppRoutes {
   static const String projectsPath = '/projects';
   static const String galleryPath = '/gallery';
   static const String playgroundPath = '/playground';
+  static const String labPath = '/lab';
   static const String caseStudiesPath = '/case-studies';
   static const String timelinePath = '/timeline';
   static const String contactPath = '/contact';

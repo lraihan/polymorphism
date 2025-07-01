@@ -7,6 +7,7 @@ import 'package:polymorphism/modules/contact/pages/contact_page.dart';
 import 'package:polymorphism/modules/gallery/gallery_lightbox.dart';
 import 'package:polymorphism/modules/gallery/pages/gallery_page.dart';
 import 'package:polymorphism/modules/home/pages/home_page.dart';
+import 'package:polymorphism/modules/lab/pages/lab_page.dart';
 import 'package:polymorphism/modules/playground/pages/playground_page.dart';
 import 'package:polymorphism/modules/projects/pages/projects_page.dart';
 import 'package:polymorphism/modules/timeline/pages/timeline_page.dart';
@@ -65,6 +66,11 @@ class AppRouter {
                 category: state.uri.queryParameters[AppRoutes.categoryFilter],
               ),
             ),
+      ),
+      GoRoute(
+        path: AppRoutes.labPath,
+        name: AppRoutes.lab,
+        pageBuilder: (context, state) => _buildPageWithTransition(context, state, const LabPage()),
       ),
       GoRoute(
         path: AppRoutes.caseStudiesPath,
