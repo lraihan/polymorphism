@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 
 /// Model representing a career milestone or event
 class CareerEvent {
-  final int year;
-  final String title;
-  final String description;
-  final IconData icon;
-  final String? company;
-  final String? location;
 
   const CareerEvent({
     required this.year,
@@ -17,6 +11,12 @@ class CareerEvent {
     this.company,
     this.location,
   });
+  final int year;
+  final String title;
+  final String description;
+  final IconData icon;
+  final String? company;
+  final String? location;
 
   /// Sample career events for demonstration
   static List<CareerEvent> get sampleEvents => [

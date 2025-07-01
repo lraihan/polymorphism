@@ -4,13 +4,12 @@ import 'package:polymorphism/modules/timeline/timeline_strip.dart';
 
 /// Timeline section for the home page
 class TimelineSection extends StatelessWidget {
-  final bool enableAnimations;
 
   const TimelineSection({super.key, this.enableAnimations = true});
+  final bool enableAnimations;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.xxl),
       color: AppColors.bgDark,
@@ -50,11 +49,11 @@ class TimelineSection extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.glassSurface,
               borderRadius: BorderRadius.circular(AppSpacing.sm),
-              border: Border.all(color: AppColors.textPrimary.withValues(alpha: 0.1), width: 1),
+              border: Border.all(color: AppColors.textPrimary.withValues(alpha: 0.1)),
             ),
             child: Row(
               children: [
-                Icon(Icons.info_outline, color: AppColors.accent, size: 20),
+                const Icon(Icons.info_outline, color: AppColors.accent, size: 20),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
@@ -70,5 +69,4 @@ class TimelineSection extends StatelessWidget {
         ],
       ),
     );
-  }
 }

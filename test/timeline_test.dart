@@ -100,10 +100,10 @@ void main() {
     });
 
     test('reset restores default state', () {
-      controller.updateActiveIndex(3);
-      controller.setScrolling(true);
-
-      controller.reset();
+      controller
+        ..updateActiveIndex(3)
+        ..setScrolling(true)
+        ..reset();
 
       expect(controller.activeIndex.value, 0);
       expect(controller.isScrolling.value, false);
@@ -145,7 +145,7 @@ void main() {
 
     testWidgets('renders timeline strip with correct height', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: Container(height: 800, child: const TimelineStrip(enableAnimations: false)))),
+        const MaterialApp(home: Scaffold(body: SizedBox(height: 800, child: TimelineStrip(enableAnimations: false)))),
       );
       await tester.pumpAndSettle();
 
@@ -155,7 +155,7 @@ void main() {
 
     testWidgets('displays all timeline events', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: Container(height: 800, child: const TimelineStrip(enableAnimations: false)))),
+        const MaterialApp(home: Scaffold(body: SizedBox(height: 800, child: TimelineStrip(enableAnimations: false)))),
       );
       await tester.pumpAndSettle();
 
@@ -173,7 +173,7 @@ void main() {
 
     testWidgets('timeline tiles alternate left/right alignment', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: Container(height: 800, child: const TimelineStrip(enableAnimations: false)))),
+        const MaterialApp(home: Scaffold(body: SizedBox(height: 800, child: TimelineStrip(enableAnimations: false)))),
       );
       await tester.pumpAndSettle();
 
@@ -186,7 +186,7 @@ void main() {
 
     testWidgets('scroll updates active index', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: Container(height: 800, child: const TimelineStrip(enableAnimations: false)))),
+        const MaterialApp(home: Scaffold(body: SizedBox(height: 800, child: TimelineStrip(enableAnimations: false)))),
       );
       await tester.pumpAndSettle();
 
@@ -209,7 +209,7 @@ void main() {
 
     testWidgets('accessibility labels are present', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: Container(height: 800, child: const TimelineStrip(enableAnimations: false)))),
+        const MaterialApp(home: Scaffold(body: SizedBox(height: 800, child: TimelineStrip(enableAnimations: false)))),
       );
       await tester.pumpAndSettle();
 
@@ -228,7 +228,7 @@ void main() {
 
     testWidgets('renders section header and content', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: SingleChildScrollView(child: const TimelineSection(enableAnimations: false)))),
+        const MaterialApp(home: Scaffold(body: SingleChildScrollView(child: TimelineSection(enableAnimations: false)))),
       );
       await tester.pumpAndSettle();
 
@@ -244,20 +244,20 @@ void main() {
 
     testWidgets('header has semantic header property', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: SingleChildScrollView(child: const TimelineSection(enableAnimations: false)))),
+        const MaterialApp(home: Scaffold(body: SingleChildScrollView(child: TimelineSection(enableAnimations: false)))),
       );
       await tester.pumpAndSettle();
 
       // Find the header semantics widget
       final headerSemantics = find.byWidgetPredicate(
-        (widget) => widget is Semantics && widget.properties.header == true,
+        (widget) => widget is Semantics && (widget.properties.header ?? false) == true,
       );
       expect(headerSemantics, findsOneWidget);
     });
 
     testWidgets('info section displays correctly', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: SingleChildScrollView(child: const TimelineSection(enableAnimations: false)))),
+        const MaterialApp(home: Scaffold(body: SingleChildScrollView(child: TimelineSection(enableAnimations: false)))),
       );
       await tester.pumpAndSettle();
 
@@ -275,14 +275,14 @@ void main() {
 
     testWidgets('controller and widget integration works', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: Container(height: 800, child: const TimelineStrip(enableAnimations: false)))),
+        const MaterialApp(home: Scaffold(body: SizedBox(height: 800, child: TimelineStrip(enableAnimations: false)))),
       );
       await tester.pumpAndSettle();
 
-      final controller = Get.find<TimelineController>();
+      final controller = Get.find<TimelineController>()
 
       // Manually update controller and verify UI responds
-      controller.updateActiveIndex(2);
+      ..updateActiveIndex(2);
       await tester.pumpAndSettle();
 
       expect(controller.activeIndex.value, 2);
@@ -292,7 +292,7 @@ void main() {
 
     testWidgets('scroll to third event updates activeIndex to 2', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: Container(height: 800, child: const TimelineStrip(enableAnimations: false)))),
+        const MaterialApp(home: Scaffold(body: SizedBox(height: 800, child: TimelineStrip(enableAnimations: false)))),
       );
       await tester.pumpAndSettle();
 

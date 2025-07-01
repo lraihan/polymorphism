@@ -7,14 +7,9 @@ void main() {
   group('ContactSection Tests', () {
     testWidgets('displays heading and email link', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
-            body: SizedBox(
-              height: 800,
-              child: SingleChildScrollView(
-                child: ContactSection(enableAnimations: false),
-              ),
-            ),
+            body: SizedBox(height: 800, child: SingleChildScrollView(child: ContactSection(enableAnimations: false))),
           ),
         ),
       );
@@ -25,14 +20,9 @@ void main() {
 
     testWidgets('shows validation errors for empty form', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
-            body: SizedBox(
-              height: 800,
-              child: SingleChildScrollView(
-                child: ContactSection(enableAnimations: false),
-              ),
-            ),
+            body: SizedBox(height: 800, child: SingleChildScrollView(child: ContactSection(enableAnimations: false))),
           ),
         ),
       );
@@ -48,14 +38,9 @@ void main() {
 
     testWidgets('shows email validation error for invalid email', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
-            body: SizedBox(
-              height: 800,
-              child: SingleChildScrollView(
-                child: ContactSection(enableAnimations: false),
-              ),
-            ),
+            body: SizedBox(height: 800, child: SingleChildScrollView(child: ContactSection(enableAnimations: false))),
           ),
         ),
       );
@@ -64,7 +49,7 @@ void main() {
       await tester.enterText(find.byType(TextFormField).at(0), 'John Doe');
       await tester.enterText(find.byType(TextFormField).at(1), 'invalid-email');
       await tester.enterText(find.byType(TextFormField).at(2), 'Test message');
-      
+
       await tester.tap(find.text('Send'));
       await tester.pump();
 
@@ -73,14 +58,9 @@ void main() {
 
     testWidgets('form fields have proper labels', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
-            body: SizedBox(
-              height: 800,
-              child: SingleChildScrollView(
-                child: ContactSection(enableAnimations: false),
-              ),
-            ),
+            body: SizedBox(height: 800, child: SingleChildScrollView(child: ContactSection(enableAnimations: false))),
           ),
         ),
       );
@@ -92,14 +72,9 @@ void main() {
 
     testWidgets('submit button is present', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
-            body: SizedBox(
-              height: 800,
-              child: SingleChildScrollView(
-                child: ContactSection(enableAnimations: false),
-              ),
-            ),
+            body: SizedBox(height: 800, child: SingleChildScrollView(child: ContactSection(enableAnimations: false))),
           ),
         ),
       );
@@ -110,14 +85,9 @@ void main() {
 
     testWidgets('respects animation enablement', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
-            body: SizedBox(
-              height: 800,
-              child: SingleChildScrollView(
-                child: ContactSection(enableAnimations: false),
-              ),
-            ),
+            body: SizedBox(height: 800, child: SingleChildScrollView(child: ContactSection(enableAnimations: false))),
           ),
         ),
       );
@@ -128,21 +98,13 @@ void main() {
 
   group('ContactPage Tests', () {
     testWidgets('displays contact section', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: ContactPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: ContactPage()));
 
       expect(find.byType(ContactSection), findsOneWidget);
     });
 
     testWidgets('is scrollable', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: ContactPage(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: ContactPage()));
 
       expect(find.byType(SingleChildScrollView), findsAtLeastNWidgets(1));
     });

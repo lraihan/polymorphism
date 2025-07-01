@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:polymorphism/core/theme/app_theme.dart';
+import 'package:polymorphism/shared/animations/scroll_reveal.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../core/theme/app_theme.dart';
-import '../../shared/animations/scroll_reveal.dart';
 
 /// Contact section with form and email link
 class ContactSection extends StatefulWidget {
-  final bool enableAnimations;
 
-  const ContactSection({
-    super.key,
-    this.enableAnimations = true,
-  });
+  const ContactSection({super.key, this.enableAnimations = true});
+  final bool enableAnimations;
 
   @override
   State<ContactSection> createState() => _ContactSectionState();
@@ -57,7 +54,9 @@ class _ContactSectionState extends State<ContactSection> {
   }
 
   Future<void> _handleSubmit() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
 
     setState(() => _isSubmitting = true);
 
@@ -70,10 +69,10 @@ class _ContactSectionState extends State<ContactSection> {
         'Message:\n${_messageController.text.trim()}\n\n'
         'Best regards,\n${_nameController.text.trim()}',
       );
-      
+
       final mailtoUrl = 'mailto:hello@polymorphism.dev?subject=$subject&body=$body';
       final uri = Uri.parse(mailtoUrl);
-      
+
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri);
         if (mounted) {
@@ -81,25 +80,19 @@ class _ContactSectionState extends State<ContactSection> {
           _nameController.clear();
           _emailController.clear();
           _messageController.clear();
-          
+
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Email client opened successfully!'),
-              backgroundColor: AppColors.accent,
-            ),
+            const SnackBar(content: Text('Email client opened successfully!'), backgroundColor: AppColors.accent),
           );
         }
       } else {
         throw Exception('Could not launch email client');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {
@@ -119,42 +112,30 @@ class _ContactSectionState extends State<ContactSection> {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: isWide ? 600 : double.infinity,
-            ),
-            child: widget.enableAnimations
-                ? ScrollReveal(
-                    child: _buildContent(theme),
-                  )
-                : _buildContent(theme),
+            constraints: BoxConstraints(maxWidth: isWide ? 600 : double.infinity),
+            child: widget.enableAnimations ? ScrollReveal(child: _buildContent(theme)) : _buildContent(theme),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildContent(ThemeData theme) {
-    return Column(
+  Widget _buildContent(ThemeData theme) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Section heading
         Text(
           "Let's build something together.",
-          style: theme.textTheme.headlineLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
-          ),
+          style: theme.textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
         ),
         const SizedBox(height: 16),
-        
+
         // Subtitle with email link
         Wrap(
           children: [
             Text(
               'Have a project in mind? Drop me a line at ',
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: AppColors.textPrimary.withOpacity(0.8),
-              ),
+              style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: .8)),
             ),
             GestureDetector(
               onTap: () async {
@@ -173,14 +154,12 @@ class _ContactSectionState extends State<ContactSection> {
             ),
             Text(
               ' or use the form below.',
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: AppColors.textPrimary.withOpacity(0.8),
-              ),
+              style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: .8)),
             ),
           ],
         ),
         const SizedBox(height: 24),
-        
+
         // Contact form
         Form(
           key: _formKey,
@@ -192,39 +171,28 @@ class _ContactSectionState extends State<ContactSection> {
                 validator: _validateName,
                 decoration: InputDecoration(
                   labelText: 'Name',
-                  labelStyle: TextStyle(
-                    color: AppColors.textPrimary.withOpacity(0.7),
-                  ),
+                  labelStyle: TextStyle(color: AppColors.textPrimary.withValues(alpha: .7)),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: AppColors.textPrimary.withOpacity(0.3),
-                    ),
+                    borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: AppColors.textPrimary.withOpacity(0.3),
-                    ),
+                    borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: AppColors.accent,
-                      width: 2,
-                    ),
+                    borderSide: const BorderSide(color: AppColors.accent, width: 2),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: Colors.red,
-                    ),
+                    borderSide: const BorderSide(color: Colors.red),
                   ),
                 ),
                 style: const TextStyle(color: AppColors.textPrimary),
               ),
               const SizedBox(height: 12),
-              
+
               // Email field
               TextFormField(
                 controller: _emailController,
@@ -232,39 +200,28 @@ class _ContactSectionState extends State<ContactSection> {
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: TextStyle(
-                    color: AppColors.textPrimary.withOpacity(0.7),
-                  ),
+                  labelStyle: TextStyle(color: AppColors.textPrimary.withValues(alpha: .7)),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: AppColors.textPrimary.withOpacity(0.3),
-                    ),
+                    borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: AppColors.textPrimary.withOpacity(0.3),
-                    ),
+                    borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: AppColors.accent,
-                      width: 2,
-                    ),
+                    borderSide: const BorderSide(color: AppColors.accent, width: 2),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: Colors.red,
-                    ),
+                    borderSide: const BorderSide(color: Colors.red),
                   ),
                 ),
                 style: const TextStyle(color: AppColors.textPrimary),
               ),
               const SizedBox(height: 12),
-              
+
               // Message field
               TextFormField(
                 controller: _messageController,
@@ -273,39 +230,28 @@ class _ContactSectionState extends State<ContactSection> {
                 decoration: InputDecoration(
                   labelText: 'Message',
                   alignLabelWithHint: true,
-                  labelStyle: TextStyle(
-                    color: AppColors.textPrimary.withOpacity(0.7),
-                  ),
+                  labelStyle: TextStyle(color: AppColors.textPrimary.withValues(alpha: .7)),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: AppColors.textPrimary.withOpacity(0.3),
-                    ),
+                    borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: AppColors.textPrimary.withOpacity(0.3),
-                    ),
+                    borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: AppColors.accent,
-                      width: 2,
-                    ),
+                    borderSide: const BorderSide(color: AppColors.accent, width: 2),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: Colors.red,
-                    ),
+                    borderSide: const BorderSide(color: Colors.red),
                   ),
                 ),
                 style: const TextStyle(color: AppColors.textPrimary),
               ),
               const SizedBox(height: 16),
-              
+
               // Submit button
               SizedBox(
                 width: double.infinity,
@@ -315,27 +261,17 @@ class _ContactSectionState extends State<ContactSection> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.accent,
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     elevation: 0,
                   ),
-                  child: _isSubmitting
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : const Text(
-                          'Send',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                  child:
+                      _isSubmitting
+                          ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                          : const Text('Send', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 ),
               ),
             ],
@@ -343,5 +279,4 @@ class _ContactSectionState extends State<ContactSection> {
         ),
       ],
     );
-  }
 }

@@ -7,9 +7,9 @@ import 'package:polymorphism/shared/animations/scroll_reveal.dart';
 
 /// Career timeline strip widget with snap-scroll functionality
 class TimelineStrip extends StatefulWidget {
-  final bool enableAnimations;
 
   const TimelineStrip({super.key, this.enableAnimations = true});
+  final bool enableAnimations;
 
   @override
   State<TimelineStrip> createState() => _TimelineStripState();
@@ -29,8 +29,8 @@ class _TimelineStripState extends State<TimelineStrip> {
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
+    _scrollController..removeListener(_onScroll)
+    ..dispose();
     super.dispose();
   }
 
@@ -39,7 +39,7 @@ class _TimelineStripState extends State<TimelineStrip> {
       _timelineController.setScrolling(true);
 
       // Calculate which item is in the center
-      final itemHeight = 156.0; // Approximate height per timeline item (140 + margins)
+      const itemHeight = 156.0; // Approximate height per timeline item (140 + margins)
       final centerOffset = _scrollController.offset + (600 / 2); // 600 is container height
       final centerIndex = (centerOffset / itemHeight).round();
 
@@ -55,8 +55,7 @@ class _TimelineStripState extends State<TimelineStrip> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
+  Widget build(BuildContext context) => SizedBox(
       height: 600,
       width: double.infinity,
       child: Padding(
@@ -91,21 +90,19 @@ class _TimelineStripState extends State<TimelineStrip> {
         ),
       ),
     );
-  }
 }
 
 /// Individual timeline tile widget
 class _TimelineTile extends StatelessWidget {
+
+  const _TimelineTile({required this.event, required this.index, required this.isActive, required this.isLeft});
   final CareerEvent event;
   final int index;
   final bool isActive;
   final bool isLeft;
 
-  const _TimelineTile({required this.event, required this.index, required this.isActive, required this.isLeft});
-
   @override
-  Widget build(BuildContext context) {
-    return Semantics(
+  Widget build(BuildContext context) => Semantics(
       label: '${event.year}: ${event.title}',
       child: Container(
         height: 140,
@@ -116,7 +113,7 @@ class _TimelineTile extends StatelessWidget {
             Expanded(child: isLeft ? _buildTileContent(context, Alignment.centerRight) : const SizedBox()),
 
             // Center timeline indicator
-            Container(
+            SizedBox(
               width: 60,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -161,10 +158,8 @@ class _TimelineTile extends StatelessWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildTileContent(BuildContext context, Alignment alignment) {
-    return Align(
+  Widget _buildTileContent(BuildContext context, Alignment alignment) => Align(
       alignment: alignment,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
@@ -269,7 +264,6 @@ class _TimelineTile extends StatelessWidget {
         ),
       ),
     );
-  }
 }
 
 /// Custom painter for the central dotted line

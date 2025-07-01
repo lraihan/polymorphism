@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../core/theme/app_theme.dart';
 
 /// Global footer with copyright and social links
 class Footer extends StatelessWidget {
   const Footer({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       height: 80,
       decoration: BoxDecoration(
         color: AppColors.glassSurface,
-        border: Border(
-          top: BorderSide(
-            color: AppColors.textPrimary.withOpacity(0.1),
-            width: 1,
-          ),
-        ),
+        border: Border(top: BorderSide(color: AppColors.textPrimary.withValues(alpha: .1))),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -27,50 +21,31 @@ class Footer extends StatelessWidget {
             // Copyright text
             Text(
               '© 2025 Raihan.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.textPrimary.withOpacity(0.7),
-              ),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary.withValues(alpha: .7)),
             ),
-            
+
             // Social icons
-            Row(
+            const Row(
               children: [
-                _SocialIcon(
-                  icon: Icons.code,
-                  tooltip: 'GitHub',
-                  url: 'https://github.com/lraihan',
-                ),
-                const SizedBox(width: 16),
-                _SocialIcon(
-                  icon: Icons.work,
-                  tooltip: 'LinkedIn',
-                  url: 'https://linkedin.com/in/lraihan',
-                ),
-                const SizedBox(width: 16),
-                _SocialIcon(
-                  icon: Icons.alternate_email,
-                  tooltip: 'X (Twitter)',
-                  url: 'https://x.com/lraihan',
-                ),
+                _SocialIcon(icon: Icons.code, tooltip: 'GitHub', url: 'https://github.com/lraihan'),
+                SizedBox(width: 16),
+                _SocialIcon(icon: Icons.work, tooltip: 'LinkedIn', url: 'https://linkedin.com/in/lraihan'),
+                SizedBox(width: 16),
+                _SocialIcon(icon: Icons.alternate_email, tooltip: 'X (Twitter)', url: 'https://x.com/lraihan'),
               ],
             ),
           ],
         ),
       ),
     );
-  }
 }
 
 class _SocialIcon extends StatefulWidget {
+
+  const _SocialIcon({required this.icon, required this.tooltip, required this.url});
   final IconData icon;
   final String tooltip;
   final String url;
-
-  const _SocialIcon({
-    required this.icon,
-    required this.tooltip,
-    required this.url,
-  });
 
   @override
   State<_SocialIcon> createState() => _SocialIconState();
@@ -84,17 +59,11 @@ class _SocialIconState extends State<_SocialIcon> with SingleTickerProviderState
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: AppMotion.fast,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: AppMotion.fast, vsync: this);
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 1.1,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -120,8 +89,7 @@ class _SocialIconState extends State<_SocialIcon> with SingleTickerProviderState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
+  Widget build(BuildContext context) => MouseRegion(
       onEnter: (_) => _handleHover(true),
       onExit: (_) => _handleHover(false),
       child: ScaleTransition(
@@ -130,15 +98,10 @@ class _SocialIconState extends State<_SocialIcon> with SingleTickerProviderState
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: _isHovered 
-                ? AppColors.accent.withOpacity(0.1)
-                : Colors.transparent,
+            color: _isHovered ? AppColors.accent.withValues(alpha: .1) : Colors.transparent,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: _isHovered 
-                  ? AppColors.accent.withOpacity(0.3)
-                  : AppColors.textPrimary.withOpacity(0.2),
-              width: 1,
+              color: _isHovered ? AppColors.accent.withValues(alpha: .3) : AppColors.textPrimary.withValues(alpha: .2),
             ),
           ),
           child: Material(
@@ -151,9 +114,7 @@ class _SocialIconState extends State<_SocialIcon> with SingleTickerProviderState
                 child: Icon(
                   widget.icon,
                   size: 20,
-                  color: _isHovered 
-                      ? AppColors.accent
-                      : AppColors.textPrimary.withOpacity(0.7),
+                  color: _isHovered ? AppColors.accent : AppColors.textPrimary.withValues(alpha: .7),
                 ),
               ),
             ),
@@ -161,5 +122,4 @@ class _SocialIconState extends State<_SocialIcon> with SingleTickerProviderState
         ),
       ),
     );
-  }
 }
