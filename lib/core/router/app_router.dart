@@ -113,12 +113,9 @@ class AppRouter {
           return CustomTransitionPage(
             key: state.pageKey,
             child: GalleryLightbox(initialIndex: index),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-                FadeTransition(
-                  opacity: CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeInOutCubic,
-                  ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) => FadeTransition(
+                  opacity: CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic),
                   child: child,
                 ),
           );
@@ -163,9 +160,12 @@ class AppRouter {
   static GoRouter get instance => _router;
 
   // Helper method to create page transitions
-  static CustomTransitionPage _buildPageWithTransition(BuildContext context, GoRouterState state, Widget child) => CustomTransitionPage(
-      key: state.pageKey,
-      child: child,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic), child: child),
-    );
+  static CustomTransitionPage _buildPageWithTransition(BuildContext context, GoRouterState state, Widget child) =>
+      CustomTransitionPage(
+        key: state.pageKey,
+        child: child,
+        transitionsBuilder:
+            (context, animation, secondaryAnimation, child) =>
+                FadeTransition(opacity: CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic), child: child),
+      );
 }

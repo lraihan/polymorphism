@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:polymorphism/modules/playground/playground_shell.dart';
 
 class PlaygroundPage extends StatelessWidget {
   const PlaygroundPage({super.key, this.demo, this.category});
@@ -7,19 +8,5 @@ class PlaygroundPage extends StatelessWidget {
   final String? category;
 
   @override
-  Widget build(BuildContext context) {
-    var displayText = 'Playground Page';
-    if (demo != null || category != null) {
-      final params = <String>[];
-      if (demo != null) {
-        params.add('Demo: $demo');
-      }
-      if (category != null) {
-        params.add('Category: $category');
-      }
-      displayText += ' (${params.join(', ')})';
-    }
-
-    return Scaffold(body: Center(child: Text(displayText)));
-  }
+  Widget build(BuildContext context) => const PlaygroundShell();
 }
