@@ -13,10 +13,7 @@ class HomePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: const HeroSection(),
-            ),
+            SizedBox(height: MediaQuery.of(context).size.height, child: const HeroSection()),
             const ProjectsSection(),
           ],
         ),

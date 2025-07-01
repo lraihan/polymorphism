@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
+import 'package:polymorphism/shared/animations/scroll_reveal.dart';
+import 'package:polymorphism/shared/project_card.dart';
 
 class ProjectsSection extends StatelessWidget {
   const ProjectsSection({super.key});
@@ -57,7 +59,11 @@ class ProjectsSection extends StatelessWidget {
             childAspectRatio: 1.5, // Changed from 1.2 to 1.5 for better sizing
           ),
           itemCount: 3,
-          itemBuilder: (context, index) => _ProjectCard(index: index, isDesktop: isDesktop),
+          itemBuilder:
+              (context, index) => ScrollReveal(
+                delay: Duration(milliseconds: index * 100), // Staggered animation
+                child: ProjectCard(index: index, isDesktop: isDesktop),
+              ),
         );
       },
     );
@@ -67,71 +73,5 @@ class ProjectsSection extends StatelessWidget {
     if (width >= 1024) return 3; // Desktop
     if (width >= 768) return 2; // Tablet
     return 1; // Mobile
-  }
-}
-
-class _ProjectCard extends StatefulWidget {
-  const _ProjectCard({required this.index, required this.isDesktop});
-
-  final int index;
-  final bool isDesktop;
-
-  @override
-  State<_ProjectCard> createState() => _ProjectCardState();
-}
-
-class _ProjectCardState extends State<_ProjectCard> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: widget.isDesktop ? (_) => _setHovered(true) : null,
-      onExit: widget.isDesktop ? (_) => _setHovered(false) : null,
-      child: AnimatedContainer(
-        duration: AppMotion.fast,
-        decoration: BoxDecoration(
-          color: AppColors.glassSurface,
-          borderRadius: BorderRadius.circular(AppSpacing.md),
-          border: widget.isDesktop && _isHovered ? Border.all(color: AppColors.accent, width: 1) : null,
-          boxShadow:
-              widget.isDesktop && _isHovered
-                  ? [
-                    BoxShadow(
-                      color: AppColors.accent.withValues(alpha: 0.2),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ]
-                  : null,
-        ),
-        child: Card(
-          color: Colors.transparent,
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.md)),
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Placeholder content - will be replaced with actual project data
-              Icon(Icons.code, size: 48, color: AppColors.textPrimary),
-              SizedBox(height: AppSpacing.md),
-              Text(
-                'Project Placeholder',
-                style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _setHovered(bool hovered) {
-    if (widget.isDesktop) {
-      setState(() {
-        _isHovered = hovered;
-      });
-    }
   }
 }

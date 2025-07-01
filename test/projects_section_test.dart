@@ -3,9 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/modules/home/projects_section.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 void main() {
   group('ProjectsSection', () {
+    setUp(() {
+      // Initialize VisibilityDetectorController for testing
+      VisibilityDetectorController.instance.updateInterval = Duration.zero;
+    });
+
     testWidgets('renders title and subtitle correctly', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -31,9 +37,9 @@ void main() {
         ),
       );
 
-      await tester.pump();
+      await tester.pumpAndSettle();
 
-      // Check that exactly 3 cards are rendered
+      // Check that exactly 3 cards are rendered (inside ScrollReveal widgets)
       expect(find.byType(Card), findsNWidgets(3));
       expect(find.text('Project Placeholder'), findsNWidgets(3));
     });

@@ -14,16 +14,19 @@ void main() {
 
     // Wait for initial frame
     await tester.pump();
-    
+
     // Wait for preloader to finish (shorter duration to avoid timeout)
     await tester.pump(const Duration(milliseconds: 1000));
-    
+
     // Pump a few more frames without settling to avoid infinite loop
     for (int i = 0; i < 10; i++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
 
-    // Verify that the app shows the home page elements
-    expect(find.textContaining('I craft'), findsOneWidget);
+    // Verify that our app shows the expected UI elements
+    expect(find.text('I craft fluid interfaces\nthat behave.'), findsOneWidget);
+    
+    // Complete any pending animations and timers
+    await tester.pumpAndSettle();
   });
 }
