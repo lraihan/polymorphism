@@ -87,7 +87,7 @@ class _HeroSectionState extends State<HeroSection> {
       delay: const Duration(milliseconds: 50), // Subtle delay for background entrance
       duration: const Duration(milliseconds: 1500), // Long, slow animation
       addScrollDelay: false, // Background elements don't need scroll delay
-      offset: 30.0, // Smaller offset for background
+      offset: 30, // Smaller offset for background
       child: Container(
         width: 400,
         height: 400,
@@ -117,7 +117,7 @@ class _HeroSectionState extends State<HeroSection> {
       delay: const Duration(milliseconds: 300), // Staggered delay for glass element
       duration: const Duration(milliseconds: 1200), // Smooth animation
       addScrollDelay: false, // Background elements don't need scroll delay
-      offset: 40.0, // Medium offset
+      offset: 40, // Medium offset
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: BackdropFilter(
@@ -147,7 +147,6 @@ class _HeroSectionState extends State<HeroSection> {
             ScrollReveal(
               delay: const Duration(milliseconds: 200), // Initial delay for hero entrance
               duration: const Duration(milliseconds: 1000), // Longer duration for experiential feel
-              addScrollDelay: true, // Enable experiential scroll delay
               child: Semantics(
                 header: true,
                 label: 'Main headline: I craft fluid interfaces that behave',
@@ -162,8 +161,6 @@ class _HeroSectionState extends State<HeroSection> {
             // CTA Button with staggered delay
             ScrollReveal(
               delay: const Duration(milliseconds: 600), // Staggered delay for button entrance
-              duration: const Duration(milliseconds: 800), // Smooth animation
-              addScrollDelay: true, // Enable experiential scroll delay
               child: FilledButton(
                 onPressed:
                     widget.onExplorePressed ??

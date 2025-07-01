@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
 
       final context = _sectionKeys[index].currentContext;
       if (context != null) {
-        final RenderBox renderBox = context.findRenderObject() as RenderBox;
+        final renderBox = context.findRenderObject()! as RenderBox;
         final position = renderBox.localToGlobal(Offset.zero);
 
         // Scroll to the section with some offset for better visibility
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
           controller: _scrollController,
           child: Column(
             children: [
-              Container(
+              SizedBox(
                 key: _sectionKeys[0],
                 height: MediaQuery.of(context).size.height,
                 child: HeroSection(onExplorePressed: () => _scrollToSection(2)),

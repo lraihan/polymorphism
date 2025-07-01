@@ -115,7 +115,6 @@ class _ContactSectionState extends State<ContactSection> {
                     ? ScrollReveal(
                       delay: const Duration(milliseconds: 200), // Add experiential delay
                       duration: const Duration(milliseconds: 1000), // Longer animation for better experience
-                      addScrollDelay: true, // Enable experiential scroll delay
                       child: _buildContent(theme),
                     )
                     : _buildContent(theme),

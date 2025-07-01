@@ -18,7 +18,6 @@ class AboutSection extends StatelessWidget {
     child: ScrollReveal(
       delay: const Duration(milliseconds: 100), // Add experiential delay
       duration: const Duration(milliseconds: 1200), // Longer animation for better experience
-      addScrollDelay: true, // Enable experiential scroll delay
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [_buildHeader(context), const SizedBox(height: AppSpacing.xl), _buildContent(context)],
@@ -56,7 +55,7 @@ class AboutSection extends StatelessWidget {
       Expanded(flex: 2, child: _buildTextContent(context)),
       const SizedBox(width: AppSpacing.xl),
       // Right column - Stats/Skills
-      Expanded(flex: 1, child: _buildStatsContent(context)),
+      Expanded(child: _buildStatsContent(context)),
     ],
   );
 
@@ -68,7 +67,7 @@ class AboutSection extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
-        'I\'m a passionate Flutter developer and designer with a love for creating beautiful, functional digital experiences. With expertise in mobile development, UI/UX design, and modern web technologies, I bridge the gap between design and development.',
+        "I'm a passionate Flutter developer and designer with a love for creating beautiful, functional digital experiences. With expertise in mobile development, UI/UX design, and modern web technologies, I bridge the gap between design and development.",
         style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary, height: 1.6),
       ),
       const SizedBox(height: AppSpacing.lg),
@@ -80,7 +79,7 @@ class AboutSection extends StatelessWidget {
       ),
       const SizedBox(height: AppSpacing.lg),
       Text(
-        'When I\'m not coding, you\'ll find me exploring new design trends, contributing to open source projects, or experimenting with the latest technologies in the Flutter ecosystem.',
+        "When I'm not coding, you'll find me exploring new design trends, contributing to open source projects, or experimenting with the latest technologies in the Flutter ecosystem.",
         style: Theme.of(
           context,
         ).textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: 0.8), height: 1.6),

@@ -43,7 +43,7 @@ void main() {
     });
 
     testWidgets('CTA button triggers callback', (tester) async {
-      bool callbackTriggered = false;
+      var callbackTriggered = false;
 
       await tester.pumpWidget(
         MaterialApp(

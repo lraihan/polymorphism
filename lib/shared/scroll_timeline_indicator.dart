@@ -3,23 +3,21 @@ import 'package:polymorphism/core/theme/app_theme.dart';
 
 /// A scroll timeline indicator that shows scroll progress
 class ScrollTimelineIndicator extends StatefulWidget {
+
+  const ScrollTimelineIndicator({
+    required this.scrollController, required this.sectionTitles, super.key,
+    this.onSectionTap,
+  });
   final ScrollController scrollController;
   final List<String> sectionTitles;
   final Function(int)? onSectionTap;
-
-  const ScrollTimelineIndicator({
-    super.key,
-    required this.scrollController,
-    required this.sectionTitles,
-    this.onSectionTap,
-  });
 
   @override
   State<ScrollTimelineIndicator> createState() => _ScrollTimelineIndicatorState();
 }
 
 class _ScrollTimelineIndicatorState extends State<ScrollTimelineIndicator> {
-  double _scrollProgress = 0.0;
+  double _scrollProgress = 0;
 
   @override
   void initState() {
@@ -53,7 +51,7 @@ class _ScrollTimelineIndicatorState extends State<ScrollTimelineIndicator> {
     return Positioned(
       right: 20,
       top: screenHeight * 0.2, // Start at 20% from top
-      child: Container(
+      child: SizedBox(
         width: 4,
         height: indicatorHeight,
         child: Stack(
