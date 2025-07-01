@@ -140,14 +140,9 @@ class AppRouter {
   static GoRouter get instance => _router;
 
   // Helper method to create page transitions
-  static CustomTransitionPage _buildPageWithTransition(BuildContext context, GoRouterState state, Widget child) {
-    return CustomTransitionPage(
+  static CustomTransitionPage _buildPageWithTransition(BuildContext context, GoRouterState state, Widget child) => CustomTransitionPage(
       key: state.pageKey,
       child: child,
-      transitionDuration: const Duration(milliseconds: 300),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(opacity: CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic), child: child);
-      },
+      transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic), child: child),
     );
-  }
 }

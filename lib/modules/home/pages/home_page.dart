@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:polymorphism/modules/gallery/gallery_section.dart';
 import 'package:polymorphism/modules/home/hero_section.dart';
 import 'package:polymorphism/modules/home/projects_section.dart';
 
@@ -8,16 +9,15 @@ class HomePage extends StatelessWidget {
   final String? section;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: MediaQuery.of(context).size.height, child: const HeroSection()),
-            const ProjectsSection(),
-          ],
-        ),
+  Widget build(BuildContext context) => Scaffold(
+    body: SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(height: MediaQuery.of(context).size.height, child: const HeroSection()),
+          const ProjectsSection(),
+          const GallerySection(),
+        ],
       ),
-    );
-  }
+    ),
+  );
 }

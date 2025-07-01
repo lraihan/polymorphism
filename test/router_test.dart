@@ -9,7 +9,7 @@ void main() {
       await tester.pumpWidget(MaterialApp.router(routerConfig: AppRouter.instance));
 
       expect(find.text('I craft fluid interfaces\nthat behave.'), findsOneWidget);
-      
+
       // Complete any pending animations and timers
       await tester.pumpAndSettle();
     });

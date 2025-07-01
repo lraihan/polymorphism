@@ -34,18 +34,14 @@ class _MainApp extends StatelessWidget {
   const _MainApp();
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
+  Widget build(BuildContext context) => MaterialApp.router(
       title: 'Polymorphism',
       theme: AppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
       routerConfig: AppRouter.instance,
-      builder: (context, child) {
-        return Scaffold(
+      builder: (context, child) => Scaffold(
           backgroundColor: AppColors.bgDark,
           body: Column(children: [const Navbar(), Expanded(child: child ?? const SizedBox.shrink())]),
-        );
-      },
+        ),
     );
-  }
 }

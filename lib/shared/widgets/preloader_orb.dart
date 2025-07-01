@@ -20,11 +20,11 @@ class PreloaderOrb extends StatelessWidget {
       child: ClipOval(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               color: AppColors.glassSurface,
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.moonGlow.withValues(alpha: 0.2), width: 1),
+              border: Border.all(color: AppColors.moonGlow.withValues(alpha: 0.2)),
             ),
             child: Center(
               child: Column(
@@ -53,9 +53,9 @@ class PreloaderOrb extends StatelessWidget {
     return Center(
       child: orbWidget
           .animate(onPlay: (controller) => controller.repeat())
-          .scale(begin: const Offset(1.0, 1.0), end: const Offset(0.9, 0.9), duration: 900.ms, curve: Curves.easeInOut)
+          .scale(begin: const Offset(1, 1), end: const Offset(0.9, 0.9), duration: 900.ms, curve: Curves.easeInOut)
           .then()
-          .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.0, 1.0), duration: 900.ms, curve: Curves.easeInOut),
+          .scale(begin: const Offset(0.9, 0.9), end: const Offset(1, 1), duration: 900.ms, curve: Curves.easeInOut),
     );
   }
 }

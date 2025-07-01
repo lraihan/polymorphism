@@ -8,8 +8,7 @@ class ProjectsSection extends StatelessWidget {
   const ProjectsSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       key: const ValueKey('projects'),
       padding: const EdgeInsets.only(
         top: AppSpacing.xxxl,
@@ -22,10 +21,8 @@ class ProjectsSection extends StatelessWidget {
         children: [_buildHeader(context), const SizedBox(height: AppSpacing.xl), _buildProjectsGrid(context)],
       ),
     );
-  }
 
-  Widget _buildHeader(BuildContext context) {
-    return Column(
+  Widget _buildHeader(BuildContext context) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -41,10 +38,8 @@ class ProjectsSection extends StatelessWidget {
         ),
       ],
     );
-  }
 
-  Widget _buildProjectsGrid(BuildContext context) {
-    return LayoutBuilder(
+  Widget _buildProjectsGrid(BuildContext context) => LayoutBuilder(
       builder: (context, constraints) {
         final crossAxisCount = _getCrossAxisCount(constraints.maxWidth);
         final isDesktop = kIsWeb && constraints.maxWidth >= 1024;
@@ -67,11 +62,14 @@ class ProjectsSection extends StatelessWidget {
         );
       },
     );
-  }
 
   int _getCrossAxisCount(double width) {
-    if (width >= 1024) return 3; // Desktop
-    if (width >= 768) return 2; // Tablet
+    if (width >= 1024) {
+      return 3; // Desktop
+    }
+    if (width >= 768) {
+      return 2; // Tablet
+    }
     return 1; // Mobile
   }
 }

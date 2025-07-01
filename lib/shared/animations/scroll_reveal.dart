@@ -33,13 +33,13 @@ class _ScrollRevealState extends State<ScrollReveal> with SingleTickerProviderSt
     _controller = AnimationController(duration: widget.duration, vsync: this);
 
     _opacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     _translateAnimation = Tween<double>(
       begin: widget.offset,
-      end: 0.0,
+      end: 0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
   }
 
@@ -78,19 +78,16 @@ class _ScrollRevealState extends State<ScrollReveal> with SingleTickerProviderSt
   }
 
   @override
-  Widget build(BuildContext context) {
-    return VisibilityDetector(
-      key: Key('${widget.key ?? UniqueKey()}_visibility'),
-      onVisibilityChanged: _onVisibilityChanged,
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          return Transform.translate(
+  Widget build(BuildContext context) => VisibilityDetector(
+    key: Key('${widget.key ?? UniqueKey()}_visibility'),
+    onVisibilityChanged: _onVisibilityChanged,
+    child: AnimatedBuilder(
+      animation: _controller,
+      builder:
+          (context, child) => Transform.translate(
             offset: Offset(0, _translateAnimation.value),
             child: Opacity(opacity: _opacityAnimation.value, child: widget.child),
-          );
-        },
-      ),
-    );
-  }
+          ),
+    ),
+  );
 }

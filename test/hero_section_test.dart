@@ -68,7 +68,7 @@ void main() {
 
       // Check headline semantics
       final headlineSemantics = find.byWidgetPredicate(
-        (widget) => widget is Semantics && widget.properties.header == true,
+        (widget) => widget is Semantics && (widget.properties.header ?? false) == true,
       );
       expect(headlineSemantics, findsOneWidget);
 
@@ -108,7 +108,7 @@ void main() {
         (widget) =>
             widget is Container &&
             widget.decoration is BoxDecoration &&
-            (widget.decoration as BoxDecoration).gradient is LinearGradient,
+            (widget.decoration! as BoxDecoration).gradient is LinearGradient,
       );
       expect(gradientContainer, findsOneWidget);
     });

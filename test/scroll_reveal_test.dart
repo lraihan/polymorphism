@@ -25,15 +25,15 @@ void main() {
       const testChild = Text('Test Content');
 
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  const SizedBox(height: 1000), // Push content below fold
+                  SizedBox(height: 1000), // Push content below fold
                   ScrollReveal(
-                    key: const ValueKey('scroll-reveal-scroll-test'),
-                    duration: const Duration(milliseconds: 300),
+                    key: ValueKey('scroll-reveal-scroll-test'),
+                    duration: Duration(milliseconds: 300),
                     child: testChild,
                   ),
                 ],
@@ -76,10 +76,10 @@ void main() {
       const testChild = Text('Test Content');
 
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: MediaQuery(
-            data: const MediaQueryData(disableAnimations: true),
-            child: Scaffold(body: ScrollReveal(key: const ValueKey('scroll-reveal-accessibility'), child: testChild)),
+            data: MediaQueryData(disableAnimations: true),
+            child: Scaffold(body: ScrollReveal(key: ValueKey('scroll-reveal-accessibility'), child: testChild)),
           ),
         ),
       );

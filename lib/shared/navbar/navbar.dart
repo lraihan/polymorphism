@@ -11,7 +11,7 @@ class Navbar extends StatefulWidget implements PreferredSizeWidget {
   State<Navbar> createState() => _NavbarState();
 
   @override
-  Size get preferredSize => Size.fromHeight(AppSpacing.xl + AppSpacing.md);
+  Size get preferredSize => const Size.fromHeight(AppSpacing.xl + AppSpacing.md);
 }
 
 class _NavbarState extends State<Navbar> {
@@ -28,8 +28,7 @@ class _NavbarState extends State<Navbar> {
   bool _isDrawerOpen = false;
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
+  Widget build(BuildContext context) => LayoutBuilder(
       builder: (context, constraints) {
         final isSmallScreen = constraints.maxWidth < 800;
 
@@ -40,7 +39,7 @@ class _NavbarState extends State<Navbar> {
             borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.md)),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
-              child: Container(
+              child: DecoratedBox(
                 decoration: const BoxDecoration(
                   color: AppColors.glassSurface,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.md)),
@@ -61,10 +60,8 @@ class _NavbarState extends State<Navbar> {
         );
       },
     );
-  }
 
-  Widget _buildLogo(BuildContext context) {
-    return Flexible(
+  Widget _buildLogo(BuildContext context) => Flexible(
       child: Text(
         'POLYMORPHISM',
         style: Theme.of(
@@ -73,7 +70,6 @@ class _NavbarState extends State<Navbar> {
         overflow: TextOverflow.ellipsis,
       ),
     );
-  }
 
   Widget _buildNavItems(BuildContext context) {
     final goRouter = GoRouter.maybeOf(context);
@@ -107,8 +103,7 @@ class _NavbarState extends State<Navbar> {
     );
   }
 
-  Widget _buildHamburgerMenu(BuildContext context) {
-    return IconButton(
+  Widget _buildHamburgerMenu(BuildContext context) => IconButton(
       icon: Icon(_isDrawerOpen ? Icons.close : Icons.menu, color: AppColors.textPrimary),
       onPressed: () {
         setState(() {
@@ -120,13 +115,12 @@ class _NavbarState extends State<Navbar> {
         }
       },
     );
-  }
 
   void _showMobileMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) => _buildMobileDrawer(context),
+      builder: _buildMobileDrawer,
     ).then((_) {
       setState(() {
         _isDrawerOpen = false;
@@ -140,12 +134,12 @@ class _NavbarState extends State<Navbar> {
 
     return Container(
       constraints: const BoxConstraints(maxHeight: 400),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.glassSurface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.lg)),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.lg)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.lg)),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
           child: SingleChildScrollView(
@@ -153,7 +147,7 @@ class _NavbarState extends State<Navbar> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: AppSpacing.sm),
+                  margin: const EdgeInsets.only(top: AppSpacing.sm),
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
@@ -162,14 +156,14 @@ class _NavbarState extends State<Navbar> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(AppSpacing.lg),
+                  padding: const EdgeInsets.all(AppSpacing.lg),
                   child: Column(
                     children:
                         _navItems.map((item) {
                           final isActive = currentLocation == item.path;
 
                           return Padding(
-                            padding: EdgeInsets.only(bottom: AppSpacing.sm),
+                            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                             child: SizedBox(
                               width: double.infinity,
                               child: TextButton(
@@ -180,7 +174,7 @@ class _NavbarState extends State<Navbar> {
                                 style: TextButton.styleFrom(
                                   foregroundColor:
                                       isActive ? AppColors.accent : AppColors.textPrimary.withValues(alpha: 0.7),
-                                  padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+                                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
                                   alignment: Alignment.centerLeft,
                                 ),
                                 child: Text(

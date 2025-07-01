@@ -93,7 +93,7 @@ void main() {
       tester.view.physicalSize = const Size(1200, 800);
       tester.view.devicePixelRatio = 1.0;
 
-      String currentRoute = '/';
+      var currentRoute = '/';
 
       final router = GoRouter(
         routes: [
@@ -147,7 +147,7 @@ void main() {
         (widget) =>
             widget is Container &&
             widget.decoration is BoxDecoration &&
-            (widget.decoration as BoxDecoration).color == AppColors.glassSurface,
+            (widget.decoration! as BoxDecoration).color == AppColors.glassSurface,
       );
       expect(containerFinder, findsOneWidget);
     });

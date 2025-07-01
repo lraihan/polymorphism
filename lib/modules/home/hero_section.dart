@@ -17,8 +17,7 @@ class _HeroSectionState extends State<HeroSection> {
   Size _screenSize = Size.zero;
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
+  Widget build(BuildContext context) => LayoutBuilder(
       builder: (context, constraints) {
         _screenSize = Size(constraints.maxWidth, constraints.maxHeight);
 
@@ -45,7 +44,7 @@ class _HeroSectionState extends State<HeroSection> {
               _buildGlassRectangle(_calculateParallaxOffset(0.5)),
 
               // Layer 2: Headline & CTA (1x)
-              _buildHeadlineAndCTA(context, _calculateParallaxOffset(1.0)),
+              _buildHeadlineAndCTA(context, _calculateParallaxOffset(1)),
             ],
           ),
         );
@@ -65,7 +64,6 @@ class _HeroSectionState extends State<HeroSection> {
         return heroContent;
       },
     );
-  }
 
   Offset _calculateParallaxOffset(double intensity) {
     if (_screenSize == Size.zero) {
@@ -81,8 +79,7 @@ class _HeroSectionState extends State<HeroSection> {
     return Offset(relativeX * maxOffset * intensity, relativeY * maxOffset * intensity);
   }
 
-  Widget _buildRadialGlow(Offset parallaxOffset) {
-    return Positioned(
+  Widget _buildRadialGlow(Offset parallaxOffset) => Positioned(
       top: -100 + parallaxOffset.dy,
       left: -100 + parallaxOffset.dx,
       child: Container(
@@ -105,10 +102,8 @@ class _HeroSectionState extends State<HeroSection> {
         ),
       ),
     );
-  }
 
-  Widget _buildGlassRectangle(Offset parallaxOffset) {
-    return Positioned(
+  Widget _buildGlassRectangle(Offset parallaxOffset) => Positioned(
       top: 100 + parallaxOffset.dy,
       right: 50 - parallaxOffset.dx,
       child: ClipRRect(
@@ -121,16 +116,14 @@ class _HeroSectionState extends State<HeroSection> {
             decoration: BoxDecoration(
               color: AppColors.glassSurface.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.moonGlow.withValues(alpha: 0.2), width: 1),
+              border: Border.all(color: AppColors.moonGlow.withValues(alpha: 0.2)),
             ),
           ),
         ),
       ),
     );
-  }
 
-  Widget _buildHeadlineAndCTA(BuildContext context, Offset parallaxOffset) {
-    return Positioned.fill(
+  Widget _buildHeadlineAndCTA(BuildContext context, Offset parallaxOffset) => Positioned.fill(
       child: Transform.translate(
         offset: parallaxOffset,
         child: Center(
@@ -162,5 +155,4 @@ class _HeroSectionState extends State<HeroSection> {
         ),
       ),
     );
-  }
 }
