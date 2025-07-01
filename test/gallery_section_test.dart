@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polymorphism/modules/gallery/gallery_section.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 void main() {
   group('GallerySection Tests', () {
+    setUp(() {
+      // Initialize VisibilityDetectorController for testing
+      VisibilityDetectorController.instance.updateInterval = Duration.zero;
+    });
+
+    tearDown(() {
+      // Reset VisibilityDetectorController after each test
+      VisibilityDetectorController.instance.updateInterval = const Duration(milliseconds: 500);
+    });
+
     Widget createTestWidget({double? width, double? height}) => MaterialApp(
       home: Scaffold(
         body: SingleChildScrollView(
@@ -21,6 +32,9 @@ void main() {
 
       expect(find.text('UI Design Gallery'), findsOneWidget);
       expect(find.text('Selected visual explorations and motion studies.'), findsOneWidget);
+
+      // Complete any pending animations and timers
+      await tester.pumpAndSettle();
     });
 
     testWidgets('renders 8 gallery tiles', (tester) async {

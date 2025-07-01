@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 /// Model representing a career milestone or event
+@immutable
 class CareerEvent {
-
   const CareerEvent({
     required this.year,
     required this.title,

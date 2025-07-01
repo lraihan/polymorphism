@@ -1,9 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:polymorphism/shell/app_shell.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 void main() {
-  tearDown(Get.reset);
+  setUp(() {
+    VisibilityDetectorController.instance.updateInterval = Duration.zero;
+  });
+
+  tearDown(() {
+    Get.reset();
+    VisibilityDetectorController.instance.notifyNow();
+  });
 
   testWidgets('App starts and shows home page', (tester) async {
     // Build our app and trigger a frame.

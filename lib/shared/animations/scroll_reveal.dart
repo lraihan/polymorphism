@@ -6,8 +6,9 @@ class ScrollReveal extends StatefulWidget {
   const ScrollReveal({
     required this.child,
     this.delay = Duration.zero,
-    this.duration = const Duration(milliseconds: 600),
-    this.offset = 40.0,
+    this.duration = const Duration(milliseconds: 800), // Slightly longer for more experience
+    this.offset = 50.0, // Slightly more offset for better reveal effect
+    this.addScrollDelay = true, // New parameter for experiential scroll delay
     super.key,
   });
 
@@ -15,6 +16,7 @@ class ScrollReveal extends StatefulWidget {
   final Duration delay;
   final Duration duration;
   final double offset;
+  final bool addScrollDelay; // Whether to add extra delay when scrolling
 
   @override
   State<ScrollReveal> createState() => _ScrollRevealState();
@@ -68,7 +70,14 @@ class _ScrollRevealState extends State<ScrollReveal> with SingleTickerProviderSt
       if (MediaQuery.disableAnimationsOf(context)) {
         _controller.value = 1.0;
       } else {
-        _delayTimer = Timer(widget.delay, () {
+        // Calculate total delay including optional scroll experience delay
+        final totalDelay =
+            widget.delay +
+            (widget.addScrollDelay
+                ? const Duration(milliseconds: 150) // Extra experiential delay
+                : Duration.zero);
+
+        _delayTimer = Timer(totalDelay, () {
           if (mounted) {
             _controller.forward();
           }

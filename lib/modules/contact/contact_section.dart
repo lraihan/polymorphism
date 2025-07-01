@@ -5,7 +5,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// Contact section with form and email link
 class ContactSection extends StatefulWidget {
-
   const ContactSection({super.key, this.enableAnimations = true});
   final bool enableAnimations;
 
@@ -90,9 +89,7 @@ class _ContactSectionState extends State<ContactSection> {
       }
     } on Exception catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {
@@ -113,7 +110,15 @@ class _ContactSectionState extends State<ContactSection> {
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: isWide ? 600 : double.infinity),
-            child: widget.enableAnimations ? ScrollReveal(child: _buildContent(theme)) : _buildContent(theme),
+            child:
+                widget.enableAnimations
+                    ? ScrollReveal(
+                      delay: const Duration(milliseconds: 200), // Add experiential delay
+                      duration: const Duration(milliseconds: 1000), // Longer animation for better experience
+                      addScrollDelay: true, // Enable experiential scroll delay
+                      child: _buildContent(theme),
+                    )
+                    : _buildContent(theme),
           ),
         ),
       ),
@@ -121,162 +126,159 @@ class _ContactSectionState extends State<ContactSection> {
   }
 
   Widget _buildContent(ThemeData theme) => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Section heading
-        Text(
-          "Let's build something together.",
-          style: theme.textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
-        ),
-        const SizedBox(height: 16),
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Section heading
+      Text(
+        "Let's build something together.",
+        style: theme.textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+      ),
+      const SizedBox(height: 16),
 
-        // Subtitle with email link
-        Wrap(
-          children: [
-            Text(
-              'Have a project in mind? Drop me a line at ',
-              style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: .8)),
+      // Subtitle with email link
+      Wrap(
+        children: [
+          Text(
+            'Have a project in mind? Drop me a line at ',
+            style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: .8)),
+          ),
+          GestureDetector(
+            onTap: () async {
+              final uri = Uri.parse('mailto:hello@polymorphism.dev');
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri);
+              }
+            },
+            child: Text(
+              'hello@polymorphism.dev',
+              style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.accent, decoration: TextDecoration.underline),
             ),
-            GestureDetector(
-              onTap: () async {
-                final uri = Uri.parse('mailto:hello@polymorphism.dev');
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri);
-                }
-              },
-              child: Text(
-                'hello@polymorphism.dev',
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: AppColors.accent,
-                  decoration: TextDecoration.underline,
+          ),
+          Text(
+            ' or use the form below.',
+            style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: .8)),
+          ),
+        ],
+      ),
+      const SizedBox(height: 24),
+
+      // Contact form
+      Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            // Name field
+            TextFormField(
+              controller: _nameController,
+              validator: _validateName,
+              decoration: InputDecoration(
+                labelText: 'Name',
+                labelStyle: TextStyle(color: AppColors.textPrimary.withValues(alpha: .7)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: AppColors.accent, width: 2),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.red),
                 ),
               ),
+              style: const TextStyle(color: AppColors.textPrimary),
             ),
-            Text(
-              ' or use the form below.',
-              style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: .8)),
+            const SizedBox(height: 12),
+
+            // Email field
+            TextFormField(
+              controller: _emailController,
+              validator: _validateEmail,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                labelText: 'Email',
+                labelStyle: TextStyle(color: AppColors.textPrimary.withValues(alpha: .7)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: AppColors.accent, width: 2),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.red),
+                ),
+              ),
+              style: const TextStyle(color: AppColors.textPrimary),
+            ),
+            const SizedBox(height: 12),
+
+            // Message field
+            TextFormField(
+              controller: _messageController,
+              validator: _validateMessage,
+              maxLines: 3,
+              decoration: InputDecoration(
+                labelText: 'Message',
+                alignLabelWithHint: true,
+                labelStyle: TextStyle(color: AppColors.textPrimary.withValues(alpha: .7)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: AppColors.accent, width: 2),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.red),
+                ),
+              ),
+              style: const TextStyle(color: AppColors.textPrimary),
+            ),
+            const SizedBox(height: 16),
+
+            // Submit button
+            SizedBox(
+              width: double.infinity,
+              height: 44,
+              child: ElevatedButton(
+                onPressed: _isSubmitting ? null : _handleSubmit,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.accent,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  elevation: 0,
+                ),
+                child:
+                    _isSubmitting
+                        ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        )
+                        : const Text('Send', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              ),
             ),
           ],
         ),
-        const SizedBox(height: 24),
-
-        // Contact form
-        Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              // Name field
-              TextFormField(
-                controller: _nameController,
-                validator: _validateName,
-                decoration: InputDecoration(
-                  labelText: 'Name',
-                  labelStyle: TextStyle(color: AppColors.textPrimary.withValues(alpha: .7)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: AppColors.accent, width: 2),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Colors.red),
-                  ),
-                ),
-                style: const TextStyle(color: AppColors.textPrimary),
-              ),
-              const SizedBox(height: 12),
-
-              // Email field
-              TextFormField(
-                controller: _emailController,
-                validator: _validateEmail,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  labelStyle: TextStyle(color: AppColors.textPrimary.withValues(alpha: .7)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: AppColors.accent, width: 2),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Colors.red),
-                  ),
-                ),
-                style: const TextStyle(color: AppColors.textPrimary),
-              ),
-              const SizedBox(height: 12),
-
-              // Message field
-              TextFormField(
-                controller: _messageController,
-                validator: _validateMessage,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  labelText: 'Message',
-                  alignLabelWithHint: true,
-                  labelStyle: TextStyle(color: AppColors.textPrimary.withValues(alpha: .7)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: AppColors.textPrimary.withValues(alpha: .3)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: AppColors.accent, width: 2),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Colors.red),
-                  ),
-                ),
-                style: const TextStyle(color: AppColors.textPrimary),
-              ),
-              const SizedBox(height: 16),
-
-              // Submit button
-              SizedBox(
-                width: double.infinity,
-                height: 44,
-                child: ElevatedButton(
-                  onPressed: _isSubmitting ? null : _handleSubmit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accent,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    elevation: 0,
-                  ),
-                  child:
-                      _isSubmitting
-                          ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                          )
-                          : const Text('Send', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+      ),
+    ],
+  );
 }

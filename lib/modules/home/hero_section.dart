@@ -1,12 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:polymorphism/core/router/app_routes.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
+import 'package:polymorphism/shared/animations/scroll_reveal.dart';
 
 class HeroSection extends StatefulWidget {
-  const HeroSection({super.key});
+  const HeroSection({super.key, this.onExplorePressed});
+
+  final VoidCallback? onExplorePressed;
 
   @override
   State<HeroSection> createState() => _HeroSectionState();
@@ -18,52 +19,52 @@ class _HeroSectionState extends State<HeroSection> {
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-      builder: (context, constraints) {
-        _screenSize = Size(constraints.maxWidth, constraints.maxHeight);
+    builder: (context, constraints) {
+      _screenSize = Size(constraints.maxWidth, constraints.maxHeight);
 
-        // Check if we should enable parallax (desktop only)
-        final isDesktop = kIsWeb && constraints.maxWidth > 800;
+      // Check if we should enable parallax (desktop only)
+      final isDesktop = kIsWeb && constraints.maxWidth > 800;
 
-        Widget heroContent = Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [AppColors.bgDark, AppColors.moonGlow.withValues(alpha: 0.4)],
-              stops: const [0.0, 1],
-            ),
+      Widget heroContent = Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.bgDark, AppColors.moonGlow.withValues(alpha: 0.4)],
+            stops: const [0.0, 1],
           ),
-          child: Stack(
-            children: [
-              // Layer 0: Blurred radial glow (slow parallax 0.2x)
-              _buildRadialGlow(_calculateParallaxOffset(0.2)),
+        ),
+        child: Stack(
+          children: [
+            // Layer 0: Blurred radial glow (slow parallax 0.2x) with animation
+            _buildRadialGlow(_calculateParallaxOffset(0.2)),
 
-              // Layer 1: Glass rectangle (0.5x)
-              _buildGlassRectangle(_calculateParallaxOffset(0.5)),
+            // Layer 1: Glass rectangle (0.5x) with staggered animation
+            _buildGlassRectangle(_calculateParallaxOffset(0.5)),
 
-              // Layer 2: Headline & CTA (1x)
-              _buildHeadlineAndCTA(context, _calculateParallaxOffset(1)),
-            ],
-          ),
+            // Layer 2: Headline & CTA (1x)
+            _buildHeadlineAndCTA(context, _calculateParallaxOffset(1)),
+          ],
+        ),
+      );
+
+      // Wrap with MouseRegion for desktop parallax
+      if (isDesktop) {
+        heroContent = MouseRegion(
+          onHover: (event) {
+            setState(() {
+              _mousePosition = event.localPosition;
+            });
+          },
+          child: heroContent,
         );
+      }
 
-        // Wrap with MouseRegion for desktop parallax
-        if (isDesktop) {
-          heroContent = MouseRegion(
-            onHover: (event) {
-              setState(() {
-                _mousePosition = event.localPosition;
-              });
-            },
-            child: heroContent,
-          );
-        }
-
-        return heroContent;
-      },
-    );
+      return heroContent;
+    },
+  );
 
   Offset _calculateParallaxOffset(double intensity) {
     if (_screenSize == Size.zero) {
@@ -80,8 +81,13 @@ class _HeroSectionState extends State<HeroSection> {
   }
 
   Widget _buildRadialGlow(Offset parallaxOffset) => Positioned(
-      top: -100 + parallaxOffset.dy,
-      left: -100 + parallaxOffset.dx,
+    top: -100 + parallaxOffset.dy,
+    left: -100 + parallaxOffset.dx,
+    child: ScrollReveal(
+      delay: const Duration(milliseconds: 50), // Subtle delay for background entrance
+      duration: const Duration(milliseconds: 1500), // Long, slow animation
+      addScrollDelay: false, // Background elements don't need scroll delay
+      offset: 30.0, // Smaller offset for background
       child: Container(
         width: 400,
         height: 400,
@@ -101,11 +107,17 @@ class _HeroSectionState extends State<HeroSection> {
           child: Container(color: Colors.transparent),
         ),
       ),
-    );
+    ),
+  );
 
   Widget _buildGlassRectangle(Offset parallaxOffset) => Positioned(
-      top: 100 + parallaxOffset.dy,
-      right: 50 - parallaxOffset.dx,
+    top: 100 + parallaxOffset.dy,
+    right: 50 - parallaxOffset.dx,
+    child: ScrollReveal(
+      delay: const Duration(milliseconds: 300), // Staggered delay for glass element
+      duration: const Duration(milliseconds: 1200), // Smooth animation
+      addScrollDelay: false, // Background elements don't need scroll delay
+      offset: 40.0, // Medium offset
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: BackdropFilter(
@@ -121,16 +133,22 @@ class _HeroSectionState extends State<HeroSection> {
           ),
         ),
       ),
-    );
+    ),
+  );
 
   Widget _buildHeadlineAndCTA(BuildContext context, Offset parallaxOffset) => Positioned.fill(
-      child: Transform.translate(
-        offset: parallaxOffset,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Semantics(
+    child: Transform.translate(
+      offset: parallaxOffset,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Headline with scroll reveal animation
+            ScrollReveal(
+              delay: const Duration(milliseconds: 200), // Initial delay for hero entrance
+              duration: const Duration(milliseconds: 1000), // Longer duration for experiential feel
+              addScrollDelay: true, // Enable experiential scroll delay
+              child: Semantics(
                 header: true,
                 label: 'Main headline: I craft fluid interfaces that behave',
                 child: Text(
@@ -139,9 +157,19 @@ class _HeroSectionState extends State<HeroSection> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 40),
-              FilledButton(
-                onPressed: () => context.go(AppRoutes.projectsPath),
+            ),
+            const SizedBox(height: 40),
+            // CTA Button with staggered delay
+            ScrollReveal(
+              delay: const Duration(milliseconds: 600), // Staggered delay for button entrance
+              duration: const Duration(milliseconds: 800), // Smooth animation
+              addScrollDelay: true, // Enable experiential scroll delay
+              child: FilledButton(
+                onPressed:
+                    widget.onExplorePressed ??
+                    () {
+                      // Default behavior if no callback provided
+                    },
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.moonGlow,
                   foregroundColor: AppColors.bgDark,
@@ -150,9 +178,10 @@ class _HeroSectionState extends State<HeroSection> {
                 ),
                 child: const Text('Explore Projects', semanticsLabel: 'Explore Projects'),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
+    ),
+  );
 }

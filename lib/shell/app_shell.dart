@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:polymorphism/core/router/app_router.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
+import 'package:polymorphism/modules/home/pages/home_page.dart';
 import 'package:polymorphism/shared/widgets/preloader_orb.dart';
 import 'package:polymorphism/shell/controllers/app_shell_controller.dart';
 
@@ -23,12 +23,12 @@ class AppShell extends StatelessWidget {
         );
       }
 
-      // Show main app with router
-      return MaterialApp.router(
+      // Show main app without router - single page app
+      return MaterialApp(
         title: 'Polymorphism',
         theme: AppTheme.darkTheme,
         debugShowCheckedModeBanner: false,
-        routerConfig: AppRouter.instance,
+        home: const HomePage(),
       );
     });
   }

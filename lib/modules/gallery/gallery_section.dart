@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:go_router/go_router.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
+import 'package:polymorphism/shared/animations/scroll_reveal.dart';
 
 class GallerySection extends StatelessWidget {
   const GallerySection({super.key});
@@ -51,7 +51,13 @@ class GallerySection extends StatelessWidget {
         crossAxisSpacing: AppSpacing.md,
         mainAxisSpacing: AppSpacing.md,
         itemCount: 8,
-        itemBuilder: (context, index) => _GalleryTile(index: index, isDesktop: isDesktop),
+        itemBuilder:
+            (context, index) => ScrollReveal(
+              delay: Duration(milliseconds: index * 120), // Staggered delay for experiential feel
+              duration: const Duration(milliseconds: 850), // Longer animation for more experience
+              addScrollDelay: true, // Enable experiential scroll delay
+              child: _GalleryTile(index: index, isDesktop: isDesktop),
+            ),
       );
     },
   );
@@ -91,7 +97,9 @@ class _GalleryTileState extends State<_GalleryTile> {
     final height = 200 / aspectRatio;
 
     return GestureDetector(
-      onTap: () => context.go('/gallery/${widget.index}'),
+      onTap: () {
+        // TODO: Add gallery lightbox functionality without router
+      },
       child: MouseRegion(
         onEnter: widget.isDesktop ? (_) => _setHovered(true) : null,
         onExit: widget.isDesktop ? (_) => _setHovered(false) : null,

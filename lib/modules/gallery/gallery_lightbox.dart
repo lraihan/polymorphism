@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 
 class GalleryLightbox extends StatefulWidget {
@@ -66,8 +65,6 @@ class _GalleryLightboxState extends State<GalleryLightbox> with TickerProviderSt
     _animationController.reverse().then((_) {
       if (mounted && Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
-      } else if (mounted) {
-        context.go('/');
       }
     });
   }
@@ -141,13 +138,7 @@ class _GalleryLightboxState extends State<GalleryLightbox> with TickerProviderSt
                             setState(() {
                               _currentIndex = index;
                             });
-                            // Update route if GoRouter is available
-                            try {
-                              context.go('/gallery/$index');
-                            } on Exception catch (e) {
-                              debugPrint(e.toString());
-                              // Ignore navigation errors in tests or when GoRouter isn't available
-                            }
+                            // No need to update routes in single-page app
                           },
                           itemCount: _totalImages,
                           itemBuilder:
@@ -227,7 +218,9 @@ class _GalleryLightboxState extends State<GalleryLightbox> with TickerProviderSt
           decoration: BoxDecoration(
             color: AppColors.glassSurface,
             shape: BoxShape.circle,
-            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha:  0.2), blurRadius: 8, offset: const Offset(0, 2))],
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 8, offset: const Offset(0, 2)),
+            ],
           ),
           child: IconButton(
             onPressed: onTap,
