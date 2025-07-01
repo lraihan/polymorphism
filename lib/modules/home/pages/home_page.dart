@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:polymorphism/modules/gallery/gallery_section.dart';
 import 'package:polymorphism/modules/home/hero_section.dart';
 import 'package:polymorphism/modules/home/projects_section.dart';
+import 'package:polymorphism/modules/timeline/timeline_section.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key, this.section});
@@ -16,6 +17,7 @@ class HomePage extends StatelessWidget {
           SizedBox(height: MediaQuery.of(context).size.height, child: const HeroSection()),
           const ProjectsSection(),
           const GallerySection(),
+          const TimelineSection(),
         ],
       ),
     ),

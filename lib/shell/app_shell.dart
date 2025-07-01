@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:polymorphism/core/router/app_router.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
-import 'package:polymorphism/shared/navbar/navbar.dart';
 import 'package:polymorphism/shared/widgets/preloader_orb.dart';
 import 'package:polymorphism/shell/controllers/app_shell_controller.dart';
 
@@ -13,35 +12,24 @@ class AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(AppShellController());
 
-    return MaterialApp(
-      title: 'Polymorphism',
-      theme: AppTheme.darkTheme,
-      debugShowCheckedModeBanner: false,
-      home: Obx(() {
-        if (!controller.isReady.value) {
-          // Show preloader
-          return const Scaffold(backgroundColor: AppColors.bgDark, body: Center(child: PreloaderOrb()));
-        }
+    return Obx(() {
+      if (!controller.isReady.value) {
+        // Show preloader
+        return MaterialApp(
+          title: 'Polymorphism',
+          theme: AppTheme.darkTheme,
+          debugShowCheckedModeBanner: false,
+          home: const Scaffold(backgroundColor: AppColors.bgDark, body: Center(child: PreloaderOrb())),
+        );
+      }
 
-        // Show main app
-        return const _MainApp();
-      }),
-    );
+      // Show main app with router
+      return MaterialApp.router(
+        title: 'Polymorphism',
+        theme: AppTheme.darkTheme,
+        debugShowCheckedModeBanner: false,
+        routerConfig: AppRouter.instance,
+      );
+    });
   }
-}
-
-class _MainApp extends StatelessWidget {
-  const _MainApp();
-
-  @override
-  Widget build(BuildContext context) => MaterialApp.router(
-      title: 'Polymorphism',
-      theme: AppTheme.darkTheme,
-      debugShowCheckedModeBanner: false,
-      routerConfig: AppRouter.instance,
-      builder: (context, child) => Scaffold(
-          backgroundColor: AppColors.bgDark,
-          body: Column(children: [const Navbar(), Expanded(child: child ?? const SizedBox.shrink())]),
-        ),
-    );
 }
