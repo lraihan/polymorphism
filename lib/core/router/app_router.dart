@@ -4,6 +4,7 @@ import 'package:polymorphism/core/pages/not_found_page.dart';
 import 'package:polymorphism/core/router/app_routes.dart';
 import 'package:polymorphism/modules/case_studies/pages/case_studies_page.dart';
 import 'package:polymorphism/modules/contact/pages/contact_page.dart';
+import 'package:polymorphism/modules/gallery/gallery_lightbox.dart';
 import 'package:polymorphism/modules/gallery/pages/gallery_page.dart';
 import 'package:polymorphism/modules/home/pages/home_page.dart';
 import 'package:polymorphism/modules/playground/pages/playground_page.dart';
@@ -100,6 +101,28 @@ class AppRouter {
                 message: state.uri.queryParameters[AppRoutes.messageParam],
               ),
             ),
+      ),
+
+      // Gallery lightbox route
+      GoRoute(
+        path: '/gallery/:index',
+        name: 'gallery-lightbox',
+        pageBuilder: (context, state) {
+          final indexStr = state.pathParameters['index'];
+          final index = int.tryParse(indexStr ?? '0') ?? 0;
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: GalleryLightbox(initialIndex: index),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                FadeTransition(
+                  opacity: CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeInOutCubic,
+                  ),
+                  child: child,
+                ),
+          );
+        },
       ),
 
       // Future parameterized routes (scaffolded for easy addition)

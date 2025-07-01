@@ -119,19 +119,22 @@ class _GalleryTileState extends State<_GalleryTile> {
               child: Stack(
                 children: [
                   // Placeholder content
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.image_outlined, size: 32, color: AppColors.textPrimary.withValues(alpha: 0.6)),
-                        const SizedBox(height: AppSpacing.sm),
-                        Text(
-                          'Gallery ${widget.index + 1}',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary.withValues(alpha: 0.8)),
-                        ),
-                      ],
+                  Hero(
+                    tag: 'gallery-img-${widget.index}',
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.image_outlined, size: 32, color: AppColors.textPrimary.withValues(alpha: 0.6)),
+                          const SizedBox(height: AppSpacing.sm),
+                          Text(
+                            'Gallery ${widget.index + 1}',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary.withValues(alpha: 0.8)),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   // Hover overlay
