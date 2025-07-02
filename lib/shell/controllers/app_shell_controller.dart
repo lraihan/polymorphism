@@ -6,13 +6,10 @@ class AppShellController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _startPreloader();
+    // Don't auto-start preloader, let curtain loader control timing
   }
 
-  void _startPreloader() {
-    // Show preloader for 2 seconds
-    Future.delayed(const Duration(seconds: 2), () {
-      isReady.value = true;
-    });
+  void setReady() {
+    isReady.value = true;
   }
 }

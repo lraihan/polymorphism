@@ -42,30 +42,6 @@ class TimelineSection extends StatelessWidget {
         TimelineStrip(enableAnimations: enableAnimations, scrollController: scrollController),
 
         const SizedBox(height: AppSpacing.xl),
-
-        // Additional info
-        Container(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          decoration: BoxDecoration(
-            color: AppColors.glassSurface,
-            borderRadius: BorderRadius.circular(AppSpacing.sm),
-            border: Border.all(color: AppColors.textPrimary.withValues(alpha: 0.1)),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.info_outline, color: AppColors.accent, size: 20),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(
-                  'Scroll through the timeline to explore different career milestones. Each position contributed to expertise in Flutter development and technical leadership.',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(color: AppColors.textPrimary.withValues(alpha: 0.8), height: 1.4),
-                ),
-              ),
-            ],
-          ),
-        ),
       ],
     ),
   );

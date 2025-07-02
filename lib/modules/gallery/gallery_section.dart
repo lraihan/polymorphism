@@ -53,8 +53,8 @@ class GallerySection extends StatelessWidget {
         itemCount: 8,
         itemBuilder:
             (context, index) => ScrollReveal(
-              delay: Duration(milliseconds: index * 120), // Staggered delay for experiential feel
-              duration: const Duration(milliseconds: 850), // Longer animation for more experience
+              delay: Duration(milliseconds: index * 120),
+              duration: const Duration(milliseconds: 850),
               child: _GalleryTile(index: index, isDesktop: isDesktop),
             ),
       );

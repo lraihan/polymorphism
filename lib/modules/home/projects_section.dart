@@ -56,8 +56,8 @@ class ProjectsSection extends StatelessWidget {
         itemCount: 3,
         itemBuilder:
             (context, index) => ScrollReveal(
-              delay: Duration(milliseconds: index * 150), // Slightly longer staggered delay
-              duration: const Duration(milliseconds: 900), // Longer animation for more experience
+              delay: Duration(milliseconds: index * 150),
+              duration: const Duration(milliseconds: 900),
               child: ProjectCard(index: index, isDesktop: isDesktop),
             ),
       );

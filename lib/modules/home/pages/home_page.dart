@@ -5,11 +5,52 @@ import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/modules/contact/contact_section.dart';
 import 'package:polymorphism/modules/gallery/gallery_section.dart';
 import 'package:polymorphism/modules/home/about_section.dart';
-import 'package:polymorphism/modules/home/hero_section.dart';
+import 'package:polymorphism/modules/home/cursor_reveal_hero_section.dart';
 import 'package:polymorphism/modules/home/projects_section.dart';
 import 'package:polymorphism/modules/timeline/timeline_section.dart';
 import 'package:polymorphism/shared/footer/footer.dart';
 import 'package:polymorphism/shared/scroll_timeline_indicator.dart';
+
+/// Custom scroll physics that provides hero section snap-to behavior
+/// while maintaining heavy scrolling for other sections
+class HeroSnapScrollPhysics extends ScrollPhysics {
+  const HeroSnapScrollPhysics({super.parent});
+
+  @override
+  HeroSnapScrollPhysics applyTo(ScrollPhysics? ancestor) {
+    return HeroSnapScrollPhysics(parent: buildParent(ancestor));
+  }
+
+  @override
+  Simulation? createBallisticSimulation(ScrollMetrics position, double velocity) {
+    // Get screen height to determine hero section bounds
+    final heroSectionHeight = position.viewportDimension;
+
+    // Only apply snap behavior if we're in the hero section area (first screen height)
+    if (position.pixels < heroSectionHeight) {
+      // Snap to either top (0) or bottom of hero section (heroSectionHeight)
+      final snapOffset = position.pixels < heroSectionHeight / 2 ? 0.0 : heroSectionHeight;
+
+      // Only snap if we're not already at the target position
+      if ((position.pixels - snapOffset).abs() > 1.0) {
+        return ScrollSpringSimulation(spring, position.pixels, snapOffset, velocity, tolerance: tolerance);
+      }
+    }
+
+    // For all other sections, use heavy momentum-based scrolling
+    return super.createBallisticSimulation(position, velocity);
+  }
+
+  // Make scrolling feel heavy and momentum-based outside hero section
+  @override
+  double get dragStartDistanceMotionThreshold => 3.5;
+
+  @override
+  double get minFlingVelocity => 100.0;
+
+  @override
+  double get maxFlingVelocity => 5000.0;
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,6 +64,11 @@ class _HomePageState extends State<HomePage> {
   final List<GlobalKey> _sectionKeys = List.generate(6, (index) => GlobalKey());
   final List<String> _sectionTitles = ['Hero', 'About', 'Projects', 'Gallery', 'Timeline', 'Contact'];
   Timer? _scrollNavigationTimer;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -51,7 +97,7 @@ class _HomePageState extends State<HomePage> {
 
         _scrollController.animateTo(
           targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
-          duration: const Duration(milliseconds: 1200), // Extended duration for more experiential feeling
+          duration: const Duration(milliseconds: 2000), // Much slower, heavier scroll duration
           curve: Curves.easeInOutCubic,
         );
       } else {
@@ -71,7 +117,7 @@ class _HomePageState extends State<HomePage> {
 
         _scrollController.animateTo(
           targetOffset,
-          duration: const Duration(milliseconds: 1200), // Extended duration for more experiential feeling
+          duration: const Duration(milliseconds: 2000), // Much slower, heavier scroll duration
           curve: Curves.easeInOutCubic,
         );
       }
@@ -83,15 +129,18 @@ class _HomePageState extends State<HomePage> {
     backgroundColor: AppColors.bgDark,
     body: Stack(
       children: [
-        // Main scrollable content
+        // Main scrollable content with hero snap + heavy scroll physics
         SingleChildScrollView(
           controller: _scrollController,
+          physics: const HeroSnapScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ), // Hero section snaps, other sections have heavy momentum
           child: Column(
             children: [
               SizedBox(
                 key: _sectionKeys[0],
                 height: MediaQuery.of(context).size.height,
-                child: HeroSection(onExplorePressed: () => _scrollToSection(2)),
+                child: CursorRevealHeroSection(onExplorePressed: () => _scrollToSection(2)),
               ),
               Container(key: _sectionKeys[1], child: const AboutSection()),
               Container(key: _sectionKeys[2], child: const ProjectsSection()),

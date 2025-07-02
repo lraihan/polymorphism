@@ -6,9 +6,8 @@ class ScrollReveal extends StatefulWidget {
   const ScrollReveal({
     required this.child,
     this.delay = Duration.zero,
-    this.duration = const Duration(milliseconds: 800), // Slightly longer for more experience
-    this.offset = 50.0, // Slightly more offset for better reveal effect
-    this.addScrollDelay = true, // New parameter for experiential scroll delay
+    this.duration = const Duration(milliseconds: 800),
+    this.offset = 50.0,
     super.key,
   });
 
@@ -16,7 +15,6 @@ class ScrollReveal extends StatefulWidget {
   final Duration delay;
   final Duration duration;
   final double offset;
-  final bool addScrollDelay; // Whether to add extra delay when scrolling
 
   @override
   State<ScrollReveal> createState() => _ScrollRevealState();
@@ -26,7 +24,7 @@ class _ScrollRevealState extends State<ScrollReveal> with SingleTickerProviderSt
   late AnimationController _controller;
   late Animation<double> _opacityAnimation;
   late Animation<double> _translateAnimation;
-  bool _hasAnimated = false;
+  bool _hasTriggered = false;
   Timer? _delayTimer;
 
   @override
@@ -51,7 +49,7 @@ class _ScrollRevealState extends State<ScrollReveal> with SingleTickerProviderSt
     // Check if animations are disabled for accessibility
     if (MediaQuery.disableAnimationsOf(context)) {
       _controller.value = 1.0;
-      _hasAnimated = true;
+      _hasTriggered = true;
     }
   }
 
@@ -63,21 +61,33 @@ class _ScrollRevealState extends State<ScrollReveal> with SingleTickerProviderSt
   }
 
   void _onVisibilityChanged(VisibilityInfo info) {
-    if (!_hasAnimated && info.visibleFraction > 0.1) {
-      _hasAnimated = true;
+    // Early return if widget is unmounted or already triggered
+    if (!mounted || _hasTriggered) return;
 
-      // Check again for disabled animations in case context changed
-      if (MediaQuery.disableAnimationsOf(context)) {
-        _controller.value = 1.0;
+    final isVisible = info.visibleFraction > 0.1;
+
+    // Check for disabled animations
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.value = 1.0;
+      _hasTriggered = true;
+      return;
+    }
+
+    // Trigger reveal animation when content becomes visible
+    if (isVisible) {
+      _hasTriggered = true;
+
+      // Cancel any pending delayed animation
+      _delayTimer?.cancel();
+
+      if (widget.delay == Duration.zero) {
+        // No delay, start animation immediately
+        if (mounted) {
+          _controller.forward();
+        }
       } else {
-        // Calculate total delay including optional scroll experience delay
-        final totalDelay =
-            widget.delay +
-            (widget.addScrollDelay
-                ? const Duration(milliseconds: 150) // Extra experiential delay
-                : Duration.zero);
-
-        _delayTimer = Timer(totalDelay, () {
+        // Use timer for delayed animation
+        _delayTimer = Timer(widget.delay, () {
           if (mounted) {
             _controller.forward();
           }

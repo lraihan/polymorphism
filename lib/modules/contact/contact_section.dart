@@ -113,8 +113,8 @@ class _ContactSectionState extends State<ContactSection> {
             child:
                 widget.enableAnimations
                     ? ScrollReveal(
-                      delay: const Duration(milliseconds: 200), // Add experiential delay
-                      duration: const Duration(milliseconds: 1000), // Longer animation for better experience
+                      delay: const Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 1000),
                       child: _buildContent(theme),
                     )
                     : _buildContent(theme),

@@ -98,7 +98,7 @@ class _TimelineStripState extends State<TimelineStrip> {
                   child:
                       widget.enableAnimations
                           ? ScrollReveal(
-                            delay: Duration(milliseconds: index * 100),
+                            duration: const Duration(milliseconds: 800),
                             child: _TimelineTile(
                               event: _timelineController.events[index],
                               index: index,

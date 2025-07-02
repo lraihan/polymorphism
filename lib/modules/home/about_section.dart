@@ -16,8 +16,8 @@ class AboutSection extends StatelessWidget {
       right: AppSpacing.lg,
     ),
     child: ScrollReveal(
-      delay: const Duration(milliseconds: 100), // Add experiential delay
-      duration: const Duration(milliseconds: 1200), // Longer animation for better experience
+      delay: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 1200),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [_buildHeader(context), const SizedBox(height: AppSpacing.xl), _buildContent(context)],
