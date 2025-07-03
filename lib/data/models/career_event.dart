@@ -21,58 +21,38 @@ class CareerEvent {
   /// Sample career events for demonstration
   static List<CareerEvent> get sampleEvents => [
     const CareerEvent(
-      year: 2018,
-      title: 'Frontend Developer',
-      description:
-          'Started career in web development with React and modern JavaScript frameworks. Built responsive UIs and collaborated with design teams.',
-      icon: Icons.code,
-      company: 'Tech Startup Inc.',
-      location: 'San Francisco, CA',
-    ),
-    const CareerEvent(
       year: 2019,
-      title: 'Mobile Developer',
+      title: 'Intern Mobile Developer',
       description:
-          'Transitioned to mobile development with React Native. Delivered cross-platform apps with complex state management and API integrations.',
-      icon: Icons.phone_android,
-      company: 'Mobile Solutions LLC',
-      location: 'Austin, TX',
+          'Started career in mobile development as an intern. the focus was on assisting in the creation of mobile applications.',
+      icon: Icons.code,
+      company: 'Lontar Lab.',
+      location: 'Bandung, Indonesia',
     ),
     const CareerEvent(
       year: 2020,
-      title: 'Flutter Specialist',
+      title: 'Java Software Engineer',
       description:
-          'Specialized in Flutter development during remote work era. Created performant, beautiful apps with custom animations and widgets.',
-      icon: Icons.flutter_dash,
-      company: 'Digital Agency Co.',
-      location: 'Remote',
-    ),
-    const CareerEvent(
-      year: 2021,
-      title: 'Senior Flutter Engineer',
-      description:
-          'Led Flutter architecture decisions and mentored junior developers. Implemented complex UI/UX patterns and state management solutions.',
-      icon: Icons.architecture,
-      company: 'Enterprise Tech Corp.',
-      location: 'Seattle, WA',
+          "Actively involved in the maintenance and development of Collega's Application Java Project Olibs Backend 724.",
+      icon: Icons.code,
+      company: 'PT Collega Inti Pratama',
+      location: 'Jakarta, Indonesia',
     ),
     const CareerEvent(
       year: 2022,
-      title: 'Technical Lead',
+      title: 'Flutter Developer',
       description:
-          'Managed cross-functional teams and drove technical strategy. Established best practices for Flutter development and CI/CD pipelines.',
-      icon: Icons.groups,
-      company: 'Innovation Labs',
-      location: 'Portland, OR',
+          "Specialized in Flutter, my focus was creating new and innovative flutter applications that leverage the framework's capabilities for high performance and beautiful UI.",
+      icon: Icons.code,
+      company: 'PT Collega Inti Pratama',
+      location: 'Jakarta, Indonesia',
     ),
-    const CareerEvent(
-      year: 2023,
-      title: 'Flutter Consultant',
+    CareerEvent(
+      year: DateTime.now().year,
+      title: 'Continuous Growth & Learning',
       description:
-          'Founded independent consultancy focusing on Flutter performance optimization and advanced UI patterns. Client work spans fintech to healthcare.',
-      icon: Icons.business_center,
-      company: 'Polymorphism Studios',
-      location: 'Global',
+          "The journey never stops. exploring cutting-edge design patterns, and building innovative digital experiences. Always learning, always growing, always pushing the boundaries of what's possible.",
+      icon: Icons.auto_awesome,
     ),
   ];
 

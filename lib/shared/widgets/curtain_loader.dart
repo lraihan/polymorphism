@@ -1,10 +1,9 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 
 /// Curtain reveal loader inspired by karim-saab.com
 class CurtainLoader extends StatefulWidget {
-  const CurtainLoader({super.key, required this.onComplete, this.duration = const Duration(milliseconds: 2500)});
+  const CurtainLoader({required this.onComplete, super.key, this.duration = const Duration(milliseconds: 2500)});
 
   final VoidCallback onComplete;
   final Duration duration;
@@ -32,40 +31,40 @@ class _CurtainLoaderState extends State<CurtainLoader> with TickerProviderStateM
     _textController = AnimationController(duration: const Duration(milliseconds: 1200), vsync: this);
 
     // Left curtain slides out to the left - smoother curve and earlier start
-    _leftCurtainAnimation = Tween<double>(begin: 0.0, end: -1.0).animate(
-      CurvedAnimation(parent: _curtainController, curve: const Interval(0.5, 1.0, curve: Curves.easeInOutCubic)),
+    _leftCurtainAnimation = Tween<double>(begin: 0, end: -1).animate(
+      CurvedAnimation(parent: _curtainController, curve: const Interval(0.5, 1, curve: Curves.easeInOutCubic)),
     );
 
     // Right curtain slides out to the right - slightly staggered for more natural feel
-    _rightCurtainAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _curtainController, curve: const Interval(0.52, 1.0, curve: Curves.easeInOutCubic)),
+    _rightCurtainAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _curtainController, curve: const Interval(0.52, 1, curve: Curves.easeInOutCubic)),
     );
 
     // Text fade in animation - smoother and longer
     _textOpacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _textController, curve: const Interval(0.0, 0.7, curve: Curves.easeOutQuart)));
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _textController, curve: const Interval(0, 0.7, curve: Curves.easeOutQuart)));
 
     // Text scale animation - smoother bounce
     _textScaleAnimation = Tween<double>(
       begin: 0.85,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _textController, curve: const Interval(0.0, 0.9, curve: Curves.easeOutBack)));
+      end: 1,
+    ).animate(CurvedAnimation(parent: _textController, curve: const Interval(0, 0.9, curve: Curves.easeOutBack)));
 
     // Start animations
     _startAnimationSequence();
   }
 
-  void _startAnimationSequence() async {
+  Future<void> _startAnimationSequence() async {
     // Start text animation immediately
-    _textController.forward();
+    await _textController.forward();
 
     // Wait longer for text to settle, then start curtain animation
     await Future.delayed(const Duration(milliseconds: 800));
 
     if (mounted) {
-      _curtainController.forward().then((_) {
+      await _curtainController.forward().then((_) {
         if (mounted) {
           widget.onComplete();
         }
@@ -99,8 +98,6 @@ class _CurtainLoaderState extends State<CurtainLoader> with TickerProviderStateM
                     height: screenSize.height,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
                         colors: [AppColors.bgDark, AppColors.bgDark, AppColors.bgDark.withValues(alpha: 0.95)],
                         stops: const [0.0, 0.8, 1.0],
                       ),
@@ -145,14 +142,11 @@ class _CurtainLoaderState extends State<CurtainLoader> with TickerProviderStateM
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            'RAIHAN FADLI',
-                            style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                              color: AppColors.textPrimary,
-                              fontWeight: FontWeight.w500, // Slightly bolder for emphasis
-                              letterSpacing: 3.0, // Consistent with theme's display styling
-                            ),
-                            textAlign: TextAlign.center,
+                          Image.asset(
+                            'assets/images/logo.png',
+                            height: 100, // Adjust height as needed
+                            fit: BoxFit.contain,
+                            color: AppColors.textPrimary, // Optional: tint the logo with the primary text color
                           ),
                           const SizedBox(height: 16),
                           Container(
@@ -181,9 +175,9 @@ class _CurtainLoaderState extends State<CurtainLoader> with TickerProviderStateM
     );
   }
 
-  Widget _buildCurtainTexture() => Container(
+  Widget _buildCurtainTexture() => DecoratedBox(
     decoration: BoxDecoration(
-      border: Border(right: BorderSide(color: AppColors.textPrimary.withValues(alpha: 0.1), width: 1)),
+      border: Border(right: BorderSide(color: AppColors.textPrimary.withValues(alpha: 0.1))),
     ),
     child: Stack(
       children: [

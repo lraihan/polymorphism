@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/modules/contact/contact_section.dart';
-import 'package:polymorphism/modules/gallery/gallery_section.dart';
 import 'package:polymorphism/modules/home/about_section.dart';
 import 'package:polymorphism/modules/home/cursor_reveal_hero_section.dart';
-import 'package:polymorphism/modules/home/projects_section.dart';
 import 'package:polymorphism/modules/timeline/timeline_section.dart';
+import 'package:polymorphism/modules/works/works_section.dart';
 import 'package:polymorphism/shared/footer/footer.dart';
 import 'package:polymorphism/shared/scroll_timeline_indicator.dart';
+import 'package:polymorphism/shared/widgets/creamu_navbar.dart';
 
 /// Custom scroll physics that provides hero section snap-to behavior
 /// while maintaining heavy scrolling for other sections
@@ -17,9 +17,7 @@ class HeroSnapScrollPhysics extends ScrollPhysics {
   const HeroSnapScrollPhysics({super.parent});
 
   @override
-  HeroSnapScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return HeroSnapScrollPhysics(parent: buildParent(ancestor));
-  }
+  HeroSnapScrollPhysics applyTo(ScrollPhysics? ancestor) => HeroSnapScrollPhysics(parent: buildParent(ancestor));
 
   @override
   Simulation? createBallisticSimulation(ScrollMetrics position, double velocity) {
@@ -33,7 +31,7 @@ class HeroSnapScrollPhysics extends ScrollPhysics {
 
       // Only snap if we're not already at the target position
       if ((position.pixels - snapOffset).abs() > 1.0) {
-        return ScrollSpringSimulation(spring, position.pixels, snapOffset, velocity, tolerance: tolerance);
+        return ScrollSpringSimulation(spring, position.pixels, snapOffset, velocity, tolerance: toleranceFor(position));
       }
     }
 
@@ -46,10 +44,10 @@ class HeroSnapScrollPhysics extends ScrollPhysics {
   double get dragStartDistanceMotionThreshold => 3.5;
 
   @override
-  double get minFlingVelocity => 100.0;
+  double get minFlingVelocity => 100;
 
   @override
-  double get maxFlingVelocity => 5000.0;
+  double get maxFlingVelocity => 5000;
 }
 
 class HomePage extends StatefulWidget {
@@ -61,8 +59,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
-  final List<GlobalKey> _sectionKeys = List.generate(6, (index) => GlobalKey());
-  final List<String> _sectionTitles = ['Hero', 'About', 'Projects', 'Gallery', 'Timeline', 'Contact'];
+  final List<GlobalKey> _sectionKeys = List.generate(5, (index) => GlobalKey()); // Reduced from 6 to 5
+  final List<String> _sectionTitles = ['Hero', 'About', 'Timeline', 'Works', 'Contact']; // Reordered sections
   Timer? _scrollNavigationTimer;
 
   @override
@@ -78,14 +76,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _scrollToSection(int index) {
-    if (index < 0 || index >= _sectionKeys.length) return;
+    if (index < 0 || index >= _sectionKeys.length) {
+      return;
+    }
 
     // Cancel any existing navigation timer
     _scrollNavigationTimer?.cancel();
 
     // Add enhanced experiential delay before scrolling for better UX
     _scrollNavigationTimer = Timer(const Duration(milliseconds: 250), () {
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       final context = _sectionKeys[index].currentContext;
       if (context != null) {
@@ -93,7 +95,7 @@ class _HomePageState extends State<HomePage> {
         final position = renderBox.localToGlobal(Offset.zero);
 
         // Scroll to the section with some offset for better visibility
-        final targetOffset = _scrollController.offset + position.dy - 80; // 80px offset for better UX
+        final targetOffset = _scrollController.offset + position.dy - 80; // 80px offset for timeline indicator
 
         _scrollController.animateTo(
           targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
@@ -124,6 +126,58 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _scrollToSectionFromNavbar(int index) {
+    if (index < 0 || index >= _sectionKeys.length) {
+      return;
+    }
+
+    // Cancel any existing navigation timer
+    _scrollNavigationTimer?.cancel();
+
+    // Add enhanced experiential delay before scrolling for better UX
+    _scrollNavigationTimer = Timer(const Duration(milliseconds: 250), () {
+      if (!mounted) {
+        return;
+      }
+
+      final context = _sectionKeys[index].currentContext;
+      if (context != null) {
+        final renderBox = context.findRenderObject()! as RenderBox;
+        final position = renderBox.localToGlobal(Offset.zero);
+
+        // Scroll to the section with adjusted offset for navbar clicks
+        // More space from top to account for navbar height and better section visibility
+        final targetOffset = _scrollController.offset + position.dy; // Larger offset for navbar navigation
+
+        _scrollController.animateTo(
+          targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
+          duration: const Duration(milliseconds: 2000),
+          curve: Curves.easeInOutCubic,
+        );
+      } else {
+        // Fallback: simple calculation if render box is not available
+        final position = _scrollController.position;
+        final maxScroll = position.maxScrollExtent;
+
+        double targetOffset;
+        if (index == 0) {
+          targetOffset = 0;
+        } else if (index >= _sectionTitles.length - 1) {
+          targetOffset = maxScroll;
+        } else {
+          final sectionProgress = index / (_sectionTitles.length - 1);
+          targetOffset = maxScroll * sectionProgress;
+        }
+
+        _scrollController.animateTo(
+          targetOffset,
+          duration: const Duration(milliseconds: 2000),
+          curve: Curves.easeInOutCubic,
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: AppColors.bgDark,
@@ -140,17 +194,22 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 key: _sectionKeys[0],
                 height: MediaQuery.of(context).size.height,
-                child: CursorRevealHeroSection(onExplorePressed: () => _scrollToSection(2)),
+                child: CursorRevealHeroSection(
+                  onExplorePressed: () => _scrollToSection(3),
+                ), // Updated to scroll to Works section
               ),
               Container(key: _sectionKeys[1], child: const AboutSection()),
-              Container(key: _sectionKeys[2], child: const ProjectsSection()),
-              Container(key: _sectionKeys[3], child: const GallerySection()),
-              Container(key: _sectionKeys[4], child: TimelineSection(scrollController: _scrollController)),
-              Container(key: _sectionKeys[5], child: const ContactSection()),
+              Container(key: _sectionKeys[2], child: TimelineSection(scrollController: _scrollController)),
+              Container(key: _sectionKeys[3], child: const WorksSection()),
+              Container(key: _sectionKeys[4], child: const ContactSection()),
               const Footer(),
             ],
           ),
         ),
+
+        // Fixed navbar at the top
+        Positioned(top: 0, left: 0, right: 0, child: CreamuNavbar(onNavigationTap: _scrollToSectionFromNavbar)),
+
         // Scroll timeline indicator
         ScrollTimelineIndicator(
           scrollController: _scrollController,

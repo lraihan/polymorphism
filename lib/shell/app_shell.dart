@@ -29,14 +29,14 @@ class _AppShellState extends State<AppShell> with SingleTickerProviderStateMixin
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _fadeController, curve: const Interval(0.0, 0.8, curve: Curves.easeOutCubic)));
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _fadeController, curve: const Interval(0, 0.8, curve: Curves.easeOutCubic)));
 
     _scaleAnimation = Tween<double>(
       begin: 0.98,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _fadeController, curve: const Interval(0.2, 1.0, curve: Curves.easeOutCubic)));
+      end: 1,
+    ).animate(CurvedAnimation(parent: _fadeController, curve: const Interval(0.2, 1, curve: Curves.easeOutCubic)));
   }
 
   @override
@@ -46,8 +46,7 @@ class _AppShellState extends State<AppShell> with SingleTickerProviderStateMixin
   }
 
   void _onCurtainComplete() {
-    final controller = Get.find<AppShellController>();
-    controller.setReady();
+    Get.find<AppShellController>().setReady();
 
     // Start fade-in animation after curtain completes
     Future.delayed(const Duration(milliseconds: 200), () {
@@ -67,28 +66,27 @@ class _AppShellState extends State<AppShell> with SingleTickerProviderStateMixin
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: AppColors.bgDark, // Set dark background to match curtain loader
-        body: Obx(() {
-          return Stack(
+        body: Obx(
+          () => Stack(
             children: [
               // Main home page with fade-in and scale animation after curtain completes
               AnimatedBuilder(
                 animation: _fadeController,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: controller.isReady.value ? _fadeAnimation.value : 0.0,
-                    child: Transform.scale(
-                      scale: controller.isReady.value ? _scaleAnimation.value : 0.98,
-                      child: const GrainFiltered(child: HomePage()),
+                builder:
+                    (context, child) => Opacity(
+                      opacity: controller.isReady.value ? _fadeAnimation.value : 0.0,
+                      child: Transform.scale(
+                        scale: controller.isReady.value ? _scaleAnimation.value : 0.98,
+                        child: const GrainFiltered(child: HomePage()),
+                      ),
                     ),
-                  );
-                },
               ),
 
               // Curtain loader overlay (only when not ready)
               if (!controller.isReady.value) CurtainLoader(onComplete: _onCurtainComplete),
             ],
-          );
-        }),
+          ),
+        ),
       ),
     );
   }

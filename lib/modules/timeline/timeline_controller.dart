@@ -19,7 +19,7 @@ class TimelineController extends GetxController {
     }
   }
 
-  /// Set scrolling state
+  // ignore: avoid_positional_boolean_parameters, use_setters_to_change_properties
   void setScrolling(bool scrolling) {
     isScrolling.value = scrolling;
   }

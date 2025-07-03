@@ -1,7 +1,9 @@
-import 'dart:ui';
 import 'dart:math' as math;
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:polymorphism/core/constant.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/shared/animations/scroll_reveal.dart';
 
@@ -22,12 +24,14 @@ class _CursorRevealHeroSectionState extends State<CursorRevealHeroSection> with 
 
   late AnimationController _pulseController;
   late AnimationController _breathController;
+  late AnimationController _cursorRevealController;
 
   late Animation<double> _pulseAnimation;
   late Animation<double> _breathAnimation;
+  late Animation<double> _cursorRevealAnimation;
 
   // Circle parameters
-  double _blobRadius = 130.0; // Base circle radius
+  final double _blobRadius = 130; // Base circle radius
 
   @override
   void initState() {
@@ -36,16 +40,22 @@ class _CursorRevealHeroSectionState extends State<CursorRevealHeroSection> with 
     // Pulse animation for the reveal indicator
     _pulseController = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
     _pulseAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 1.2,
     ).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut));
 
     // Slow breathing animation for circle scaling
     _breathController = AnimationController(duration: const Duration(milliseconds: 6000), vsync: this);
     _breathAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(parent: _breathController, curve: Curves.easeInOut));
+
+    // Cursor reveal animation with delay and smooth curve
+    _cursorRevealController = AnimationController(duration: const Duration(milliseconds: 800), vsync: this);
+    _cursorRevealAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _cursorRevealController, curve: const Interval(0.2, 1, curve: Curves.elasticOut)),
+    );
 
     // Start animations
     _pulseController.repeat(reverse: true);
@@ -56,63 +66,76 @@ class _CursorRevealHeroSectionState extends State<CursorRevealHeroSection> with 
   void dispose() {
     _pulseController.dispose();
     _breathController.dispose();
+    _cursorRevealController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-      builder: (context, constraints) {
-        _screenSize = Size(constraints.maxWidth, constraints.maxHeight);
-        final isDesktop = kIsWeb && constraints.maxWidth > 800;
+    builder: (context, constraints) {
+      _screenSize = Size(constraints.maxWidth, constraints.maxHeight);
+      final isDesktop = kIsWeb && constraints.maxWidth > 800;
 
-        Widget heroContent = Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: AppColors.bgDark,
-          child: Stack(
-            children: [
-              // Background image layer
-              _buildBackgroundImage(),
+      Widget heroContent = Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: AppColors.bgDark,
+        child: Stack(
+          children: [
+            // Background image layer
+            _buildBackgroundImage(),
 
-              // Foreground image layer with mask reveal
-              if (isDesktop) _buildMaskedForegroundImage(),
+            // Foreground image layer with mask reveal
+            if (isDesktop) _buildMaskedForegroundImage(),
 
-              // Content overlay
-              _buildContentOverlay(context),
+            // Content overlay
+            _buildContentOverlay(context),
 
-              // Cursor reveal indicator (desktop only)
-              if (isDesktop && _isHovering) _buildCursorRevealIndicator(),
-            ],
-          ),
+            // Cursor reveal indicator (desktop only)
+            if (isDesktop && _isHovering) _buildCursorRevealIndicator(),
+          ],
+        ),
+      );
+
+      // Wrap with mouse region for desktop
+      if (isDesktop) {
+        heroContent = MouseRegion(
+          onEnter: (_) {
+            setState(() => _isHovering = true);
+            // Start cursor reveal animation with a slight delay
+            Future.delayed(const Duration(milliseconds: 150), () {
+              if (_isHovering && mounted) {
+                _cursorRevealController.forward();
+              }
+            });
+          },
+          onExit: (_) {
+            setState(() => _isHovering = false);
+            _cursorRevealController.reverse();
+          },
+          onHover: (event) {
+            setState(() {
+              _mousePosition = event.localPosition;
+            });
+          },
+          child: heroContent,
         );
+      }
 
-        // Wrap with mouse region for desktop
-        if (isDesktop) {
-          heroContent = MouseRegion(
-            onEnter: (_) => setState(() => _isHovering = true),
-            onExit: (_) => setState(() => _isHovering = false),
-            onHover: (event) {
-              setState(() {
-                _mousePosition = event.localPosition;
-              });
-            },
-            child: heroContent,
-          );
-        }
-
-        return heroContent;
-      },
-    );
+      return heroContent;
+    },
+  );
 
   Widget _buildBackgroundImage() => Positioned.fill(
-      child: Stack(
-        children: [
-          // Background image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/Foreground.jpg',
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
+    child: Stack(
+      children: [
+        // Background image
+        Positioned.fill(
+          child: Image.asset(
+            'assets/images/Foreground.jpg',
+            fit: BoxFit.cover,
+            errorBuilder:
+                (context, error, stackTrace) => Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
@@ -122,46 +145,51 @@ class _CursorRevealHeroSectionState extends State<CursorRevealHeroSection> with 
                     ),
                   ),
                 ),
-            ),
           ),
-          // Subtle overlay for better text readability
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [AppColors.bgDark.withValues(alpha: 0.1), AppColors.bgDark.withValues(alpha: 0.4)],
-                  stops: const [0.0, 1.0],
-                ),
+        ),
+        // Subtle overlay for better text readability
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [AppColors.bgDark.withValues(alpha: 0.1), AppColors.bgDark.withValues(alpha: 0.4)],
+                stops: const [0.0, 1.0],
               ),
             ),
           ),
-        ],
-      ),
-    );
+        ),
+      ],
+    ),
+  );
 
   Widget _buildMaskedForegroundImage() => AnimatedBuilder(
-      animation: _breathController,
-      builder: (context, child) => Positioned.fill(
-          child: ClipPath(
-            clipper: _LiquidBlobClipper(
-              center: _mousePosition,
-              screenSize: _screenSize,
-              breathProgress: _breathAnimation.value,
-              liquidProgress: 0, // Not used for circle
-              blobSeeds: const [], // Not used for circle
-              blobRadius: _blobRadius,
-              isHovering: _isHovering,
-            ),
-            child: Stack(
-              children: [
-                // Foreground image
-                Positioned.fill(
-                  child: Image.asset(
-                    'assets/images/Background.jpg',
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
+    animation: Listenable.merge([_breathController, _cursorRevealController]),
+    builder: (context, child) {
+      final revealProgress = _cursorRevealAnimation.value;
+
+      return Positioned.fill(
+        child: ClipPath(
+          clipper: _LiquidBlobClipper(
+            center: _mousePosition,
+            screenSize: _screenSize,
+            breathProgress: _breathAnimation.value,
+            liquidProgress: 0, // Not used for circle
+            blobSeeds: const [], // Not used for circle
+            blobRadius: _blobRadius * revealProgress, // Scale with reveal animation
+            isHovering: _isHovering,
+            revealProgress: revealProgress,
+          ),
+          child: Stack(
+            children: [
+              // Foreground image
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/images/Background.jpg',
+                  fit: BoxFit.cover,
+                  errorBuilder:
+                      (context, error, stackTrace) => Container(
                         decoration: BoxDecoration(
                           gradient: RadialGradient(
                             radius: 1.2,
@@ -174,140 +202,320 @@ class _CursorRevealHeroSectionState extends State<CursorRevealHeroSection> with 
                           ),
                         ),
                       ),
-                  ),
                 ),
-                // Subtle glass effect overlay
-                BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
-                  child: Container(color: AppColors.moonGlow.withValues(alpha: 0.05)),
-                ),
-              ],
-            ),
+              ),
+              // Subtle glass effect overlay
+              BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+                child: Container(color: AppColors.moonGlow.withValues(alpha: 0.05)),
+              ),
+            ],
           ),
         ),
-    );
+      );
+    },
+  );
 
   Widget _buildContentOverlay(BuildContext context) => Positioned.fill(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 40),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Main headline
-            ScrollReveal(
-              child: Column(
+    child: Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.symmetric(vertical: verticalPadding(context), horizontal: horizontalPadding(context)),
+      child:
+          kIsWeb && MediaQuery.of(context).size.width < 800
+              ? Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'MY DESIGNS-',
-                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                      color: AppColors.textPrimary,
-                      fontWeight: FontWeight.w900,
-                      fontSize: _getResponsiveFontSize(context, 56),
-                      letterSpacing: 8,
-                      height: 1.1,
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: screenHeight(context) * .1),
+                        ScrollReveal(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'MY DESIGNS-',
+                                style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: _getResponsiveFontSize(context, 56),
+                                  letterSpacing: 8,
+                                  height: 1.1,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'whisper to the code.',
+                                style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: _getResponsiveFontSize(context, 42),
+                                  letterSpacing: 2,
+                                  height: 1.2,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: verticalPadding(context)),
+
+                        // Subtitle
+                        ScrollReveal(
+                          delay: const Duration(milliseconds: 200),
+                          child: Container(
+                            constraints: const BoxConstraints(maxWidth: 600),
+                            child: Text(
+                              'I design and develop apps that do more than look good—\nthey tell stories, evoke emotions, and feel alive.',
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: AppColors.textPrimary.withValues(alpha: 0.8),
+                                fontSize: _getResponsiveFontSize(context, 18),
+                                height: 1.6,
+                                letterSpacing: 0.5,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'whisper to the code.',
-                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                      color: AppColors.textPrimary,
-                      fontWeight: FontWeight.w300,
-                      fontSize: _getResponsiveFontSize(context, 42),
-                      letterSpacing: 2,
-                      height: 1.2,
+
+                  SizedBox(height: verticalPadding(context)),
+                  ScrollReveal(
+                    delay: const Duration(milliseconds: 800),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Scroll to explore',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppColors.textPrimary.withValues(alpha: 0.6),
+                            fontSize: 12,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Container(
+                          width: 1,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [AppColors.accent, AppColors.accent.withValues(alpha: 0)],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    textAlign: TextAlign.center,
                   ),
+                  const SizedBox(height: 40),
                 ],
-              ),
-            ),
+              )
+              : Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: screenHeight(context) * .2),
+                        ScrollReveal(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'MY DESIGNS-',
+                                style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: _getResponsiveFontSize(context, 56),
+                                  letterSpacing: 8,
+                                  height: 1.1,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'whisper to the code.',
+                                style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: _getResponsiveFontSize(context, 42),
+                                  letterSpacing: 2,
+                                  height: 1.2,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
 
-            const SizedBox(height: 40),
-
-            // Subtitle
-            ScrollReveal(
-              delay: const Duration(milliseconds: 200),
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 600),
-                child: Text(
-                  'I design and develop websites that do more than look good—they tell stories, evoke emotions, and make brands feel alive.',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppColors.textPrimary.withValues(alpha: 0.8),
-                    fontSize: _getResponsiveFontSize(context, 18),
-                    height: 1.6,
-                    letterSpacing: 0.5,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 40),
-
-            // Scroll indicator (desktop only)
-            if (kIsWeb && MediaQuery.of(context).size.width > 800)
-              ScrollReveal(
-                delay: const Duration(milliseconds: 400),
-                child: Column(
-                  children: [
-                    Text(
-                      'Scroll to explore',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textPrimary.withValues(alpha: 0.6),
-                        fontSize: 12,
-                        letterSpacing: 1,
-                      ),
+                        SizedBox(height: verticalPadding(context)),
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    Container(
-                      width: 1,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [AppColors.accent, AppColors.accent.withValues(alpha: 0)],
+                  ),
+                  if (kIsWeb && MediaQuery.of(context).size.width > 800)
+                    SizedBox(
+                      width: screenWidth(context) - verticalPadding(context) * 2,
+                      child: ScrollReveal(
+                        delay: const Duration(milliseconds: 800),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Scroll to explore',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: AppColors.textPrimary.withValues(alpha: 0.6),
+                                fontSize: 12,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              width: 1,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [AppColors.accent, AppColors.accent.withValues(alpha: 0)],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  const SizedBox(height: 40),
+                  Container(
+                    width: double.infinity,
+                    height: 1,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.accent.withValues(alpha: 0),
+                          AppColors.accent.withValues(alpha: 0.3),
+                          AppColors.accent.withValues(alpha: 0),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: screenWidth(context) - horizontalPadding(context) * 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ScrollReveal(
+                          delay: const Duration(milliseconds: 300),
+                          child: SizedBox(
+                            width: screenWidth(context) * .15,
+                            child: Text(
+                              'UI UX Designer',
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: AppColors.textPrimary.withValues(alpha: 0.8),
+                                fontSize: _getResponsiveFontSize(context, 18),
+                                height: 1.6,
+                                letterSpacing: 0.5,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        // Subtitle
+                        ScrollReveal(
+                          delay: const Duration(milliseconds: 200),
+                          child: Container(
+                            constraints: const BoxConstraints(maxWidth: 600),
+                            child: Text(
+                              'I design and develop apps that do more than look good—\nthey tell stories, evoke emotions, and feel alive.',
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: AppColors.textPrimary.withValues(alpha: 0.8),
+                                fontSize: _getResponsiveFontSize(context, 18),
+                                height: 1.6,
+                                letterSpacing: 0.5,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        ScrollReveal(
+                          delay: const Duration(milliseconds: 300),
+                          child: SizedBox(
+                            width: screenWidth(context) * .15,
+                            child: Text(
+                              'Flutter Engineer',
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: AppColors.textPrimary.withValues(alpha: 0.8),
+                                fontSize: _getResponsiveFontSize(context, 18),
+                                height: 1.6,
+                                letterSpacing: 0.5,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-          ],
-        ),
-      ),
-    );
+    ),
+  );
 
   Widget _buildCursorRevealIndicator() => AnimatedBuilder(
-      animation: _pulseAnimation,
-      builder: (context, child) => Positioned(
-          left: _mousePosition.dx - 20,
-          top: _mousePosition.dy - 20,
-          child: Transform.scale(
-            scale: _pulseAnimation.value,
+    animation: Listenable.merge([_pulseAnimation, _cursorRevealAnimation]),
+    builder: (context, child) {
+      final revealScale = _cursorRevealAnimation.value.clamp(0.0, 1.0);
+      final pulseScale = _pulseAnimation.value.clamp(1.0, 1.2);
+
+      // Clamp opacity to valid range [0.0, 1.0] to prevent elasticOut overshoot
+      final clampedOpacity = _cursorRevealAnimation.value.clamp(0.0, 1.0);
+
+      return Positioned(
+        left: _mousePosition.dx - 20,
+        top: _mousePosition.dy - 20,
+        child: Transform.scale(
+          scale: (revealScale * pulseScale).clamp(0.0, 1.5),
+          child: Opacity(
+            opacity: clampedOpacity,
             child: Container(
               width: 40,
               height: 40,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColors.accent.withValues(alpha: 0.6), width: 2),
-                boxShadow: [BoxShadow(color: AppColors.accent.withValues(alpha: 0.3), blurRadius: 12, spreadRadius: 2)],
+                border: Border.all(
+                  color: AppColors.accent.withValues(alpha: (0.6 * clampedOpacity).clamp(0.0, 1.0)),
+                  width: 2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.accent.withValues(alpha: (0.3 * clampedOpacity).clamp(0.0, 1.0)),
+                    blurRadius: 12,
+                    spreadRadius: 2,
+                  ),
+                ],
               ),
               child: ClipOval(
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: ColoredBox(
-                    color: AppColors.accent.withValues(alpha: 0.1),
-                    child: const Icon(Icons.visibility, color: AppColors.accent, size: 16),
+                    color: AppColors.accent.withValues(alpha: (0.1 * clampedOpacity).clamp(0.0, 1.0)),
+                    child: Icon(Icons.visibility, color: AppColors.accent.withValues(alpha: clampedOpacity), size: 16),
                   ),
                 ),
               ),
             ),
           ),
         ),
-    );
+      );
+    },
+  );
 
   double _getResponsiveFontSize(BuildContext context, double baseFontSize) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -331,6 +539,7 @@ class _LiquidBlobClipper extends CustomClipper<Path> {
     required this.blobSeeds,
     required this.blobRadius,
     required this.isHovering,
+    this.revealProgress = 1.0,
   });
 
   final Offset center;
@@ -340,20 +549,21 @@ class _LiquidBlobClipper extends CustomClipper<Path> {
   final List<double> blobSeeds;
   final double blobRadius;
   final bool isHovering;
+  final double revealProgress;
 
   @override
   Path getClip(Size size) {
     final path = Path();
 
-    if (!isHovering || screenSize == Size.zero) {
+    if (!isHovering || screenSize == Size.zero || revealProgress <= 0) {
       return path;
     }
 
     // Simple breathing effect for circle scaling
     final breathScale = 1.0 + math.sin(breathProgress * math.pi * 2) * 0.15;
 
-    // Calculate final radius with breathing
-    final finalRadius = blobRadius * breathScale;
+    // Calculate final radius with breathing and reveal progress
+    final finalRadius = blobRadius * breathScale * revealProgress;
 
     // Create a simple circle at the cursor position
     path.addOval(Rect.fromCircle(center: center, radius: finalRadius));
@@ -362,7 +572,9 @@ class _LiquidBlobClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(covariant _LiquidBlobClipper oldClipper) => center != oldClipper.center ||
-        breathProgress != oldClipper.breathProgress ||
-        isHovering != oldClipper.isHovering;
+  bool shouldReclip(covariant _LiquidBlobClipper oldClipper) =>
+      center != oldClipper.center ||
+      breathProgress != oldClipper.breathProgress ||
+      isHovering != oldClipper.isHovering ||
+      revealProgress != oldClipper.revealProgress;
 }

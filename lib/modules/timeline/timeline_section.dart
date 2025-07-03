@@ -9,40 +9,69 @@ class TimelineSection extends StatelessWidget {
   final ScrollController? scrollController;
 
   @override
-  Widget build(BuildContext context) => Container(
-    width: double.infinity,
-    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.xxl),
-    color: AppColors.bgDark,
-    child: Column(
-      children: [
-        // Section header
-        Semantics(
-          header: true,
-          child: Text(
-            'Career Timeline',
-            style: Theme.of(
-              context,
-            ).textTheme.headlineMedium?.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
-            textAlign: TextAlign.center,
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+
+    // Responsive padding
+    final horizontalPadding = isMobile ? AppSpacing.md : AppSpacing.lg;
+    final verticalPadding = isMobile ? AppSpacing.xl : AppSpacing.xxl;
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
+      color: AppColors.bgDark,
+      child: Column(
+        children: [
+          // Section header
+          Semantics(
+            header: true,
+            child: Text(
+              'Career Timeline',
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w700,
+                fontSize: _getResponsiveFontSize(context, 28),
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
-        ),
 
-        const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.sm),
 
-        // Section subtitle
-        Text(
-          'A journey through professional milestones and growth',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: 0.8)),
-          textAlign: TextAlign.center,
-        ),
+          // Section subtitle
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: isMobile ? 0 : AppSpacing.xl),
+            child: Text(
+              'A journey through professional milestones and growth',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: AppColors.textPrimary.withValues(alpha: 0.8),
+                fontSize: _getResponsiveFontSize(context, 16),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
 
-        const SizedBox(height: AppSpacing.xxl),
+          SizedBox(height: isMobile ? AppSpacing.xl : AppSpacing.xxl),
 
-        // Timeline strip
-        TimelineStrip(enableAnimations: enableAnimations, scrollController: scrollController),
+          // Timeline strip
+          TimelineStrip(enableAnimations: enableAnimations, scrollController: scrollController),
 
-        const SizedBox(height: AppSpacing.xl),
-      ],
-    ),
-  );
+          const SizedBox(height: AppSpacing.xl),
+        ],
+      ),
+    );
+  }
+
+  // Responsive font size utility
+  double _getResponsiveFontSize(BuildContext context, double baseFontSize) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    if (screenWidth < 600) {
+      return baseFontSize * 0.8; // Mobile - smaller
+    } else if (screenWidth < 1024) {
+      return baseFontSize * 0.9; // Tablet - slightly smaller
+    }
+    return baseFontSize; // Desktop - full size
+  }
 }

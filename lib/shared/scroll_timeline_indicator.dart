@@ -32,7 +32,9 @@ class _ScrollTimelineIndicatorState extends State<ScrollTimelineIndicator> {
   }
 
   void _updateScrollProgress() {
-    if (!widget.scrollController.hasClients) return;
+    if (!widget.scrollController.hasClients) {
+      return;
+    }
 
     final position = widget.scrollController.position;
     final maxScroll = position.maxScrollExtent;

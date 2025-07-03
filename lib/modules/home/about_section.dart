@@ -1,4 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:polymorphism/core/constant.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/shared/animations/scroll_reveal.dart';
 
@@ -7,131 +9,211 @@ class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
 
   @override
-  Widget build(BuildContext context) => Container(
-    key: const ValueKey('about'),
-    padding: const EdgeInsets.only(
-      top: AppSpacing.xxxl,
-      bottom: AppSpacing.xxl,
-      left: AppSpacing.lg,
-      right: AppSpacing.lg,
-    ),
-    child: ScrollReveal(
-      delay: const Duration(milliseconds: 100),
-      duration: const Duration(milliseconds: 1200),
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
+    final isTablet = screenWidth >= 768 && screenWidth < 1024;
+
+    return Container(
+      height: screenHeight(context),
+      width: screenWidth - horizontalPadding(context) * 2,
+      key: const ValueKey('about'),
+      padding: EdgeInsets.only(
+        top: AppSpacing.xxxl,
+        bottom: AppSpacing.xxl,
+        left: isMobile ? AppSpacing.md : AppSpacing.lg,
+        right: isMobile ? AppSpacing.md : AppSpacing.lg,
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [_buildHeader(context), const SizedBox(height: AppSpacing.xl), _buildContent(context)],
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(child: isMobile ? _buildMobileLayout(context) : _buildDesktopLayout(context, isTablet)),
+          _buildStatsFooter(context),
+        ],
       ),
-    ),
-  );
-
-  Widget _buildHeader(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'About Me',
-        style: Theme.of(
-          context,
-        ).textTheme.headlineLarge?.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.bold),
-      ),
-      const SizedBox(height: AppSpacing.md),
-      Text(
-        'Crafting digital experiences through code and design.',
-        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: 0.8)),
-      ),
-    ],
-  );
-
-  Widget _buildContent(BuildContext context) {
-    final isWide = MediaQuery.of(context).size.width >= 800;
-
-    return Column(children: [if (isWide) _buildWideLayout(context) else _buildNarrowLayout(context)]);
+    );
   }
 
-  Widget _buildWideLayout(BuildContext context) => Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      // Left column - Text content
-      Expanded(flex: 2, child: _buildTextContent(context)),
-      const SizedBox(width: AppSpacing.xl),
-      // Right column - Stats/Skills
-      Expanded(child: _buildStatsContent(context)),
-    ],
-  );
-
-  Widget _buildNarrowLayout(BuildContext context) => Column(
-    children: [_buildTextContent(context), const SizedBox(height: AppSpacing.xl), _buildStatsContent(context)],
-  );
-
-  Widget _buildTextContent(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        "I'm a passionate Flutter developer and designer with a love for creating beautiful, functional digital experiences. With expertise in mobile development, UI/UX design, and modern web technologies, I bridge the gap between design and development.",
-        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary, height: 1.6),
-      ),
-      const SizedBox(height: AppSpacing.lg),
-      Text(
-        'My journey began in frontend development and evolved into specializing in Flutter applications. I believe in the power of clean code, intuitive design, and seamless user experiences that make technology feel natural and accessible.',
-        style: Theme.of(
-          context,
-        ).textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: 0.9), height: 1.6),
-      ),
-      const SizedBox(height: AppSpacing.lg),
-      Text(
-        "When I'm not coding, you'll find me exploring new design trends, contributing to open source projects, or experimenting with the latest technologies in the Flutter ecosystem.",
-        style: Theme.of(
-          context,
-        ).textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: 0.8), height: 1.6),
-      ),
-    ],
-  );
-
-  Widget _buildStatsContent(BuildContext context) => Container(
-    padding: const EdgeInsets.all(AppSpacing.lg),
-    decoration: BoxDecoration(
-      color: AppColors.glassSurface,
-      borderRadius: BorderRadius.circular(AppSpacing.md),
-      border: Border.all(color: AppColors.textPrimary.withValues(alpha: 0.1)),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildMobileLayout(BuildContext context) => Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          'Quick Stats',
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: AppSpacing.lg),
-        _buildStatItem(context, '5+', 'Years Experience'),
-        _buildStatItem(context, '30+', 'Projects Completed'),
-        _buildStatItem(context, '6', 'Technologies Mastered'),
-        _buildStatItem(context, '∞', 'Coffee Consumed'),
-      ],
-    ),
-  );
-
-  Widget _buildStatItem(BuildContext context, String number, String label) => Padding(
-    padding: const EdgeInsets.only(bottom: AppSpacing.md),
-    child: Row(
-      children: [
-        Text(
-          number,
-          style: Theme.of(
-            context,
-          ).textTheme.headlineSmall?.copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(
+        ScrollReveal(
+          delay: const Duration(milliseconds: 100),
+          duration: const Duration(milliseconds: 1200),
           child: Text(
-            label,
+            '(About.)',
             style: Theme.of(
               context,
-            ).textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary.withValues(alpha: 0.8)),
+            ).textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        ScrollReveal(
+          delay: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 1200),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            child: AutoSizeText(
+              "I'm Raihan, visual engineer. I use Flutter and Figma to craft digital anatomies where the elegance of architecture and the beauty of design assembled to deliver efficient- high-performing solutions.",
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+              maxLines: 6,
+              minFontSize: 16,
+            ),
           ),
         ),
       ],
-    ),
-  );
+    );
+
+  Widget _buildDesktopLayout(BuildContext context, bool isTablet) {
+    final titleWidth = isTablet ? 0.35 : 0.3;
+    final contentWidth = isTablet ? 0.55 : 0.5;
+
+    return Row(
+      children: [
+        ScrollReveal(
+          delay: const Duration(milliseconds: 100),
+          duration: const Duration(milliseconds: 1200),
+          child: Container(
+            width: screenWidth(context) * titleWidth - horizontalPadding(context),
+            alignment: Alignment.center,
+            child: Text(
+              '(About.)',
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        ScrollReveal(
+          delay: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 1200),
+          child: SizedBox(
+            width: screenWidth(context) * contentWidth - horizontalPadding(context),
+            child: AutoSizeText(
+              "I'm Raihan, visual engineer. I use Flutter and Figma to craft digital anatomies where the elegance of architecture and the beauty of design assembled to deliver efficient- high-performing solutions.",
+              style: Theme.of(
+                context,
+              ).textTheme.headlineLarge?.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatsFooter(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? AppSpacing.md : AppSpacing.xl, vertical: AppSpacing.lg),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: AppColors.textPrimary.withValues(alpha: 0.1))),
+      ),
+      child: isMobile ? _buildMobileStats(context) : _buildDesktopStats(context),
+    );
+  }
+
+  Widget _buildMobileStats(BuildContext context) => Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ScrollReveal(
+              delay: const Duration(milliseconds: 1100),
+              child: _buildStatItem(context, '5+', 'Years\nExperience'),
+            ),
+            ScrollReveal(
+              delay: const Duration(milliseconds: 1150),
+              duration: const Duration(milliseconds: 1200),
+              child: _buildStatItem(context, '10+', 'Projects\nCompleted'),
+            ),
+            ScrollReveal(
+              delay: const Duration(milliseconds: 1200),
+              duration: const Duration(milliseconds: 1200),
+              child: _buildStatItem(context, 'Millions', 'of Codes\nWritten'),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const SizedBox(width: 60), // Spacer for alignment
+            ScrollReveal(
+              delay: const Duration(milliseconds: 1250),
+              duration: const Duration(milliseconds: 1200),
+              child: _buildStatItem(context, 'Hundreds', 'of Screen\nDesigned'),
+            ),
+            ScrollReveal(
+              delay: const Duration(milliseconds: 1300),
+              duration: const Duration(milliseconds: 1200),
+              child: _buildStatItem(context, '∞', 'Coffee\nConsumed'),
+            ),
+            const SizedBox(width: 60), // Spacer for alignment
+          ],
+        ),
+      ],
+    );
+
+  Widget _buildDesktopStats(BuildContext context) => Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ScrollReveal(
+          delay: const Duration(milliseconds: 1100),
+          child: _buildStatItem(context, '5+', 'Years\nExperience'),
+        ),
+        ScrollReveal(
+          delay: const Duration(milliseconds: 1150),
+          duration: const Duration(milliseconds: 1200),
+          child: _buildStatItem(context, '10+', 'Projects\nCompleted'),
+        ),
+        ScrollReveal(
+          delay: const Duration(milliseconds: 1200),
+          duration: const Duration(milliseconds: 1200),
+          child: _buildStatItem(context, 'Millions', 'of Codes\nWritten'),
+        ),
+        ScrollReveal(
+          delay: const Duration(milliseconds: 1250),
+          duration: const Duration(milliseconds: 1200),
+          child: _buildStatItem(context, 'Hundreds', 'of Screen\nDesigned'),
+        ),
+        ScrollReveal(
+          delay: const Duration(milliseconds: 1300),
+          duration: const Duration(milliseconds: 1200),
+          child: _buildStatItem(context, '∞', 'Coffee\nConsumed'),
+        ),
+      ],
+    );
+
+  Widget _buildStatItem(BuildContext context, String number, String label) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
+
+    return Column(
+      children: [
+        Text(
+          number,
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            color: AppColors.accent,
+            fontWeight: FontWeight.w700,
+            fontSize: isMobile ? 24 : null, // Smaller on mobile
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: AppColors.textPrimary.withValues(alpha: 0.7),
+            letterSpacing: 0.5,
+            fontSize: isMobile ? 12 : null, // Smaller on mobile
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
 }

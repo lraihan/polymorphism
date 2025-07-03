@@ -62,7 +62,9 @@ class _ScrollRevealState extends State<ScrollReveal> with SingleTickerProviderSt
 
   void _onVisibilityChanged(VisibilityInfo info) {
     // Early return if widget is unmounted or already triggered
-    if (!mounted || _hasTriggered) return;
+    if (!mounted || _hasTriggered) {
+      return;
+    }
 
     final isVisible = info.visibleFraction > 0.1;
 

@@ -19,7 +19,7 @@ class TimelineStrip extends StatefulWidget {
 
 class _TimelineStripState extends State<TimelineStrip> {
   late TimelineController _timelineController;
-  double _timelineProgress = 0.0;
+  double _timelineProgress = 0;
   final List<GlobalKey> _itemKeys = [];
   final GlobalKey _timelineKey = GlobalKey();
   Timer? _scrollDelayTimer;
@@ -29,7 +29,7 @@ class _TimelineStripState extends State<TimelineStrip> {
     super.initState();
     _timelineController = Get.put(TimelineController());
     // Initialize keys for each timeline item
-    for (int i = 0; i < _timelineController.eventCount; i++) {
+    for (var i = 0; i < _timelineController.eventCount; i++) {
       _itemKeys.add(GlobalKey());
     }
     widget.scrollController?.addListener(_updateTimelineProgress);
@@ -43,18 +43,20 @@ class _TimelineStripState extends State<TimelineStrip> {
   }
 
   void _updateTimelineProgress() {
-    if (widget.scrollController?.hasClients != true) return;
+    if (widget.scrollController?.hasClients != true) {
+      return;
+    }
 
     final viewportHeight = widget.scrollController!.position.viewportDimension;
     final viewportCenter = viewportHeight / 2;
 
-    int activeItems = 0;
+    var activeItems = 0;
 
     // Check each timeline item to see if it has passed the center of the screen
-    for (int i = 0; i < _itemKeys.length; i++) {
+    for (var i = 0; i < _itemKeys.length; i++) {
       final itemContext = _itemKeys[i].currentContext;
       if (itemContext != null) {
-        final RenderBox itemBox = itemContext.findRenderObject() as RenderBox;
+        final itemBox = itemContext.findRenderObject()! as RenderBox;
         final itemPosition = itemBox.localToGlobal(Offset.zero);
         final itemCenter = itemPosition.dy + (itemBox.size.height / 2);
 
@@ -98,7 +100,6 @@ class _TimelineStripState extends State<TimelineStrip> {
                   child:
                       widget.enableAnimations
                           ? ScrollReveal(
-                            duration: const Duration(milliseconds: 800),
                             child: _TimelineTile(
                               event: _timelineController.events[index],
                               index: index,
@@ -126,7 +127,7 @@ class _TimelineStripState extends State<TimelineStrip> {
     final nextItemProgress = (index + 1) / _timelineController.eventCount;
 
     // Calculate how much of this connecting line should be glowing
-    double lineProgress = 0.0;
+    var lineProgress = 0.0;
     if (_timelineProgress > currentItemProgress) {
       if (_timelineProgress >= nextItemProgress) {
         lineProgress = 1.0; // Fully active
@@ -186,18 +187,16 @@ class _TimelineTile extends StatelessWidget {
   Widget build(BuildContext context) => Semantics(
     label: '${event.year}: ${event.title}',
     child: Container(
-      height: 140,
       margin: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Left content (even indices)
           Expanded(child: isLeft ? _buildTileContent(context, Alignment.centerRight) : const SizedBox()),
 
           // Center timeline indicator
           SizedBox(
-            width: 60,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Timeline dot with enhanced glow
                 Container(
@@ -243,6 +242,7 @@ class _TimelineTile extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: isActive ? AppColors.accent : AppColors.textPrimary.withValues(alpha: 0.6),
                     fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                    fontSize: _getResponsiveFontSize(context, 12),
                   ),
                 ),
               ],
@@ -256,109 +256,146 @@ class _TimelineTile extends StatelessWidget {
     ),
   );
 
-  Widget _buildTileContent(BuildContext context, Alignment alignment) => Align(
-    alignment: alignment,
-    child: AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOutCubic,
-      padding: const EdgeInsets.all(AppSpacing.md),
-      margin: EdgeInsets.only(left: isLeft ? 0 : AppSpacing.md, right: isLeft ? AppSpacing.md : 0),
-      decoration: BoxDecoration(
-        color: AppColors.glassSurface,
-        borderRadius: BorderRadius.circular(AppSpacing.sm),
-        border: Border.all(
-          color: isActive ? AppColors.accent.withValues(alpha: 0.3) : AppColors.textPrimary.withValues(alpha: 0.1),
-          width: isActive ? 2 : 1,
+  Widget _buildTileContent(BuildContext context, Alignment alignment) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+
+    // Adjust margins based on screen size
+    final horizontalMargin = isMobile ? AppSpacing.sm : AppSpacing.md;
+    final contentPadding = isMobile ? AppSpacing.sm : AppSpacing.md;
+
+    return Align(
+      alignment: alignment,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOutCubic,
+        padding: EdgeInsets.all(contentPadding),
+        margin: EdgeInsets.only(left: isLeft ? 0 : horizontalMargin, right: isLeft ? horizontalMargin : 0),
+        constraints: BoxConstraints(
+          maxWidth: isMobile ? screenWidth * 0.75 : screenWidth * .35, // Responsive max width
         ),
-        boxShadow:
-            isActive
-                ? [BoxShadow(color: AppColors.accent.withValues(alpha: 0.1), blurRadius: 12, spreadRadius: 2)]
-                : null,
-      ),
-      child: Column(
-        crossAxisAlignment: isLeft ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Icon and title row
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (!isLeft) ...[
-                Icon(
-                  event.icon,
-                  color: isActive ? AppColors.accent : AppColors.textPrimary.withValues(alpha: 0.6),
-                  size: 18,
-                ),
-                const SizedBox(width: AppSpacing.xs),
-              ],
-              Flexible(
-                child: Text(
-                  event.title,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: isActive ? AppColors.accent : AppColors.textPrimary,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                  ),
-                  textAlign: isLeft ? TextAlign.right : TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              if (isLeft) ...[
-                const SizedBox(width: AppSpacing.xs),
-                Icon(
-                  event.icon,
-                  color: isActive ? AppColors.accent : AppColors.textPrimary.withValues(alpha: 0.6),
-                  size: 18,
-                ),
-              ],
-            ],
+        decoration: BoxDecoration(
+          color: AppColors.glassSurface,
+          borderRadius: BorderRadius.circular(AppSpacing.sm),
+          border: Border.all(
+            color: isActive ? AppColors.accent.withValues(alpha: 0.3) : AppColors.textPrimary.withValues(alpha: 0.1),
+            width: isActive ? 2 : 1,
           ),
-
-          const SizedBox(height: 4),
-
-          // Company and location
-          if (event.company != null) ...[
-            Text(
-              '${event.company}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppColors.textPrimary.withValues(alpha: 0.7),
-                fontWeight: FontWeight.w500,
-                fontSize: 11,
-              ),
-              textAlign: isLeft ? TextAlign.right : TextAlign.left,
-              overflow: TextOverflow.ellipsis,
+          boxShadow:
+              isActive
+                  ? [BoxShadow(color: AppColors.accent.withValues(alpha: 0.1), blurRadius: 12, spreadRadius: 2)]
+                  : null,
+        ),
+        child: Column(
+          crossAxisAlignment: isLeft ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Icon and title row
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (!isLeft) ...[
+                  Icon(
+                    event.icon,
+                    color: isActive ? AppColors.accent : AppColors.textPrimary.withValues(alpha: 0.6),
+                    size: _getResponsiveIconSize(context),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                ],
+                Flexible(
+                  child: Text(
+                    event.title,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: isActive ? AppColors.accent : AppColors.textPrimary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: _getResponsiveFontSize(context, 14),
+                    ),
+                    textAlign: isLeft ? TextAlign.right : TextAlign.left,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (isLeft) ...[
+                  const SizedBox(width: AppSpacing.xs),
+                  Icon(
+                    event.icon,
+                    color: isActive ? AppColors.accent : AppColors.textPrimary.withValues(alpha: 0.6),
+                    size: _getResponsiveIconSize(context),
+                  ),
+                ],
+              ],
             ),
-            if (event.location != null) ...[
-              const SizedBox(height: 1),
+
+            SizedBox(height: isMobile ? 4 : 6),
+
+            // Company and location
+            if (event.company != null) ...[
               Text(
-                event.location!,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: AppColors.textPrimary.withValues(alpha: 0.6), fontSize: 10),
+                '${event.company}',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppColors.textPrimary.withValues(alpha: 0.7),
+                  fontWeight: FontWeight.w500,
+                  fontSize: _getResponsiveFontSize(context, 12),
+                ),
                 textAlign: isLeft ? TextAlign.right : TextAlign.left,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
+              if (event.location != null) ...[
+                const SizedBox(height: 2),
+                Text(
+                  event.location!,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.textPrimary.withValues(alpha: 0.6),
+                    fontSize: _getResponsiveFontSize(context, 11),
+                  ),
+                  textAlign: isLeft ? TextAlign.right : TextAlign.left,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ],
-          ],
 
-          const SizedBox(height: 4),
+            SizedBox(height: isMobile ? 6 : 8),
 
-          // Description
-          Flexible(
-            child: Text(
+            // Description - Allow wrapping for better readability
+            Text(
               event.description,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: AppColors.textPrimary.withValues(alpha: 0.8),
-                height: 1.2,
-                fontSize: 10,
+                height: 1.5, // Increased line height for better readability
+                fontSize: _getResponsiveFontSize(context, 11),
               ),
               textAlign: isLeft ? TextAlign.right : TextAlign.left,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              softWrap: true, // Ensure text wraps properly
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
+
+  // Responsive font size utility
+  double _getResponsiveFontSize(BuildContext context, double baseFontSize) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    if (screenWidth < 600) {
+      return baseFontSize * 0.85; // Mobile - slightly smaller
+    } else if (screenWidth < 1024) {
+      return baseFontSize * 0.95; // Tablet - slightly smaller
+    }
+    return baseFontSize; // Desktop - full size
+  }
+
+  // Responsive icon size utility
+  double _getResponsiveIconSize(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    if (screenWidth < 600) {
+      return 16; // Mobile - smaller icons
+    } else if (screenWidth < 1024) {
+      return 17; // Tablet - medium icons
+    }
+    return 18; // Desktop - full size icons
+  }
 }

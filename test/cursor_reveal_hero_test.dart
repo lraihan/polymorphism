@@ -25,7 +25,7 @@ void main() {
 
       // Verify headline text is present
       expect(find.text('UNLOCK'), findsOneWidget);
-      expect(find.text('Your Brand\'s Personality'), findsOneWidget);
+      expect(find.text("Your Brand's Personality"), findsOneWidget);
     });
 
     testWidgets('renders subtitle and CTA button', (tester) async {
@@ -44,7 +44,7 @@ void main() {
     });
 
     testWidgets('CTA button triggers callback', (tester) async {
-      bool callbackTriggered = false;
+      var callbackTriggered = false;
 
       await tester.pumpWidget(
         MaterialApp(
