@@ -6,8 +6,8 @@ import 'package:polymorphism/core/constant.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 
 /// Navbar inspired by creamu.co.jp with randomized text hover animation
-class CreamuNavbar extends StatelessWidget {
-  const CreamuNavbar({super.key, this.onNavigationTap});
+class GlassNavbar extends StatelessWidget {
+  const GlassNavbar({super.key, this.onNavigationTap});
 
   final Function(int)? onNavigationTap;
 

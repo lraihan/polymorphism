@@ -519,12 +519,19 @@ class _CursorRevealHeroSectionState extends State<CursorRevealHeroSection> with 
   double _getResponsiveFontSize(BuildContext context, double baseFontSize) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    if (screenWidth < 600) {
-      return baseFontSize * 0.7; // Mobile
+    // Enhanced responsive breakpoints
+    if (screenWidth < 480) {
+      return baseFontSize * 0.4; // Extra small mobile
+    } else if (screenWidth < 600) {
+      return baseFontSize * 0.5; // Small mobile
+    } else if (screenWidth < 768) {
+      return baseFontSize * 0.6; // Large mobile
     } else if (screenWidth < 1024) {
-      return baseFontSize * 0.85; // Tablet
+      return baseFontSize * 0.75; // Tablet
+    } else if (screenWidth < 1440) {
+      return baseFontSize * 0.9; // Small desktop
     }
-    return baseFontSize; // Desktop
+    return baseFontSize; // Large desktop
   }
 }
 

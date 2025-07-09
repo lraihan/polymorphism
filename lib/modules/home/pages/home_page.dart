@@ -10,7 +10,7 @@ import 'package:polymorphism/modules/timeline/timeline_section.dart';
 import 'package:polymorphism/modules/works/works_section.dart';
 import 'package:polymorphism/shared/footer/footer.dart';
 import 'package:polymorphism/shared/scroll_timeline_indicator.dart';
-import 'package:polymorphism/shared/widgets/creamu_navbar.dart';
+import 'package:polymorphism/shared/widgets/glass_navbar.dart';
 
 /// Custom scroll physics that provides hero section snap-to behavior
 /// while maintaining heavy scrolling for other sections
@@ -217,7 +217,7 @@ class _HomePageState extends State<HomePage> {
         ),
 
         // Fixed navbar at the top
-        Positioned(top: 0, left: 0, right: 0, child: CreamuNavbar(onNavigationTap: _scrollToSectionFromNavbar)),
+        Positioned(top: 0, left: 0, right: 0, child: GlassNavbar(onNavigationTap: _scrollToSectionFromNavbar)),
 
         // Scroll timeline indicator
         ScrollTimelineIndicator(

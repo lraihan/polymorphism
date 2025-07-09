@@ -20,6 +20,9 @@ dependencies:
   auto_size_text: ^3.0.0
   flutter_tilt: ^3.2.1
   stacked_card_carousel: ^0.0.4
+  intl: ^0.19.0
+  lucide_icons_flutter: ^3.0.6
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:

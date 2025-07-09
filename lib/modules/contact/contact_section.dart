@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:polymorphism/core/services/email_service.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/shared/animations/scroll_reveal.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 /// Contact section with form and email link
 class ContactSection extends StatefulWidget {
@@ -60,6 +62,56 @@ class _ContactSectionState extends State<ContactSection> {
     setState(() => _isSubmitting = true);
 
     try {
+      // Try to send email using EmailJS service
+      final success = await EmailService.sendEmail(
+        fromName: _nameController.text.trim(),
+        fromEmail: _emailController.text.trim(),
+        message: _messageController.text.trim(),
+        subject: 'Portfolio Contact Form - ${_nameController.text.trim()}',
+      );
+
+      if (mounted) {
+        if (success) {
+          // Clear form on success
+          _formKey.currentState!.reset();
+          _nameController.clear();
+          _emailController.clear();
+          _messageController.clear();
+
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.white),
+                  SizedBox(width: 8),
+                  Expanded(child: Text('Message sent successfully! I\'ll get back to you soon.')),
+                ],
+              ),
+              backgroundColor: AppColors.accent,
+              duration: Duration(seconds: 4),
+            ),
+          );
+        } else {
+          // Fallback to email client if service fails
+          await _openEmailClient();
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        // Fallback to email client on error
+        await _openEmailClient();
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
+  }
+
+  /// Fallback method to open email client
+  Future<void> _openEmailClient() async {
+    try {
       final subject = Uri.encodeComponent('Portfolio Inquiry');
       final body = Uri.encodeComponent(
         'Hi Raihan,\n\n'
@@ -69,31 +121,44 @@ class _ContactSectionState extends State<ContactSection> {
         'Best regards,\n${_nameController.text.trim()}',
       );
 
-      final mailtoUrl = 'mailto:hello@polymorphism.dev?subject=$subject&body=$body';
+      final mailtoUrl = 'mailto:lraihan@hackermail.com?subject=$subject&body=$body';
       final uri = Uri.parse(mailtoUrl);
 
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri);
         if (mounted) {
-          _formKey.currentState!.reset();
-          _nameController.clear();
-          _emailController.clear();
-          _messageController.clear();
-
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Email client opened successfully!'), backgroundColor: AppColors.accent),
+            const SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.email, color: Colors.white),
+                  SizedBox(width: 8),
+                  Expanded(child: Text('Email client opened with your message!')),
+                ],
+              ),
+              backgroundColor: AppColors.accent,
+              duration: Duration(seconds: 3),
+            ),
           );
         }
       } else {
         throw Exception('Could not launch email client');
       }
-    } on Exception catch (e) {
+    } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isSubmitting = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.error, color: Colors.white),
+                SizedBox(width: 8),
+                Expanded(child: Text('Error: Please email me directly at lraihan@hackermail.com')),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 5),
+          ),
+        );
       }
     }
   }
@@ -101,12 +166,23 @@ class _ContactSectionState extends State<ContactSection> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isWide = MediaQuery.of(context).size.width >= 800;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWide = screenWidth >= 800;
+    final isMobile = screenWidth < 600;
+
+    // Responsive padding
+    final horizontalPadding =
+        isMobile
+            ? 16.0
+            : isWide
+            ? 24.0
+            : 20.0;
+    final verticalPadding = isMobile ? 24.0 : 40.0;
 
     return SizedBox(
       width: double.infinity,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: isWide ? 600 : double.infinity),
@@ -138,28 +214,25 @@ class _ContactSectionState extends State<ContactSection> {
       Wrap(
         children: [
           Text(
-            'Have a project in mind? Drop me a line at ',
+            'Have a project in mind? Send me a message below or email me directly at ',
             style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: .8)),
           ),
           GestureDetector(
             onTap: () async {
-              final uri = Uri.parse('mailto:hello@polymorphism.dev');
+              final uri = Uri.parse('mailto:lraihan@hackermail.com');
               if (await canLaunchUrl(uri)) {
                 await launchUrl(uri);
               }
             },
             child: Text(
-              'hello@polymorphism.dev',
+              'lraihan@hackermail.com',
               style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.accent, decoration: TextDecoration.underline),
             ),
           ),
-          Text(
-            ' or use the form below.',
-            style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: .8)),
-          ),
+          Text('.', style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: .8))),
         ],
       ),
-      const SizedBox(height: 24),
+      const SizedBox(height: 32),
 
       // Contact form
       Form(
@@ -264,15 +337,30 @@ class _ContactSectionState extends State<ContactSection> {
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   elevation: 0,
+                  disabledBackgroundColor: AppColors.accent.withValues(alpha: 0.6),
                 ),
                 child:
                     _isSubmitting
-                        ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        ? const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                            ),
+                            SizedBox(width: 12),
+                            Text('Sending...', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                          ],
                         )
-                        : const Text('Send', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        : const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.send, size: 18),
+                            SizedBox(width: 8),
+                            Text('Send Message', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                          ],
+                        ),
               ),
             ),
           ],

@@ -1,47 +1,160 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:polymorphism/core/constant.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Global footer with copyright and social links
-class Footer extends StatelessWidget {
+class Footer extends StatefulWidget {
   const Footer({super.key});
 
   @override
-  Widget build(BuildContext context) => Container(
-      height: 80,
+  State<Footer> createState() => _FooterState();
+}
+
+class _FooterState extends State<Footer> {
+  late Timer _timer;
+  String _jakartaTime = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _updateTime();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) => _updateTime());
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  void _updateTime() {
+    // Get current UTC time and convert to GMT+7
+    final utcNow = DateTime.now().toUtc();
+    final gmt7Time = utcNow.add(const Duration(hours: 7));
+    final formatter = DateFormat('h:mm a');
+    setState(() {
+      _jakartaTime = formatter.format(gmt7Time);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
+
+    return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.glassSurface,
+        color: AppColors.bgDark,
         border: Border(top: BorderSide(color: AppColors.textPrimary.withValues(alpha: .1))),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding(context),
+          vertical: isMobile ? verticalPadding(context) * 0.6 : verticalPadding(context),
+        ),
+        child: Column(
           children: [
-            // Copyright text
-            Text(
-              '© 2025 Raihan.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary.withValues(alpha: .7)),
-            ),
-
-            // Social icons
-            const Row(
-              children: [
-                _SocialIcon(icon: Icons.code, tooltip: 'GitHub', url: 'https://github.com/lraihan'),
-                SizedBox(width: 16),
-                _SocialIcon(icon: Icons.work, tooltip: 'LinkedIn', url: 'https://linkedin.com/in/lraihan'),
-                SizedBox(width: 16),
-                _SocialIcon(icon: Icons.alternate_email, tooltip: 'X (Twitter)', url: 'https://x.com/lraihan'),
-              ],
-            ),
+            if (isMobile) _buildMobileLayout(context) else _buildDesktopLayout(context),
+            SizedBox(height: isMobile ? 16 : 24),
+            Image.asset('assets/images/logo.png', fit: BoxFit.fitWidth, height: isMobile ? 40 : 60),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildDesktopLayout(BuildContext context) => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      // Copyright text
+      Text(
+        '© 2025 Raihan.',
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary.withValues(alpha: .7)),
+      ),
+      Text(
+        'lraihan@hackermail.com',
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary.withValues(alpha: .7)),
+      ),
+      Text(
+        'Jakarta $_jakartaTime',
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary.withValues(alpha: .7)),
+      ),
+
+      // Social icons
+      const Row(
+        children: [
+          _SocialIcon(icon: Icons.code, tooltip: 'GitHub', url: 'https://github.com/lraihan'),
+          SizedBox(width: 16),
+          _SocialIcon(icon: Icons.work, tooltip: 'LinkedIn', url: 'https://www.linkedin.com/in/raihan-fadli-dev/'),
+          SizedBox(width: 16),
+          _SocialIcon(
+            icon: LucideIcons.instagram,
+            tooltip: 'Instagram',
+            url: 'https://www.instagram.com/locio_raihan/',
+          ),
+        ],
+      ),
+    ],
+  );
+
+  Widget _buildMobileLayout(BuildContext context) => Column(
+    children: [
+      // Top row with copyright and time
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            '© 2025 Raihan.',
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: AppColors.textPrimary.withValues(alpha: .7), fontSize: 12),
+          ),
+          Text(
+            'Jakarta $_jakartaTime',
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: AppColors.textPrimary.withValues(alpha: .7), fontSize: 12),
+          ),
+        ],
+      ),
+      const SizedBox(height: 12),
+      // Bottom row with email and social icons
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              'lraihan@hackermail.com',
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppColors.textPrimary.withValues(alpha: .7), fontSize: 12),
+            ),
+          ),
+          const Row(
+            children: [
+              _SocialIcon(icon: Icons.code, tooltip: 'GitHub', url: 'https://github.com/lraihan'),
+              SizedBox(width: 12),
+              _SocialIcon(icon: Icons.work, tooltip: 'LinkedIn', url: 'https://www.linkedin.com/in/raihan-fadli-dev/'),
+              SizedBox(width: 12),
+              _SocialIcon(
+                icon: LucideIcons.instagram,
+                tooltip: 'Instagram',
+                url: 'https://www.instagram.com/locio_raihan/',
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
 }
 
 class _SocialIcon extends StatefulWidget {
-
   const _SocialIcon({required this.icon, required this.tooltip, required this.url});
   final IconData icon;
   final String tooltip;
@@ -90,36 +203,28 @@ class _SocialIconState extends State<_SocialIcon> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) => MouseRegion(
-      onEnter: (_) => _handleHover(true),
-      onExit: (_) => _handleHover(false),
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: _isHovered ? AppColors.accent.withValues(alpha: .1) : Colors.transparent,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: _isHovered ? AppColors.accent.withValues(alpha: .3) : AppColors.textPrimary.withValues(alpha: .2),
-            ),
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: _launchUrl,
-              child: Tooltip(
-                message: widget.tooltip,
-                child: Icon(
-                  widget.icon,
-                  size: 20,
-                  color: _isHovered ? AppColors.accent : AppColors.textPrimary.withValues(alpha: .7),
-                ),
+    onEnter: (_) => _handleHover(true),
+    onExit: (_) => _handleHover(false),
+    child: ScaleTransition(
+      scale: _scaleAnimation,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: _launchUrl,
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Tooltip(
+              message: widget.tooltip,
+              child: Icon(
+                widget.icon,
+                size: 20,
+                color: _isHovered ? AppColors.accent : AppColors.textPrimary.withValues(alpha: .7),
               ),
             ),
           ),
         ),
       ),
-    );
+    ),
+  );
 }
