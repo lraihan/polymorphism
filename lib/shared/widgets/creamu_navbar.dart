@@ -60,31 +60,31 @@ class CreamuNavbar extends StatelessWidget {
   }
 
   Widget _buildFullNav(double spacing) => Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      _AnimatedNavItem(text: 'About', index: 1, onTap: onNavigationTap),
+      SizedBox(width: spacing),
+      _AnimatedNavItem(text: 'Timeline', index: 2, onTap: onNavigationTap),
+      SizedBox(width: spacing),
+      _AnimatedNavItem(text: 'Works', index: 3, onTap: onNavigationTap),
+      SizedBox(width: spacing),
+      _AnimatedNavItem(text: 'Contact', index: 5, onTap: onNavigationTap),
+    ],
+  );
+
+  Widget _buildCompactNav(double spacing) => SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         _AnimatedNavItem(text: 'About', index: 1, onTap: onNavigationTap),
         SizedBox(width: spacing),
-        _AnimatedNavItem(text: 'Timeline', index: 2, onTap: onNavigationTap),
-        SizedBox(width: spacing),
         _AnimatedNavItem(text: 'Works', index: 3, onTap: onNavigationTap),
         SizedBox(width: spacing),
-        _AnimatedNavItem(text: 'Contact', index: 4, onTap: onNavigationTap),
+        _AnimatedNavItem(text: 'Contact', index: 5, onTap: onNavigationTap),
       ],
-    );
-
-  Widget _buildCompactNav(double spacing) => SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          _AnimatedNavItem(text: 'About', index: 1, onTap: onNavigationTap),
-          SizedBox(width: spacing),
-          _AnimatedNavItem(text: 'Works', index: 3, onTap: onNavigationTap),
-          SizedBox(width: spacing),
-          _AnimatedNavItem(text: 'Contact', index: 4, onTap: onNavigationTap),
-        ],
-      ),
-    );
+    ),
+  );
 }
 
 class _AnimatedNavItem extends StatefulWidget {
@@ -115,10 +115,7 @@ class _AnimatedNavItemState extends State<_AnimatedNavItem> with SingleTickerPro
 
     _controller = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
 
-    _animation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _animation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -205,35 +202,36 @@ class _AnimatedNavItemState extends State<_AnimatedNavItem> with SingleTickerPro
         onTap: () => widget.onTap?.call(widget.index),
         child: AnimatedBuilder(
           animation: _animation,
-          builder: (context, child) => AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: _isHovering ? AppColors.glassSurface.withValues(alpha: 0.3) : Colors.transparent,
-                border: _isHovering ? Border.all(color: AppColors.textPrimary.withValues(alpha: 0.2)) : null,
-                boxShadow:
-                    _isHovering
-                        ? [
-                          BoxShadow(
-                            color: AppColors.accent.withValues(alpha: 0.1),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ]
-                        : null,
-              ),
-              child: Text(
-                _displayText,
-                style: TextStyle(
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.5,
-                  color: AppColors.textPrimary.withValues(alpha: _isHovering ? 1.0 : 0.8),
-                  fontFamily: 'Nunito', // Using the same font as the theme
+          builder:
+              (context, child) => AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: _isHovering ? AppColors.glassSurface.withValues(alpha: 0.3) : Colors.transparent,
+                  border: _isHovering ? Border.all(color: AppColors.textPrimary.withValues(alpha: 0.2)) : null,
+                  boxShadow:
+                      _isHovering
+                          ? [
+                            BoxShadow(
+                              color: AppColors.accent.withValues(alpha: 0.1),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ]
+                          : null,
+                ),
+                child: Text(
+                  _displayText,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.5,
+                    color: AppColors.textPrimary.withValues(alpha: _isHovering ? 1.0 : 0.8),
+                    fontFamily: 'Nunito', // Using the same font as the theme
+                  ),
                 ),
               ),
-            ),
         ),
       ),
     );

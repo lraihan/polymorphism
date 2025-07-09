@@ -339,7 +339,6 @@ class _CursorRevealHeroSectionState extends State<CursorRevealHeroSection> with 
                                 ),
                                 textAlign: TextAlign.center,
                               ),
-                              const SizedBox(height: 16),
                               Text(
                                 'whisper to the code.',
                                 style: Theme.of(context).textTheme.displayMedium?.copyWith(

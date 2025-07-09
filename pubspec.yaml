@@ -16,9 +16,10 @@ dependencies:
   meta: ^1.15.0
   google_fonts: ^6.2.1
   visibility_detector: ^0.4.0
-  flutter_staggered_grid_view: ^0.7.0
   grain: ^0.0.1
   auto_size_text: ^3.0.0
+  flutter_tilt: ^3.2.1
+  stacked_card_carousel: ^0.0.4
 
 dev_dependencies:
   flutter_test:
@@ -28,4 +29,5 @@ dev_dependencies:
 flutter:
   assets: 
     - assets/images/
+    - assets/images/works/
   uses-material-design: true

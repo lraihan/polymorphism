@@ -5,6 +5,7 @@ import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/modules/contact/contact_section.dart';
 import 'package:polymorphism/modules/home/about_section.dart';
 import 'package:polymorphism/modules/home/cursor_reveal_hero_section.dart';
+import 'package:polymorphism/modules/standout/standout_section.dart';
 import 'package:polymorphism/modules/timeline/timeline_section.dart';
 import 'package:polymorphism/modules/works/works_section.dart';
 import 'package:polymorphism/shared/footer/footer.dart';
@@ -59,8 +60,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
-  final List<GlobalKey> _sectionKeys = List.generate(5, (index) => GlobalKey()); // Reduced from 6 to 5
-  final List<String> _sectionTitles = ['Hero', 'About', 'Timeline', 'Works', 'Contact']; // Reordered sections
+  final List<GlobalKey> _sectionKeys = List.generate(6, (index) => GlobalKey()); // Updated to 6 sections
+  final List<String> _sectionTitles = [
+    'Hero',
+    'About',
+    'Timeline',
+    'Works',
+    'Stand Out',
+    'Contact',
+  ]; // Added Stand Out section
   Timer? _scrollNavigationTimer;
 
   @override
@@ -200,8 +208,9 @@ class _HomePageState extends State<HomePage> {
               ),
               Container(key: _sectionKeys[1], child: const AboutSection()),
               Container(key: _sectionKeys[2], child: TimelineSection(scrollController: _scrollController)),
-              Container(key: _sectionKeys[3], child: const WorksSection()),
-              Container(key: _sectionKeys[4], child: const ContactSection()),
+              Container(key: _sectionKeys[3], child: WorksSection(scrollController: _scrollController)),
+              Container(key: _sectionKeys[4], child: StandOutSection(scrollController: _scrollController)),
+              Container(key: _sectionKeys[5], child: const ContactSection()),
               const Footer(),
             ],
           ),

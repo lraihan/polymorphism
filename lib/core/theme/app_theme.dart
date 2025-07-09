@@ -50,59 +50,59 @@ class AppTheme {
       // Typography using Google Fonts
       textTheme: TextTheme(
         // Display text - Playfair Display
-        displayLarge: GoogleFonts.playfairDisplay(
+        displayLarge: GoogleFonts.bebasNeue(
           fontSize: 57,
           fontWeight: FontWeight.w400,
-          letterSpacing: -0.25,
+          letterSpacing: 2,
           color: AppColors.textPrimary,
         ),
-        displayMedium: GoogleFonts.playfairDisplay(
+        displayMedium: GoogleFonts.bebasNeue(
           fontSize: 45,
           fontWeight: FontWeight.w400,
-          letterSpacing: 0,
+          letterSpacing: 2,
           color: AppColors.textPrimary,
         ),
-        displaySmall: GoogleFonts.playfairDisplay(
+        displaySmall: GoogleFonts.bebasNeue(
           fontSize: 36,
           fontWeight: FontWeight.w400,
-          letterSpacing: 0,
+          letterSpacing: 2,
           color: AppColors.textPrimary,
         ),
 
         // Headlines - Playfair Display
-        headlineLarge: GoogleFonts.playfairDisplay(
+        headlineLarge: GoogleFonts.bebasNeue(
           fontSize: 32,
           fontWeight: FontWeight.w400,
-          letterSpacing: 0,
+          letterSpacing: 2,
           color: AppColors.textPrimary,
         ),
-        headlineMedium: GoogleFonts.playfairDisplay(
+        headlineMedium: GoogleFonts.bebasNeue(
           fontSize: 28,
           fontWeight: FontWeight.w400,
-          letterSpacing: 0,
+          letterSpacing: 2,
           color: AppColors.textPrimary,
         ),
-        headlineSmall: GoogleFonts.playfairDisplay(
+        headlineSmall: GoogleFonts.bebasNeue(
           fontSize: 24,
           fontWeight: FontWeight.w400,
-          letterSpacing: 0,
+          letterSpacing: 2,
           color: AppColors.textPrimary,
         ),
 
         // Titles - Inter
-        titleLarge: GoogleFonts.inter(
+        titleLarge: GoogleFonts.inconsolata(
           fontSize: 22,
           fontWeight: FontWeight.w400,
           letterSpacing: 0,
           color: AppColors.textPrimary,
         ),
-        titleMedium: GoogleFonts.inter(
+        titleMedium: GoogleFonts.inconsolata(
           fontSize: 16,
           fontWeight: FontWeight.w500,
           letterSpacing: 0.15,
           color: AppColors.textPrimary,
         ),
-        titleSmall: GoogleFonts.inter(
+        titleSmall: GoogleFonts.inconsolata(
           fontSize: 14,
           fontWeight: FontWeight.w500,
           letterSpacing: 0.1,
@@ -110,19 +110,19 @@ class AppTheme {
         ),
 
         // Body text - Inter
-        bodyLarge: GoogleFonts.inter(
+        bodyLarge: GoogleFonts.inconsolata(
           fontSize: 16,
           fontWeight: FontWeight.w400,
           letterSpacing: 0.5,
           color: AppColors.textPrimary,
         ),
-        bodyMedium: GoogleFonts.inter(
+        bodyMedium: GoogleFonts.inconsolata(
           fontSize: 14,
           fontWeight: FontWeight.w400,
           letterSpacing: 0.25,
           color: AppColors.textPrimary,
         ),
-        bodySmall: GoogleFonts.inter(
+        bodySmall: GoogleFonts.inconsolata(
           fontSize: 12,
           fontWeight: FontWeight.w400,
           letterSpacing: 0.4,
@@ -130,19 +130,19 @@ class AppTheme {
         ),
 
         // Labels - Inter
-        labelLarge: GoogleFonts.inter(
+        labelLarge: GoogleFonts.inconsolata(
           fontSize: 14,
           fontWeight: FontWeight.w500,
           letterSpacing: 0.1,
           color: AppColors.textPrimary,
         ),
-        labelMedium: GoogleFonts.inter(
+        labelMedium: GoogleFonts.inconsolata(
           fontSize: 12,
           fontWeight: FontWeight.w500,
           letterSpacing: 0.5,
           color: AppColors.textPrimary,
         ),
-        labelSmall: GoogleFonts.inter(
+        labelSmall: GoogleFonts.inconsolata(
           fontSize: 11,
           fontWeight: FontWeight.w500,
           letterSpacing: 0.5,
@@ -160,11 +160,7 @@ class AppTheme {
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
         centerTitle: true,
-        titleTextStyle: GoogleFonts.playfairDisplay(
-          fontSize: 24,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textPrimary,
-        ),
+        titleTextStyle: GoogleFonts.bebasNeue(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary),
       ),
 
       // Button themes

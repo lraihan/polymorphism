@@ -66,7 +66,9 @@ class _ScrollRevealState extends State<ScrollReveal> with SingleTickerProviderSt
       return;
     }
 
-    final isVisible = info.visibleFraction > 0.1;
+    // Adjust the visibility threshold to trigger slightly below center
+    // This makes content reveal feel more natural, consistent with timeline behavior
+    final isVisible = info.visibleFraction > 0.2; // Increased from 0.1 to 0.2 for better bottom-biased reveals
 
     // Check for disabled animations
     if (MediaQuery.disableAnimationsOf(context)) {

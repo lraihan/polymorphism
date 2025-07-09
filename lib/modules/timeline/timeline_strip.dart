@@ -48,11 +48,13 @@ class _TimelineStripState extends State<TimelineStrip> {
     }
 
     final viewportHeight = widget.scrollController!.position.viewportDimension;
-    final viewportCenter = viewportHeight / 2;
+    // Move viewport trigger point to slightly below center (60% down from top)
+    // This makes content reveal feel more natural as users scroll
+    final viewportTrigger = viewportHeight * 0.75;
 
     var activeItems = 0;
 
-    // Check each timeline item to see if it has passed the center of the screen
+    // Check each timeline item to see if it has passed the viewport trigger point
     for (var i = 0; i < _itemKeys.length; i++) {
       final itemContext = _itemKeys[i].currentContext;
       if (itemContext != null) {
@@ -60,8 +62,8 @@ class _TimelineStripState extends State<TimelineStrip> {
         final itemPosition = itemBox.localToGlobal(Offset.zero);
         final itemCenter = itemPosition.dy + (itemBox.size.height / 2);
 
-        // Item is considered "passed" when its center has gone above the viewport center
-        if (itemCenter <= viewportCenter) {
+        // Item is considered "passed" when its center has gone above the viewport trigger point
+        if (itemCenter <= viewportTrigger) {
           activeItems = i + 1;
         }
       }
@@ -93,6 +95,8 @@ class _TimelineStripState extends State<TimelineStrip> {
         itemBuilder:
             (context, index) => Column(
               children: [
+                // Dynamic connecting line (except for the first item) - appears BEFORE the dot
+                if (index > 0) _buildConnectingLine(index - 1),
                 // Timeline item
                 Container(
                   key: _itemKeys[index],
@@ -103,44 +107,41 @@ class _TimelineStripState extends State<TimelineStrip> {
                             child: _TimelineTile(
                               event: _timelineController.events[index],
                               index: index,
-                              isActive: _timelineProgress > (index / _timelineController.eventCount),
+                              isActive: _timelineProgress >= ((index + 1) / _timelineController.eventCount),
                               isLeft: index % 2 == 0,
                             ),
                           )
                           : _TimelineTile(
                             event: _timelineController.events[index],
                             index: index,
-                            isActive: _timelineProgress > (index / _timelineController.eventCount),
+                            isActive: _timelineProgress >= ((index + 1) / _timelineController.eventCount),
                             isLeft: index % 2 == 0,
                           ),
                 ),
-                // Dynamic connecting line (except for the last item)
-                if (index < _timelineController.eventCount - 1) _buildConnectingLine(index),
               ],
             ),
       ),
     ),
   );
 
-  Widget _buildConnectingLine(int index) {
-    final currentItemProgress = index / _timelineController.eventCount;
-    final nextItemProgress = (index + 1) / _timelineController.eventCount;
+  Widget _buildConnectingLine(int previousIndex) {
+    // For the visual pattern (•)(-•)(-•)(-•), we need:
+    // - Line before index 1 should glow WITH dot 1 (when dot 1 is active)
+    // - Line before index 2 should glow WITH dot 2 (when dot 2 is active), etc.
 
-    // Calculate how much of this connecting line should be glowing
+    final currentItemIndex = previousIndex + 1; // The dot this line connects TO
+    final currentItemProgress = (currentItemIndex + 1) / _timelineController.eventCount;
+
+    // Line glows when its corresponding dot is active
+    // This means the line glows when we've reached the progress of its target dot
     var lineProgress = 0.0;
-    if (_timelineProgress > currentItemProgress) {
-      if (_timelineProgress >= nextItemProgress) {
-        lineProgress = 1.0; // Fully active
-      } else {
-        // Partially active based on progress between items
-        final progressBetweenItems =
-            (_timelineProgress - currentItemProgress) / (nextItemProgress - currentItemProgress);
-        lineProgress = progressBetweenItems.clamp(0.0, 1.0);
-      }
+
+    if (_timelineProgress >= currentItemProgress) {
+      lineProgress = 1.0; // Fully active - the dot this line connects to is active
     }
 
     return Container(
-      height: 40,
+      height: 90,
       width: 4,
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: Stack(
@@ -149,7 +150,7 @@ class _TimelineStripState extends State<TimelineStrip> {
           // Background line
           Container(
             width: 2,
-            height: 40,
+            height: 80,
             decoration: BoxDecoration(
               color: AppColors.textPrimary.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(1),
@@ -159,7 +160,7 @@ class _TimelineStripState extends State<TimelineStrip> {
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             width: lineProgress > 0 ? 3 : 2,
-            height: 40 * lineProgress,
+            height: 80 * lineProgress,
             decoration: BoxDecoration(
               color: AppColors.accent,
               borderRadius: BorderRadius.circular(1.5),
