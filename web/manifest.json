@@ -1,11 +1,11 @@
 {
-    "name": "project_master_template",
-    "short_name": "project_master_template",
+    "name": "Polymorphism - Visual Engineer Portfolio",
+    "short_name": "Polymorphism",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#1A1A1A",
+    "theme_color": "#64FFDA",
+    "description": "Portfolio showcasing the identity of an Ultimate Polymorphism — a visionary who balances engineering, art, and design.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

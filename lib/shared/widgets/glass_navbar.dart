@@ -48,7 +48,7 @@ class GlassNavbar extends StatelessWidget {
                           height: isSmallScreen ? 28 : 32,
                           width: 60,
                           color: AppColors.textPrimary.withValues(alpha: 0.1),
-                          child: Icon(Icons.image_not_supported, color: AppColors.textPrimary, size: 16),
+                          child: const Icon(Icons.image_not_supported, color: AppColors.textPrimary, size: 16),
                         ),
                   ),
                 ),

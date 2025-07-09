@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import 'package:polymorphism/core/services/email_service.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/shared/animations/scroll_reveal.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactSection extends StatefulWidget {
   const ContactSection({super.key, this.enableAnimations = true});
@@ -81,18 +80,17 @@ class _ContactSectionState extends State<ContactSection> {
                 children: [
                   Icon(Icons.check_circle, color: Colors.white),
                   SizedBox(width: 8),
-                  Expanded(child: Text('Message sent successfully! I\'ll get back to you soon.')),
+                  Expanded(child: Text("Message sent successfully! I'll get back to you soon.")),
                 ],
               ),
               backgroundColor: AppColors.accent,
-              duration: Duration(seconds: 4),
             ),
           );
         } else {
           await _openEmailClient();
         }
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         await _openEmailClient();
       }
@@ -137,7 +135,7 @@ class _ContactSectionState extends State<ContactSection> {
       } else {
         throw Exception('Could not launch email client');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -201,26 +199,9 @@ class _ContactSectionState extends State<ContactSection> {
       ),
       const SizedBox(height: 16),
 
-      Wrap(
-        children: [
-          Text(
-            'Have a project in mind? Send me a message below or email me directly at ',
-            style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: .8)),
-          ),
-          GestureDetector(
-            onTap: () async {
-              final uri = Uri.parse('mailto:lraihan@hackermail.com');
-              if (await canLaunchUrl(uri)) {
-                await launchUrl(uri);
-              }
-            },
-            child: Text(
-              'lraihan@hackermail.com',
-              style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.accent, decoration: TextDecoration.underline),
-            ),
-          ),
-          Text('.', style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: .8))),
-        ],
+      Text(
+        'Have a project in mind? Send me a message below or email me directly at lraihan@hackermail.com',
+        style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary.withValues(alpha: .8)),
       ),
       const SizedBox(height: 32),
 

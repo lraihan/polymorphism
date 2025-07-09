@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:grain/grain.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/modules/home/pages/home_page.dart';
+import 'package:polymorphism/shared/widgets/asset_loading_screen.dart';
 import 'package:polymorphism/shared/widgets/curtain_loader.dart';
 import 'package:polymorphism/shell/controllers/app_shell_controller.dart';
 
@@ -45,7 +46,7 @@ class _AppShellState extends State<AppShell> with SingleTickerProviderStateMixin
   }
 
   void _onCurtainComplete() {
-    Get.find<AppShellController>().setReady();
+    Get.find<AppShellController>().onCurtainComplete();
 
     Future.delayed(const Duration(milliseconds: 200), () {
       if (mounted) {
@@ -63,26 +64,31 @@ class _AppShellState extends State<AppShell> with SingleTickerProviderStateMixin
       theme: AppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: AppColors.bgDark, // Set dark background to match curtain loader
-        body: Obx(
-          () => Stack(
-            children: [
-              AnimatedBuilder(
-                animation: _fadeController,
-                builder:
-                    (context, child) => Opacity(
-                      opacity: controller.isReady.value ? _fadeAnimation.value : 0.0,
-                      child: Transform.scale(
-                        scale: controller.isReady.value ? _scaleAnimation.value : 0.98,
-                        child: const GrainFiltered(child: HomePage()),
-                      ),
-                    ),
-              ),
+        backgroundColor: AppColors.bgDark,
+        body: Obx(() {
+          // Phase 1: Asset Loading
+          if (controller.isPreloading.value) {
+            return const AssetLoadingScreen();
+          }
 
-              if (!controller.isReady.value) CurtainLoader(onComplete: _onCurtainComplete),
-            ],
-          ),
-        ),
+          // Phase 2: Curtain Loader (after assets loaded)
+          if (controller.showCurtainLoader.value && !controller.isReady.value) {
+            return CurtainLoader(onComplete: _onCurtainComplete);
+          }
+
+          // Phase 3: Main App (after curtain animation)
+          return AnimatedBuilder(
+            animation: _fadeController,
+            builder:
+                (context, child) => Opacity(
+                  opacity: controller.isReady.value ? _fadeAnimation.value : 0.0,
+                  child: Transform.scale(
+                    scale: controller.isReady.value ? _scaleAnimation.value : 0.98,
+                    child: const GrainFiltered(child: HomePage()),
+                  ),
+                ),
+          );
+        }),
       ),
     );
   }

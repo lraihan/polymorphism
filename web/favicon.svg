@@ -1,0 +1,14 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="32" height="32" fill="#1A1A1A"/>
+  
+  <!-- Code brackets and slash -->
+  <g stroke="#64FFDA" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left bracket < -->
+    <path d="M10 8L4 16L10 24"/>
+    <!-- Right bracket > -->
+    <path d="M22 8L28 16L22 24"/>
+    <!-- Slash / -->
+    <path d="M18 8L14 24"/>
+  </g>
+</svg>
