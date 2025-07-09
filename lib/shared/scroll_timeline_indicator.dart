@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 
-/// A scroll timeline indicator that shows scroll progress
 class ScrollTimelineIndicator extends StatefulWidget {
 
   const ScrollTimelineIndicator({
@@ -59,7 +58,6 @@ class _ScrollTimelineIndicatorState extends State<ScrollTimelineIndicator> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Timeline line (background)
             Container(
               width: 2,
               height: indicatorHeight,
@@ -68,7 +66,6 @@ class _ScrollTimelineIndicatorState extends State<ScrollTimelineIndicator> {
                 borderRadius: BorderRadius.circular(1),
               ),
             ),
-            // Progress line (foreground)
             Align(
               alignment: Alignment.topCenter,
               child: Container(

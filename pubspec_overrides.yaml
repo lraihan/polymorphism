@@ -1,6 +1,0 @@
-# Pubspec overrides for dependency resolution
-# This file helps resolve version conflicts when needed
-# 
-# Example:
-# dependency_overrides:
-#   package_name: ^1.0.0

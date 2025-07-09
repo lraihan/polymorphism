@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/modules/timeline/timeline_strip.dart';
 
-/// Timeline section for the home page
 class TimelineSection extends StatelessWidget {
   const TimelineSection({super.key, this.enableAnimations = true, this.scrollController});
   final bool enableAnimations;
@@ -13,7 +12,6 @@ class TimelineSection extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
 
-    // Responsive padding
     final horizontalPadding = isMobile ? AppSpacing.md : AppSpacing.lg;
     final verticalPadding = isMobile ? AppSpacing.xl : AppSpacing.xxl;
 
@@ -23,7 +21,6 @@ class TimelineSection extends StatelessWidget {
       color: AppColors.bgDark,
       child: Column(
         children: [
-          // Section header
           Semantics(
             header: true,
             child: Text(
@@ -39,7 +36,6 @@ class TimelineSection extends StatelessWidget {
 
           const SizedBox(height: AppSpacing.sm),
 
-          // Section subtitle
           Padding(
             padding: EdgeInsets.symmetric(horizontal: isMobile ? 0 : AppSpacing.xl),
             child: Text(
@@ -54,7 +50,6 @@ class TimelineSection extends StatelessWidget {
 
           SizedBox(height: isMobile ? AppSpacing.xl : AppSpacing.xxl),
 
-          // Timeline strip
           TimelineStrip(enableAnimations: enableAnimations, scrollController: scrollController),
 
           const SizedBox(height: AppSpacing.xl),
@@ -63,7 +58,6 @@ class TimelineSection extends StatelessWidget {
     );
   }
 
-  // Responsive font size utility
   double _getResponsiveFontSize(BuildContext context, double baseFontSize) {
     final screenWidth = MediaQuery.of(context).size.width;
 

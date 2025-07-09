@@ -46,7 +46,6 @@ class _ScrollRevealState extends State<ScrollReveal> with SingleTickerProviderSt
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Check if animations are disabled for accessibility
     if (MediaQuery.disableAnimationsOf(context)) {
       _controller.value = 1.0;
       _hasTriggered = true;
@@ -61,36 +60,28 @@ class _ScrollRevealState extends State<ScrollReveal> with SingleTickerProviderSt
   }
 
   void _onVisibilityChanged(VisibilityInfo info) {
-    // Early return if widget is unmounted or already triggered
     if (!mounted || _hasTriggered) {
       return;
     }
 
-    // Adjust the visibility threshold to trigger slightly below center
-    // This makes content reveal feel more natural, consistent with timeline behavior
     final isVisible = info.visibleFraction > 0.2; // Increased from 0.1 to 0.2 for better bottom-biased reveals
 
-    // Check for disabled animations
     if (MediaQuery.disableAnimationsOf(context)) {
       _controller.value = 1.0;
       _hasTriggered = true;
       return;
     }
 
-    // Trigger reveal animation when content becomes visible
     if (isVisible) {
       _hasTriggered = true;
 
-      // Cancel any pending delayed animation
       _delayTimer?.cancel();
 
       if (widget.delay == Duration.zero) {
-        // No delay, start animation immediately
         if (mounted) {
           _controller.forward();
         }
       } else {
-        // Use timer for delayed animation
         _delayTimer = Timer(widget.delay, () {
           if (mounted) {
             _controller.forward();

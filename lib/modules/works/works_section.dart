@@ -27,7 +27,6 @@ class _WorksSectionState extends State<WorksSection> {
     _textKey = GlobalKey();
     widget.scrollController?.addListener(_updateHeaderScroll);
 
-    // Calculate text width after the first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _calculateTextWidth();
     });
@@ -36,7 +35,6 @@ class _WorksSectionState extends State<WorksSection> {
   @override
   void didUpdateWidget(WorksSection oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Recalculate text width when widget updates
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _calculateTextWidth();
     });
@@ -65,7 +63,6 @@ class _WorksSectionState extends State<WorksSection> {
       return;
     }
 
-    // Get the position of the works section
     final worksContext = _worksKey.currentContext;
     if (worksContext == null) {
       return;
@@ -81,21 +78,16 @@ class _WorksSectionState extends State<WorksSection> {
     final screenWidth = MediaQuery.of(context).size.width;
     final scrollPosition = widget.scrollController!.offset;
 
-    // Calculate when the works section is in view
     final worksTop = worksPosition.dy + scrollPosition;
     final worksBottom = worksTop + worksBox.size.height;
 
-    // Start horizontal scroll when works section enters viewport
     final viewportTop = scrollPosition;
     final viewportBottom = scrollPosition + screenHeight;
 
     if (worksTop <= viewportBottom && worksBottom >= viewportTop) {
-      // Section is in view - calculate scroll progress within section
       final sectionProgress = ((scrollPosition - (worksTop - screenHeight)) / (worksBox.size.height + screenHeight))
           .clamp(0.0, 1.0);
 
-      // Convert to horizontal offset (scroll text from right to left to reveal full content)
-      // Calculate maximum scroll distance: text width minus screen width + extra padding
       final maxScrollDistance =
           (_textWidth > screenWidth) ? (_textWidth - screenWidth + horizontalPadding(context) * 4) * 1.1 : 0.0;
 
@@ -222,7 +214,6 @@ class _WorksSectionState extends State<WorksSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // header text with horizontal scroll effect
           SizedBox(
             height: screenHeight(context) * (isMobile ? 0.35 : 0.65),
             child: SingleChildScrollView(
@@ -277,6 +268,7 @@ class _WorksSectionState extends State<WorksSection> {
   );
 
   Widget _buildMobileHeaderContent(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
         '(Works.)',
@@ -295,7 +287,6 @@ class _WorksSectionState extends State<WorksSection> {
     ],
   );
 
-  /// Unified method to build project sections based on screen size and project type
   Widget _buildProject(
     BuildContext context,
     String title,
@@ -307,17 +298,14 @@ class _WorksSectionState extends State<WorksSection> {
     final isMobile = screenWidth < 768;
 
     if (isMobile) {
-      // Mobile layout - use appropriate carousel based on project type
       return _buildMobileLayout(context, title, description, imagePath, projectType);
     } else {
-      // Desktop layout - different layouts based on project type
       return projectType == ProjectType.mobile
           ? _buildDesktopMobileProjectLayout(context, title, description, imagePath)
           : _buildDesktopLayout(context, title, description, imagePath);
     }
   }
 
-  /// Mobile responsive layout (for small screens)
   Widget _buildMobileLayout(
     BuildContext context,
     String title,
@@ -335,7 +323,6 @@ class _WorksSectionState extends State<WorksSection> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Title and description
               Padding(
                 padding: EdgeInsets.symmetric(vertical: verticalPadding(context) * 0.5),
                 child: Column(
@@ -359,7 +346,6 @@ class _WorksSectionState extends State<WorksSection> {
                   ],
                 ),
               ),
-              // Image carousel - choose appropriate carousel based on project type
               Center(
                 child: SizedBox(
                   height: screenHeight(context) * 0.4,
@@ -388,7 +374,6 @@ class _WorksSectionState extends State<WorksSection> {
         ),
   );
 
-  /// Desktop layout for regular projects
   Widget _buildDesktopLayout(BuildContext context, String title, String description, String imagePath) => LayoutBuilder(
     builder:
         (context, constraints) => Container(
@@ -434,7 +419,6 @@ class _WorksSectionState extends State<WorksSection> {
         ),
   );
 
-  /// Desktop layout for mobile projects (showcasing mobile apps)
   Widget _buildDesktopMobileProjectLayout(BuildContext context, String title, String description, String imagePath) =>
       LayoutBuilder(
         builder:
@@ -475,12 +459,32 @@ class _WorksSectionState extends State<WorksSection> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Tilt(child: Image.asset(imagePath, fit: BoxFit.contain, height: screenHeight(context) * 0.7)),
+                        Tilt(
+                          child: Image.asset(
+                            imagePath,
+                            fit: BoxFit.contain,
+                            height: screenHeight(context) * 0.7,
+                            errorBuilder:
+                                (context, error, stackTrace) => Container(
+                                  height: screenHeight(context) * 0.7,
+                                  width: 200,
+                                  color: AppColors.bgDark.withValues(alpha: 0.1),
+                                  child: const Icon(Icons.image_not_supported, color: AppColors.textPrimary),
+                                ),
+                          ),
+                        ),
                         Tilt(
                           child: Image.asset(
                             imagePath.replaceAll('-1.', '-2.'),
                             fit: BoxFit.contain,
                             height: screenHeight(context) * 0.7,
+                            errorBuilder:
+                                (context, error, stackTrace) => Container(
+                                  height: screenHeight(context) * 0.7,
+                                  width: 200,
+                                  color: AppColors.bgDark.withValues(alpha: 0.1),
+                                  child: const Icon(Icons.image_not_supported, color: AppColors.textPrimary),
+                                ),
                           ),
                         ),
                         Tilt(
@@ -488,6 +492,13 @@ class _WorksSectionState extends State<WorksSection> {
                             imagePath.replaceAll('-1.', '-3.'),
                             fit: BoxFit.contain,
                             height: screenHeight(context) * 0.7,
+                            errorBuilder:
+                                (context, error, stackTrace) => Container(
+                                  height: screenHeight(context) * 0.7,
+                                  width: 200,
+                                  color: AppColors.bgDark.withValues(alpha: 0.1),
+                                  child: const Icon(Icons.image_not_supported, color: AppColors.textPrimary),
+                                ),
                           ),
                         ),
                       ],
@@ -499,7 +510,6 @@ class _WorksSectionState extends State<WorksSection> {
       );
 }
 
-/// Desktop/Web project carousel - uses width-based sizing for landscape apps
 class _ProjectImageCarousel extends StatefulWidget {
   const _ProjectImageCarousel({required this.imagePaths});
 
@@ -530,7 +540,6 @@ class _ProjectImageCarouselState extends State<_ProjectImageCarousel> {
       width: isMobile ? screenWidth * 0.85 : screenWidth * 0.7,
       child: Column(
         children: [
-          // Image carousel with navigation arrows
           Expanded(
             child: Stack(
               children: [
@@ -552,12 +561,18 @@ class _ProjectImageCarouselState extends State<_ProjectImageCarousel> {
                             widget.imagePaths[index],
                             fit: BoxFit.contain,
                             width: isMobile ? screenWidth * 0.85 : screenWidth * 0.7,
+                            errorBuilder:
+                                (context, error, stackTrace) => Container(
+                                  width: isMobile ? screenWidth * 0.85 : screenWidth * 0.7,
+                                  height: 200,
+                                  color: AppColors.bgDark.withValues(alpha: 0.1),
+                                  child: const Icon(Icons.image_not_supported, color: AppColors.textPrimary),
+                                ),
                           ),
                         ),
                       ),
                 ),
 
-                // Left arrow
                 if (_currentPage > 0)
                   Positioned(
                     left: isMobile ? 8 : 16,
@@ -588,7 +603,6 @@ class _ProjectImageCarouselState extends State<_ProjectImageCarousel> {
                     ),
                   ),
 
-                // Right arrow
                 if (_currentPage < widget.imagePaths.length - 1)
                   Positioned(
                     right: isMobile ? 8 : 16,
@@ -624,7 +638,6 @@ class _ProjectImageCarouselState extends State<_ProjectImageCarousel> {
 
           SizedBox(height: isMobile ? 12 : 16),
 
-          // Page indicators
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
@@ -659,7 +672,6 @@ class _ProjectImageCarouselState extends State<_ProjectImageCarousel> {
   }
 }
 
-/// Mobile/Phone app project carousel - uses height-based sizing for portrait apps
 class _ProjectImageCarouselMobile extends StatefulWidget {
   const _ProjectImageCarouselMobile({required this.imagePaths});
 
@@ -686,12 +698,10 @@ class _ProjectImageCarouselMobileState extends State<_ProjectImageCarouselMobile
     final isMobile = screenWidth < 768;
 
     return SizedBox(
-      // Mobile projects use height-based sizing (portrait apps)
       height: isMobile ? screenHeight * 0.4 : screenHeight * 0.8,
       width: isMobile ? screenHeight * 0.25 : screenHeight * 0.45, // Portrait ratio based on height
       child: Column(
         children: [
-          // Image carousel with navigation arrows
           Expanded(
             child: Stack(
               children: [
@@ -713,12 +723,18 @@ class _ProjectImageCarouselMobileState extends State<_ProjectImageCarouselMobile
                             widget.imagePaths[index],
                             fit: BoxFit.contain,
                             height: isMobile ? screenHeight * 0.4 : screenHeight * 0.8,
+                            errorBuilder:
+                                (context, error, stackTrace) => Container(
+                                  height: isMobile ? screenHeight * 0.4 : screenHeight * 0.8,
+                                  width: 200,
+                                  color: AppColors.bgDark.withValues(alpha: 0.1),
+                                  child: const Icon(Icons.image_not_supported, color: AppColors.textPrimary),
+                                ),
                           ),
                         ),
                       ),
                 ),
 
-                // Left arrow
                 if (_currentPage > 0)
                   Positioned(
                     left: isMobile ? 8 : 16,
@@ -749,7 +765,6 @@ class _ProjectImageCarouselMobileState extends State<_ProjectImageCarouselMobile
                     ),
                   ),
 
-                // Right arrow
                 if (_currentPage < widget.imagePaths.length - 1)
                   Positioned(
                     right: isMobile ? 8 : 16,
@@ -785,7 +800,6 @@ class _ProjectImageCarouselMobileState extends State<_ProjectImageCarouselMobile
 
           SizedBox(height: isMobile ? 12 : 16),
 
-          // Page indicators
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(

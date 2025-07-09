@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:polymorphism/core/constant.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 
-/// Navbar inspired by creamu.co.jp with randomized text hover animation
 class GlassNavbar extends StatelessWidget {
   const GlassNavbar({super.key, this.onNavigationTap});
 
@@ -17,7 +16,6 @@ class GlassNavbar extends StatelessWidget {
     final isSmallScreen = screenWidth < 800;
     final isMediumScreen = screenWidth < 1200;
 
-    // Adaptive spacing based on screen size
     final horizontalPadding = isSmallScreen ? 20.0 : 40.0;
     final itemSpacing =
         isSmallScreen
@@ -37,7 +35,6 @@ class GlassNavbar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Logo on the left
               Flexible(
                 child: GestureDetector(
                   onTap: () => onNavigationTap?.call(0),
@@ -46,11 +43,17 @@ class GlassNavbar extends StatelessWidget {
                     height: isSmallScreen ? 28 : 32,
                     fit: BoxFit.contain,
                     color: AppColors.textPrimary,
+                    errorBuilder:
+                        (context, error, stackTrace) => Container(
+                          height: isSmallScreen ? 28 : 32,
+                          width: 60,
+                          color: AppColors.textPrimary.withValues(alpha: 0.1),
+                          child: Icon(Icons.image_not_supported, color: AppColors.textPrimary, size: 16),
+                        ),
                   ),
                 ),
               ),
 
-              // Navigation menu on the right
               Flexible(flex: 2, child: isSmallScreen ? _buildCompactNav(itemSpacing) : _buildFullNav(itemSpacing)),
             ],
           ),
@@ -131,7 +134,6 @@ class _AnimatedNavItemState extends State<_AnimatedNavItem> with SingleTickerPro
       return;
     }
 
-    // Create randomized version of the text
     final random = Random();
     const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -140,7 +142,6 @@ class _AnimatedNavItemState extends State<_AnimatedNavItem> with SingleTickerPro
       if (_originalText[i] == ' ') {
         randomizedText += ' ';
       } else {
-        // 70% chance to show original letter, 30% chance to show random
         if (random.nextDouble() > 0.3) {
           randomizedText += _originalText[i];
         } else {
@@ -153,7 +154,6 @@ class _AnimatedNavItemState extends State<_AnimatedNavItem> with SingleTickerPro
       _displayText = randomizedText;
     });
 
-    // Continue scrambling for a short time
     _scrambleTimer = Timer(const Duration(milliseconds: 80), () {
       if (_isHovering && mounted) {
         _startRandomizeAnimation();
@@ -170,7 +170,6 @@ class _AnimatedNavItemState extends State<_AnimatedNavItem> with SingleTickerPro
       _controller.forward();
       _startRandomizeAnimation();
 
-      // After 1 second, stop scrambling and return to original text
       _resetTimer = Timer(const Duration(milliseconds: 600), () {
         if (_isHovering && mounted) {
           _scrambleTimer?.cancel();

@@ -7,7 +7,6 @@ import 'package:polymorphism/data/models/career_event.dart';
 import 'package:polymorphism/modules/timeline/timeline_controller.dart';
 import 'package:polymorphism/shared/animations/scroll_reveal.dart';
 
-/// Career timeline strip widget
 class TimelineStrip extends StatefulWidget {
   const TimelineStrip({super.key, this.enableAnimations = true, this.scrollController});
   final bool enableAnimations;
@@ -28,7 +27,6 @@ class _TimelineStripState extends State<TimelineStrip> {
   void initState() {
     super.initState();
     _timelineController = Get.put(TimelineController());
-    // Initialize keys for each timeline item
     for (var i = 0; i < _timelineController.eventCount; i++) {
       _itemKeys.add(GlobalKey());
     }
@@ -48,13 +46,10 @@ class _TimelineStripState extends State<TimelineStrip> {
     }
 
     final viewportHeight = widget.scrollController!.position.viewportDimension;
-    // Move viewport trigger point to slightly below center (60% down from top)
-    // This makes content reveal feel more natural as users scroll
     final viewportTrigger = viewportHeight * 0.75;
 
     var activeItems = 0;
 
-    // Check each timeline item to see if it has passed the viewport trigger point
     for (var i = 0; i < _itemKeys.length; i++) {
       final itemContext = _itemKeys[i].currentContext;
       if (itemContext != null) {
@@ -62,17 +57,14 @@ class _TimelineStripState extends State<TimelineStrip> {
         final itemPosition = itemBox.localToGlobal(Offset.zero);
         final itemCenter = itemPosition.dy + (itemBox.size.height / 2);
 
-        // Item is considered "passed" when its center has gone above the viewport trigger point
         if (itemCenter <= viewportTrigger) {
           activeItems = i + 1;
         }
       }
     }
 
-    // Cancel any existing timer to avoid multiple rapid updates
     _scrollDelayTimer?.cancel();
 
-    // Add enhanced experiential delay before updating progress
     _scrollDelayTimer = Timer(Duration.zero, () {
       if (mounted) {
         final newProgress = _timelineController.eventCount > 0 ? activeItems / _timelineController.eventCount : 0.0;
@@ -95,9 +87,7 @@ class _TimelineStripState extends State<TimelineStrip> {
         itemBuilder:
             (context, index) => Column(
               children: [
-                // Dynamic connecting line (except for the first item) - appears BEFORE the dot
                 if (index > 0) _buildConnectingLine(index - 1),
-                // Timeline item
                 Container(
                   key: _itemKeys[index],
                   margin: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
@@ -125,15 +115,10 @@ class _TimelineStripState extends State<TimelineStrip> {
   );
 
   Widget _buildConnectingLine(int previousIndex) {
-    // For the visual pattern (•)(-•)(-•)(-•), we need:
-    // - Line before index 1 should glow WITH dot 1 (when dot 1 is active)
-    // - Line before index 2 should glow WITH dot 2 (when dot 2 is active), etc.
 
     final currentItemIndex = previousIndex + 1; // The dot this line connects TO
     final currentItemProgress = (currentItemIndex + 1) / _timelineController.eventCount;
 
-    // Line glows when its corresponding dot is active
-    // This means the line glows when we've reached the progress of its target dot
     var lineProgress = 0.0;
 
     if (_timelineProgress >= currentItemProgress) {
@@ -147,7 +132,6 @@ class _TimelineStripState extends State<TimelineStrip> {
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          // Background line
           Container(
             width: 2,
             height: 80,
@@ -156,7 +140,6 @@ class _TimelineStripState extends State<TimelineStrip> {
               borderRadius: BorderRadius.circular(1),
             ),
           ),
-          // Progressive glow line
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             width: lineProgress > 0 ? 3 : 2,
@@ -176,7 +159,6 @@ class _TimelineStripState extends State<TimelineStrip> {
   }
 }
 
-/// Individual timeline tile widget
 class _TimelineTile extends StatelessWidget {
   const _TimelineTile({required this.event, required this.index, required this.isActive, required this.isLeft});
   final CareerEvent event;
@@ -192,14 +174,11 @@ class _TimelineTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Left content (even indices)
           Expanded(child: isLeft ? _buildTileContent(context, Alignment.centerRight) : const SizedBox()),
 
-          // Center timeline indicator
           SizedBox(
             child: Column(
               children: [
-                // Timeline dot with enhanced glow
                 Container(
                   width: isActive ? 24 : 16,
                   height: isActive ? 24 : 16,
@@ -236,7 +215,6 @@ class _TimelineTile extends StatelessWidget {
                   ),
                 ),
 
-                // Year label
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   '${event.year}',
@@ -250,7 +228,6 @@ class _TimelineTile extends StatelessWidget {
             ),
           ),
 
-          // Right content (odd indices)
           Expanded(child: !isLeft ? _buildTileContent(context, Alignment.centerLeft) : const SizedBox()),
         ],
       ),
@@ -261,7 +238,6 @@ class _TimelineTile extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
 
-    // Adjust margins based on screen size
     final horizontalMargin = isMobile ? AppSpacing.sm : AppSpacing.md;
     final contentPadding = isMobile ? AppSpacing.sm : AppSpacing.md;
 
@@ -291,7 +267,6 @@ class _TimelineTile extends StatelessWidget {
           crossAxisAlignment: isLeft ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Icon and title row
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -329,7 +304,6 @@ class _TimelineTile extends StatelessWidget {
 
             SizedBox(height: isMobile ? 4 : 6),
 
-            // Company and location
             if (event.company != null) ...[
               Text(
                 '${event.company}',
@@ -359,7 +333,6 @@ class _TimelineTile extends StatelessWidget {
 
             SizedBox(height: isMobile ? 6 : 8),
 
-            // Description - Allow wrapping for better readability
             Text(
               event.description,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -376,7 +349,6 @@ class _TimelineTile extends StatelessWidget {
     );
   }
 
-  // Responsive font size utility
   double _getResponsiveFontSize(BuildContext context, double baseFontSize) {
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -388,7 +360,6 @@ class _TimelineTile extends StatelessWidget {
     return baseFontSize; // Desktop - full size
   }
 
-  // Responsive icon size utility
   double _getResponsiveIconSize(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 

@@ -12,8 +12,6 @@ import 'package:polymorphism/shared/footer/footer.dart';
 import 'package:polymorphism/shared/scroll_timeline_indicator.dart';
 import 'package:polymorphism/shared/widgets/glass_navbar.dart';
 
-/// Custom scroll physics that provides hero section snap-to behavior
-/// while maintaining heavy scrolling for other sections
 class HeroSnapScrollPhysics extends ScrollPhysics {
   const HeroSnapScrollPhysics({super.parent});
 
@@ -22,25 +20,19 @@ class HeroSnapScrollPhysics extends ScrollPhysics {
 
   @override
   Simulation? createBallisticSimulation(ScrollMetrics position, double velocity) {
-    // Get screen height to determine hero section bounds
     final heroSectionHeight = position.viewportDimension;
 
-    // Only apply snap behavior if we're in the hero section area (first screen height)
     if (position.pixels < heroSectionHeight) {
-      // Snap to either top (0) or bottom of hero section (heroSectionHeight)
       final snapOffset = position.pixels < heroSectionHeight / 2 ? 0.0 : heroSectionHeight;
 
-      // Only snap if we're not already at the target position
       if ((position.pixels - snapOffset).abs() > 1.0) {
         return ScrollSpringSimulation(spring, position.pixels, snapOffset, velocity, tolerance: toleranceFor(position));
       }
     }
 
-    // For all other sections, use heavy momentum-based scrolling
     return super.createBallisticSimulation(position, velocity);
   }
 
-  // Make scrolling feel heavy and momentum-based outside hero section
   @override
   double get dragStartDistanceMotionThreshold => 3.5;
 
@@ -88,10 +80,8 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    // Cancel any existing navigation timer
     _scrollNavigationTimer?.cancel();
 
-    // Add enhanced experiential delay before scrolling for better UX
     _scrollNavigationTimer = Timer(const Duration(milliseconds: 250), () {
       if (!mounted) {
         return;
@@ -102,16 +92,14 @@ class _HomePageState extends State<HomePage> {
         final renderBox = context.findRenderObject()! as RenderBox;
         final position = renderBox.localToGlobal(Offset.zero);
 
-        // Scroll to the section with some offset for better visibility
-        final targetOffset = _scrollController.offset + position.dy - 80; // 80px offset for timeline indicator
+        final targetOffset = _scrollController.offset + position.dy - 80;
 
         _scrollController.animateTo(
           targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
-          duration: const Duration(milliseconds: 2000), // Much slower, heavier scroll duration
+          duration: const Duration(milliseconds: 2000),
           curve: Curves.easeInOutCubic,
         );
       } else {
-        // Fallback: simple calculation if render box is not available
         final position = _scrollController.position;
         final maxScroll = position.maxScrollExtent;
 
@@ -127,7 +115,7 @@ class _HomePageState extends State<HomePage> {
 
         _scrollController.animateTo(
           targetOffset,
-          duration: const Duration(milliseconds: 2000), // Much slower, heavier scroll duration
+          duration: const Duration(milliseconds: 2000),
           curve: Curves.easeInOutCubic,
         );
       }
@@ -139,10 +127,8 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    // Cancel any existing navigation timer
     _scrollNavigationTimer?.cancel();
 
-    // Add enhanced experiential delay before scrolling for better UX
     _scrollNavigationTimer = Timer(const Duration(milliseconds: 250), () {
       if (!mounted) {
         return;
@@ -153,8 +139,6 @@ class _HomePageState extends State<HomePage> {
         final renderBox = context.findRenderObject()! as RenderBox;
         final position = renderBox.localToGlobal(Offset.zero);
 
-        // Scroll to the section with adjusted offset for navbar clicks
-        // More space from top to account for navbar height and better section visibility
         final targetOffset = _scrollController.offset + position.dy; // Larger offset for navbar navigation
 
         _scrollController.animateTo(
@@ -163,7 +147,6 @@ class _HomePageState extends State<HomePage> {
           curve: Curves.easeInOutCubic,
         );
       } else {
-        // Fallback: simple calculation if render box is not available
         final position = _scrollController.position;
         final maxScroll = position.maxScrollExtent;
 
@@ -191,7 +174,6 @@ class _HomePageState extends State<HomePage> {
     backgroundColor: AppColors.bgDark,
     body: Stack(
       children: [
-        // Main scrollable content with hero snap + heavy scroll physics
         SingleChildScrollView(
           controller: _scrollController,
           physics: const HeroSnapScrollPhysics(
@@ -216,10 +198,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
 
-        // Fixed navbar at the top
         Positioned(top: 0, left: 0, right: 0, child: GlassNavbar(onNavigationTap: _scrollToSectionFromNavbar)),
 
-        // Scroll timeline indicator
         ScrollTimelineIndicator(
           scrollController: _scrollController,
           sectionTitles: _sectionTitles,

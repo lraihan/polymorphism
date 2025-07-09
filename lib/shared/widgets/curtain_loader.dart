@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 
-/// Curtain reveal loader inspired by karim-saab.com
 class CurtainLoader extends StatefulWidget {
   const CurtainLoader({required this.onComplete, super.key, this.duration = const Duration(milliseconds: 2500)});
 
@@ -24,43 +23,35 @@ class _CurtainLoaderState extends State<CurtainLoader> with TickerProviderStateM
   void initState() {
     super.initState();
 
-    // Curtain animation controller - longer duration for smoother feel
     _curtainController = AnimationController(duration: const Duration(milliseconds: 3000), vsync: this);
 
-    // Text animation controller
     _textController = AnimationController(duration: const Duration(milliseconds: 1200), vsync: this);
 
-    // Left curtain slides out to the left - smoother curve and earlier start
-    _leftCurtainAnimation = Tween<double>(begin: 0, end: -1).animate(
-      CurvedAnimation(parent: _curtainController, curve: const Interval(0.5, 1, curve: Curves.easeInOutCubic)),
-    );
+    _leftCurtainAnimation = Tween<double>(
+      begin: 0,
+      end: -1,
+    ).animate(CurvedAnimation(parent: _curtainController, curve: const Interval(0.5, 1, curve: Curves.easeInOutCubic)));
 
-    // Right curtain slides out to the right - slightly staggered for more natural feel
     _rightCurtainAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _curtainController, curve: const Interval(0.52, 1, curve: Curves.easeInOutCubic)),
     );
 
-    // Text fade in animation - smoother and longer
     _textOpacityAnimation = Tween<double>(
       begin: 0,
       end: 1,
     ).animate(CurvedAnimation(parent: _textController, curve: const Interval(0, 0.7, curve: Curves.easeOutQuart)));
 
-    // Text scale animation - smoother bounce
     _textScaleAnimation = Tween<double>(
       begin: 0.85,
       end: 1,
     ).animate(CurvedAnimation(parent: _textController, curve: const Interval(0, 0.9, curve: Curves.easeOutBack)));
 
-    // Start animations
     _startAnimationSequence();
   }
 
   Future<void> _startAnimationSequence() async {
-    // Start text animation immediately
     await _textController.forward();
 
-    // Wait longer for text to settle, then start curtain animation
     await Future.delayed(const Duration(milliseconds: 800));
 
     if (mounted) {
@@ -87,7 +78,6 @@ class _CurtainLoaderState extends State<CurtainLoader> with TickerProviderStateM
       backgroundColor: AppColors.bgDark,
       body: Stack(
         children: [
-          // Left curtain
           AnimatedBuilder(
             animation: _curtainController,
             builder:
@@ -107,7 +97,6 @@ class _CurtainLoaderState extends State<CurtainLoader> with TickerProviderStateM
                 ),
           ),
 
-          // Right curtain
           AnimatedBuilder(
             animation: _curtainController,
             builder:
@@ -129,7 +118,6 @@ class _CurtainLoaderState extends State<CurtainLoader> with TickerProviderStateM
                 ),
           ),
 
-          // Loading text - Fades out when curtains start opening
           Center(
             child: AnimatedBuilder(
               animation: Listenable.merge([_textController, _curtainController]),
@@ -137,16 +125,22 @@ class _CurtainLoaderState extends State<CurtainLoader> with TickerProviderStateM
                   (context, child) => Transform.scale(
                     scale: _textScaleAnimation.value,
                     child: Opacity(
-                      // Smoother text fade out - starts earlier and more gradual
                       opacity: _textOpacityAnimation.value * (1.0 - (_curtainController.value * 1.5).clamp(0.0, 1.0)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
                             'assets/images/logo.png',
-                            height: 100, // Adjust height as needed
+                            height: 100,
                             fit: BoxFit.contain,
-                            color: AppColors.textPrimary, // Optional: tint the logo with the primary text color
+                            color: AppColors.textPrimary,
+                            errorBuilder:
+                                (context, error, stackTrace) => Container(
+                                  height: 100,
+                                  width: 100,
+                                  color: AppColors.textPrimary.withValues(alpha: 0.1),
+                                  child: const Icon(Icons.image_not_supported, color: AppColors.textPrimary),
+                                ),
                           ),
                           const SizedBox(height: 16),
                           Container(
@@ -176,12 +170,9 @@ class _CurtainLoaderState extends State<CurtainLoader> with TickerProviderStateM
   }
 
   Widget _buildCurtainTexture() => DecoratedBox(
-    decoration: BoxDecoration(
-      border: Border(right: BorderSide(color: AppColors.textPrimary.withValues(alpha: 0.1))),
-    ),
+    decoration: BoxDecoration(border: Border(right: BorderSide(color: AppColors.textPrimary.withValues(alpha: 0.1)))),
     child: Stack(
       children: [
-        // Subtle pattern for testing (no network dependency)
         Positioned.fill(
           child: Opacity(
             opacity: 0.02,

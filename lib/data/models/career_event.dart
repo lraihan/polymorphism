@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Model representing a career milestone or event
 @immutable
 class CareerEvent {
   const CareerEvent({
@@ -18,7 +17,6 @@ class CareerEvent {
   final String? company;
   final String? location;
 
-  /// Sample career events for demonstration
   static List<CareerEvent> get sampleEvents => [
     const CareerEvent(
       year: 2019,

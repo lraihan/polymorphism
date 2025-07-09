@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Application color constants
 class AppColors {
   static const Color bgDark = Color(0xFF1A1F2B);
   static const Color glassSurface = Color(0x1AFFFFFF); // 10% white
@@ -10,7 +9,6 @@ class AppColors {
   static const Color accent = Color(0xFF4E9AF1);
 }
 
-/// Application spacing constants based on 8dp grid
 class AppSpacing {
   static const double base = 8;
   static const double xs = base * 0.5; // 4
@@ -22,15 +20,12 @@ class AppSpacing {
   static const double xxxl = base * 8.0; // 64
 }
 
-/// Application motion duration constants
 class AppMotion {
-  // Motion durations
   static const Duration fast = Duration(milliseconds: 200);
   static const Duration medium = Duration(milliseconds: 400);
   static const Duration slow = Duration(milliseconds: 600);
 }
 
-/// Application theme configuration
 class AppTheme {
   static ThemeData get darkTheme {
     const colorScheme = ColorScheme.dark(
@@ -47,9 +42,7 @@ class AppTheme {
       colorScheme: colorScheme,
       scaffoldBackgroundColor: AppColors.bgDark,
 
-      // Typography using Google Fonts
       textTheme: TextTheme(
-        // Display text - Playfair Display
         displayLarge: GoogleFonts.bebasNeue(
           fontSize: 57,
           fontWeight: FontWeight.w400,
@@ -69,7 +62,6 @@ class AppTheme {
           color: AppColors.textPrimary,
         ),
 
-        // Headlines - Playfair Display
         headlineLarge: GoogleFonts.bebasNeue(
           fontSize: 32,
           fontWeight: FontWeight.w400,
@@ -89,7 +81,6 @@ class AppTheme {
           color: AppColors.textPrimary,
         ),
 
-        // Titles - Inter
         titleLarge: GoogleFonts.inconsolata(
           fontSize: 22,
           fontWeight: FontWeight.w400,
@@ -109,7 +100,6 @@ class AppTheme {
           color: AppColors.textPrimary,
         ),
 
-        // Body text - Inter
         bodyLarge: GoogleFonts.inconsolata(
           fontSize: 16,
           fontWeight: FontWeight.w400,
@@ -129,7 +119,6 @@ class AppTheme {
           color: AppColors.textPrimary,
         ),
 
-        // Labels - Inter
         labelLarge: GoogleFonts.inconsolata(
           fontSize: 14,
           fontWeight: FontWeight.w500,
@@ -150,11 +139,9 @@ class AppTheme {
         ),
       ),
 
-      // Disable splash and highlight effects
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.transparent,
 
-      // App bar theme
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.bgDark,
         foregroundColor: AppColors.textPrimary,
@@ -163,7 +150,6 @@ class AppTheme {
         titleTextStyle: GoogleFonts.bebasNeue(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary),
       ),
 
-      // Button themes
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.accent,
@@ -174,7 +160,6 @@ class AppTheme {
         ),
       ),
 
-      // Card theme
       cardTheme: CardThemeData(
         color: AppColors.glassSurface,
         elevation: 0,

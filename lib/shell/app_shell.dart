@@ -22,7 +22,6 @@ class _AppShellState extends State<AppShell> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
 
-    // Initialize fade and scale animations for home page
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 1500), // Smooth, elegant fade
       vsync: this,
@@ -48,7 +47,6 @@ class _AppShellState extends State<AppShell> with SingleTickerProviderStateMixin
   void _onCurtainComplete() {
     Get.find<AppShellController>().setReady();
 
-    // Start fade-in animation after curtain completes
     Future.delayed(const Duration(milliseconds: 200), () {
       if (mounted) {
         _fadeController.forward();
@@ -69,7 +67,6 @@ class _AppShellState extends State<AppShell> with SingleTickerProviderStateMixin
         body: Obx(
           () => Stack(
             children: [
-              // Main home page with fade-in and scale animation after curtain completes
               AnimatedBuilder(
                 animation: _fadeController,
                 builder:
@@ -82,7 +79,6 @@ class _AppShellState extends State<AppShell> with SingleTickerProviderStateMixin
                     ),
               ),
 
-              // Curtain loader overlay (only when not ready)
               if (!controller.isReady.value) CurtainLoader(onComplete: _onCurtainComplete),
             ],
           ),

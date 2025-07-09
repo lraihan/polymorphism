@@ -7,7 +7,6 @@ import 'package:polymorphism/core/constant.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// Global footer with copyright and social links
 class Footer extends StatefulWidget {
   const Footer({super.key});
 
@@ -33,7 +32,6 @@ class _FooterState extends State<Footer> {
   }
 
   void _updateTime() {
-    // Get current UTC time and convert to GMT+7
     final utcNow = DateTime.now().toUtc();
     final gmt7Time = utcNow.add(const Duration(hours: 7));
     final formatter = DateFormat('h:mm a');
@@ -61,7 +59,18 @@ class _FooterState extends State<Footer> {
           children: [
             if (isMobile) _buildMobileLayout(context) else _buildDesktopLayout(context),
             SizedBox(height: isMobile ? 16 : 24),
-            Image.asset('assets/images/logo.png', fit: BoxFit.fitWidth, height: isMobile ? 40 : 60),
+            Image.asset(
+              'assets/images/logo.png',
+              fit: BoxFit.fitWidth,
+              height: isMobile ? 40 : 60,
+              errorBuilder:
+                  (context, error, stackTrace) => Container(
+                    height: isMobile ? 40 : 60,
+                    width: 100,
+                    color: AppColors.textPrimary.withValues(alpha: 0.1),
+                    child: const Icon(Icons.image_not_supported, color: AppColors.textPrimary),
+                  ),
+            ),
           ],
         ),
       ),
@@ -71,7 +80,6 @@ class _FooterState extends State<Footer> {
   Widget _buildDesktopLayout(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      // Copyright text
       Text(
         '© 2025 Raihan.',
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary.withValues(alpha: .7)),
@@ -85,7 +93,6 @@ class _FooterState extends State<Footer> {
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary.withValues(alpha: .7)),
       ),
 
-      // Social icons
       const Row(
         children: [
           _SocialIcon(icon: Icons.code, tooltip: 'GitHub', url: 'https://github.com/lraihan'),
@@ -104,7 +111,6 @@ class _FooterState extends State<Footer> {
 
   Widget _buildMobileLayout(BuildContext context) => Column(
     children: [
-      // Top row with copyright and time
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -123,7 +129,6 @@ class _FooterState extends State<Footer> {
         ],
       ),
       const SizedBox(height: 12),
-      // Bottom row with email and social icons
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

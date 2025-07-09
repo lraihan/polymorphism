@@ -5,7 +5,6 @@ import 'package:polymorphism/core/services/email_service.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/shared/animations/scroll_reveal.dart';
 
-/// Contact section with form and email link
 class ContactSection extends StatefulWidget {
   const ContactSection({super.key, this.enableAnimations = true});
   final bool enableAnimations;
@@ -62,7 +61,6 @@ class _ContactSectionState extends State<ContactSection> {
     setState(() => _isSubmitting = true);
 
     try {
-      // Try to send email using EmailJS service
       final success = await EmailService.sendEmail(
         fromName: _nameController.text.trim(),
         fromEmail: _emailController.text.trim(),
@@ -72,13 +70,11 @@ class _ContactSectionState extends State<ContactSection> {
 
       if (mounted) {
         if (success) {
-          // Clear form on success
           _formKey.currentState!.reset();
           _nameController.clear();
           _emailController.clear();
           _messageController.clear();
 
-          // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Row(
@@ -93,13 +89,11 @@ class _ContactSectionState extends State<ContactSection> {
             ),
           );
         } else {
-          // Fallback to email client if service fails
           await _openEmailClient();
         }
       }
     } catch (e) {
       if (mounted) {
-        // Fallback to email client on error
         await _openEmailClient();
       }
     } finally {
@@ -109,7 +103,6 @@ class _ContactSectionState extends State<ContactSection> {
     }
   }
 
-  /// Fallback method to open email client
   Future<void> _openEmailClient() async {
     try {
       final subject = Uri.encodeComponent('Portfolio Inquiry');
@@ -170,7 +163,6 @@ class _ContactSectionState extends State<ContactSection> {
     final isWide = screenWidth >= 800;
     final isMobile = screenWidth < 600;
 
-    // Responsive padding
     final horizontalPadding =
         isMobile
             ? 16.0
@@ -203,14 +195,12 @@ class _ContactSectionState extends State<ContactSection> {
   Widget _buildContent(ThemeData theme) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      // Section heading
       Text(
         "Let's build something together.",
         style: theme.textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
       ),
       const SizedBox(height: 16),
 
-      // Subtitle with email link
       Wrap(
         children: [
           Text(
@@ -234,12 +224,10 @@ class _ContactSectionState extends State<ContactSection> {
       ),
       const SizedBox(height: 32),
 
-      // Contact form
       Form(
         key: _formKey,
         child: Column(
           children: [
-            // Name field
             TextFormField(
               controller: _nameController,
               validator: _validateName,
@@ -267,7 +255,6 @@ class _ContactSectionState extends State<ContactSection> {
             ),
             const SizedBox(height: 12),
 
-            // Email field
             TextFormField(
               controller: _emailController,
               validator: _validateEmail,
@@ -296,7 +283,6 @@ class _ContactSectionState extends State<ContactSection> {
             ),
             const SizedBox(height: 12),
 
-            // Message field
             TextFormField(
               controller: _messageController,
               validator: _validateMessage,
@@ -326,7 +312,6 @@ class _ContactSectionState extends State<ContactSection> {
             ),
             const SizedBox(height: 16),
 
-            // Submit button
             SizedBox(
               width: double.infinity,
               height: 44,

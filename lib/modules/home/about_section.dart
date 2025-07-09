@@ -4,7 +4,6 @@ import 'package:polymorphism/core/constant.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/shared/animations/scroll_reveal.dart';
 
-/// About section for the home page
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
 
