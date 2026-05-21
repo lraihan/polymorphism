@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:polymorphism/core/constant.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/shared/animations/scroll_reveal.dart';
+import 'package:polymorphism/shared/widgets/animated_counter.dart';
 
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
@@ -121,17 +122,17 @@ class AboutSection extends StatelessWidget {
         children: [
           ScrollReveal(
             delay: const Duration(milliseconds: 1100),
-            child: _buildStatItem(context, '5+', 'Years\nExperience'),
+            child: _buildStatItem(context, end: 5, suffix: '+', label: 'Years\nExperience'),
           ),
           ScrollReveal(
             delay: const Duration(milliseconds: 1150),
             duration: const Duration(milliseconds: 1200),
-            child: _buildStatItem(context, '10+', 'Projects\nCompleted'),
+            child: _buildStatItem(context, end: 10, suffix: '+', label: 'Projects\nCompleted'),
           ),
           ScrollReveal(
             delay: const Duration(milliseconds: 1200),
             duration: const Duration(milliseconds: 1200),
-            child: _buildStatItem(context, 'Millions', 'of Codes\nWritten'),
+            child: _buildStatItem(context, staticLabel: 'Millions', label: 'of Codes\nWritten'),
           ),
         ],
       ),
@@ -139,18 +140,18 @@ class AboutSection extends StatelessWidget {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const SizedBox(width: 60), // Spacer for alignment
+          const SizedBox(width: 60),
           ScrollReveal(
             delay: const Duration(milliseconds: 1250),
             duration: const Duration(milliseconds: 1200),
-            child: _buildStatItem(context, 'Hundreds', 'of Screen\nDesigned'),
+            child: _buildStatItem(context, staticLabel: 'Hundreds', label: 'of Screen\nDesigned'),
           ),
           ScrollReveal(
             delay: const Duration(milliseconds: 1300),
             duration: const Duration(milliseconds: 1200),
-            child: _buildStatItem(context, '∞', 'Coffee\nConsumed'),
+            child: _buildStatItem(context, staticLabel: '∞', label: 'Coffee\nConsumed'),
           ),
-          const SizedBox(width: 60), // Spacer for alignment
+          const SizedBox(width: 60),
         ],
       ),
     ],
@@ -161,52 +162,56 @@ class AboutSection extends StatelessWidget {
     children: [
       ScrollReveal(
         delay: const Duration(milliseconds: 1100),
-        child: _buildStatItem(context, '5+', 'Years\nExperience'),
+        child: _buildStatItem(context, end: 5, suffix: '+', label: 'Years\nExperience'),
       ),
       ScrollReveal(
         delay: const Duration(milliseconds: 1150),
         duration: const Duration(milliseconds: 1200),
-        child: _buildStatItem(context, '10+', 'Projects\nCompleted'),
+        child: _buildStatItem(context, end: 10, suffix: '+', label: 'Projects\nCompleted'),
       ),
       ScrollReveal(
         delay: const Duration(milliseconds: 1200),
         duration: const Duration(milliseconds: 1200),
-        child: _buildStatItem(context, 'Millions', 'of Codes\nWritten'),
+        child: _buildStatItem(context, staticLabel: 'Millions', label: 'of Codes\nWritten'),
       ),
       ScrollReveal(
         delay: const Duration(milliseconds: 1250),
         duration: const Duration(milliseconds: 1200),
-        child: _buildStatItem(context, 'Hundreds', 'of Screen\nDesigned'),
+        child: _buildStatItem(context, staticLabel: 'Hundreds', label: 'of Screen\nDesigned'),
       ),
       ScrollReveal(
         delay: const Duration(milliseconds: 1300),
         duration: const Duration(milliseconds: 1200),
-        child: _buildStatItem(context, '∞', 'Coffee\nConsumed'),
+        child: _buildStatItem(context, staticLabel: '∞', label: 'Coffee\nConsumed'),
       ),
     ],
   );
 
-  Widget _buildStatItem(BuildContext context, String number, String label) {
+  Widget _buildStatItem(
+    BuildContext context, {
+    required String label,
+    int? end,
+    String suffix = '',
+    String? staticLabel,
+  }) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 768;
+    final numberStyle = Theme.of(context).textTheme.headlineMedium!.copyWith(
+      color: AppColors.accent,
+      fontWeight: FontWeight.w700,
+      fontSize: isMobile ? 24 : null,
+    );
 
     return Column(
       children: [
-        Text(
-          number,
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            color: AppColors.accent,
-            fontWeight: FontWeight.w700,
-            fontSize: isMobile ? 24 : null, // Smaller on mobile
-          ),
-        ),
+        AnimatedCounter(end: end, suffix: suffix, staticLabel: staticLabel, style: numberStyle),
         const SizedBox(height: AppSpacing.xs),
         Text(
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: AppColors.textPrimary.withValues(alpha: 0.7),
             letterSpacing: 0.5,
-            fontSize: isMobile ? 12 : null, // Smaller on mobile
+            fontSize: isMobile ? 12 : null,
           ),
           textAlign: TextAlign.center,
         ),

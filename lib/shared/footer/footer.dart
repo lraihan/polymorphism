@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:polymorphism/core/constant.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
+import 'package:polymorphism/shared/animations/scroll_reveal.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Footer extends StatefulWidget {
@@ -55,7 +56,8 @@ class _FooterState extends State<Footer> {
           horizontal: horizontalPadding(context),
           vertical: isMobile ? verticalPadding(context) * 0.6 : verticalPadding(context),
         ),
-        child: Column(
+        child: ScrollReveal(
+          child: Column(
           children: [
             if (isMobile) _buildMobileLayout(context) else _buildDesktopLayout(context),
             SizedBox(height: isMobile ? 16 : 24),
@@ -73,6 +75,7 @@ class _FooterState extends State<Footer> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

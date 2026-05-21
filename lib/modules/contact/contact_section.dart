@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:polymorphism/core/services/email_service.dart';
 import 'package:polymorphism/core/theme/app_theme.dart';
 import 'package:polymorphism/shared/animations/scroll_reveal.dart';
+import 'package:polymorphism/shared/widgets/magnetic_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactSection extends StatefulWidget {
@@ -38,8 +39,7 @@ class _ContactSectionState extends State<ContactSection> {
     if (value == null || value.trim().isEmpty) {
       return 'Email is required';
     }
-    final emailRegex = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
-    if (!emailRegex.hasMatch(value.trim())) {
+    if (!EmailService.isValidEmail(value.trim())) {
       return 'Please enter a valid email address';
     }
     return null;
@@ -296,18 +296,29 @@ class _ContactSectionState extends State<ContactSection> {
             SizedBox(
               width: double.infinity,
               height: 44,
-              child: ElevatedButton(
-                onPressed: _isSubmitting ? null : _handleSubmit,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accent,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  elevation: 0,
-                  disabledBackgroundColor: AppColors.accent.withValues(alpha: 0.6),
-                ),
-                child:
-                    _isSubmitting
-                        ? const Row(
+              child: MagneticButton(
+                onTap: _isSubmitting ? null : _handleSubmit,
+                child: AnimatedContainer(
+                  duration: AppMotion.fast,
+                  decoration: BoxDecoration(
+                    color: _isSubmitting
+                        ? AppColors.accent.withValues(alpha: 0.6)
+                        : AppColors.accent,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: _isSubmitting
+                        ? null
+                        : [
+                            BoxShadow(
+                              color: AppColors.accent.withValues(alpha: 0.35),
+                              blurRadius: 18,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                  ),
+                  alignment: Alignment.center,
+                  height: 44,
+                  child: _isSubmitting
+                      ? const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
@@ -316,17 +327,32 @@ class _ContactSectionState extends State<ContactSection> {
                               child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                             ),
                             SizedBox(width: 12),
-                            Text('Sending...', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                            Text(
+                              'Sending...',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ],
                         )
-                        : const Row(
+                      : const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.send, size: 18),
+                            Icon(Icons.send, size: 18, color: Colors.white),
                             SizedBox(width: 8),
-                            Text('Send Message', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                            Text(
+                              'Send Message',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ],
                         ),
+                ),
               ),
             ),
           ],

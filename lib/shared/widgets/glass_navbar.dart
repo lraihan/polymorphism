@@ -67,11 +67,13 @@ class GlassNavbar extends StatelessWidget {
     children: [
       _AnimatedNavItem(text: 'About', index: 1, onTap: onNavigationTap),
       SizedBox(width: spacing),
-      _AnimatedNavItem(text: 'Timeline', index: 2, onTap: onNavigationTap),
+      _AnimatedNavItem(text: 'Skills', index: 2, onTap: onNavigationTap),
       SizedBox(width: spacing),
-      _AnimatedNavItem(text: 'Works', index: 3, onTap: onNavigationTap),
+      _AnimatedNavItem(text: 'Timeline', index: 3, onTap: onNavigationTap),
       SizedBox(width: spacing),
-      _AnimatedNavItem(text: 'Contact', index: 5, onTap: onNavigationTap),
+      _AnimatedNavItem(text: 'Works', index: 4, onTap: onNavigationTap),
+      SizedBox(width: spacing),
+      _AnimatedNavItem(text: 'Contact', index: 6, onTap: onNavigationTap),
     ],
   );
 
@@ -82,9 +84,9 @@ class GlassNavbar extends StatelessWidget {
       children: [
         _AnimatedNavItem(text: 'About', index: 1, onTap: onNavigationTap),
         SizedBox(width: spacing),
-        _AnimatedNavItem(text: 'Works', index: 3, onTap: onNavigationTap),
+        _AnimatedNavItem(text: 'Works', index: 4, onTap: onNavigationTap),
         SizedBox(width: spacing),
-        _AnimatedNavItem(text: 'Contact', index: 5, onTap: onNavigationTap),
+        _AnimatedNavItem(text: 'Contact', index: 6, onTap: onNavigationTap),
       ],
     ),
   );
