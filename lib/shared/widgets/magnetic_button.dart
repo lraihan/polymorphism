@@ -1,13 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:polymorphism/core/theme/app_tokens.dart';
+import 'package:polymorphism/core/utils/extensions.dart';
 
-/// A button with a subtle magnetic pull on hover (web/desktop only).
-///
-/// Wraps any [child] with a [MouseRegion] that tracks the cursor and applies
-/// a smoothed translation to suggest the button is "pulling" toward the
-/// pointer. Falls back to a static [Transform] on mobile and when reduced
-/// motion is requested.
+/// A wrapper that gives its child a subtle magnetic pull toward the cursor
+/// (hover-capable devices only). Falls back to a plain tappable on touch
+/// and under reduced motion.
 class MagneticButton extends StatefulWidget {
   const MagneticButton({
     required this.child,
@@ -30,76 +28,68 @@ class MagneticButton extends StatefulWidget {
   State<MagneticButton> createState() => _MagneticButtonState();
 }
 
-class _MagneticButtonState extends State<MagneticButton> with SingleTickerProviderStateMixin {
+class _MagneticButtonState extends State<MagneticButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _settle;
   Offset _offset = Offset.zero;
-  Size _size = Size.zero;
-  late AnimationController _settleController;
   Offset _settleFrom = Offset.zero;
 
   @override
   void initState() {
     super.initState();
-    _settleController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 350),
-    )..addListener(() {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _offset = Offset.lerp(_settleFrom, Offset.zero, Curves.easeOutCubic.transform(_settleController.value))!;
+    _settle = AnimationController(vsync: this, duration: AppDurations.normal)
+      ..addListener(() {
+        if (mounted) {
+          setState(() {
+            _offset =
+                Offset.lerp(
+                  _settleFrom,
+                  Offset.zero,
+                  AppCurves.enter.transform(_settle.value),
+                )!;
+          });
+        }
       });
-    });
   }
 
   @override
   void dispose() {
-    _settleController.dispose();
+    _settle.dispose();
     super.dispose();
   }
 
   void _onHover(PointerHoverEvent event) {
-    if (_size == Size.zero) {
+    // Read the laid-out size from the render object rather than a LayoutBuilder:
+    // LayoutBuilder cannot be dry-laid-out, which crashes any intrinsic-measuring
+    // ancestor (e.g. the hero's IntrinsicHeight / a Wrap computing its height).
+    final size = context.size;
+    if (size == null || size.isEmpty) {
       return;
     }
-    final centerX = _size.width / 2;
-    final centerY = _size.height / 2;
-    final dx = (event.localPosition.dx - centerX) * widget.strength;
-    final dy = (event.localPosition.dy - centerY) * widget.strength;
-    final clamped = Offset(
-      dx.clamp(-widget.maxOffset, widget.maxOffset),
-      dy.clamp(-widget.maxOffset, widget.maxOffset),
-    );
-    setState(() => _offset = clamped);
+    _settle.stop();
+    final dx = (event.localPosition.dx - size.width / 2) * widget.strength;
+    final dy = (event.localPosition.dy - size.height / 2) * widget.strength;
+    setState(() {
+      _offset = Offset(
+        dx.clamp(-widget.maxOffset, widget.maxOffset),
+        dy.clamp(-widget.maxOffset, widget.maxOffset),
+      );
+    });
   }
 
   void _onExit() {
     _settleFrom = _offset;
-    _settleController
-      ..stop()
-      ..forward(from: 0);
+    _settle.forward(from: 0);
   }
 
   @override
   Widget build(BuildContext context) {
-    final reduceMotion = MediaQuery.disableAnimationsOf(context);
-    final screenWidth = MediaQuery.of(context).size.width;
-    final supports = (kIsWeb && screenWidth >= 800) && !reduceMotion;
-
-    var content = widget.child;
-    if (supports) {
-      content = AnimatedContainer(
-        duration: const Duration(milliseconds: 120),
-        curve: Curves.easeOut,
-        transform: Matrix4.translationValues(_offset.dx, _offset.dy, 0),
-        child: widget.child,
-      );
-    }
+    final supports = context.supportsHover && !context.reducedMotion;
 
     final tappable = GestureDetector(
       onTap: widget.onTap,
       behavior: HitTestBehavior.opaque,
-      child: content,
+      child: widget.child,
     );
 
     if (!supports) {
@@ -107,15 +97,10 @@ class _MagneticButtonState extends State<MagneticButton> with SingleTickerProvid
     }
 
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
+      opaque: false,
       onHover: _onHover,
       onExit: (_) => _onExit(),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          _size = Size(constraints.maxWidth, constraints.maxHeight);
-          return tappable;
-        },
-      ),
+      child: Transform.translate(offset: _offset, child: tappable),
     );
   }
 }

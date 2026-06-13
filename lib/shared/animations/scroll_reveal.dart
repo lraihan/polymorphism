@@ -1,107 +1,123 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:polymorphism/core/theme/app_tokens.dart';
+import 'package:polymorphism/core/utils/extensions.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+/// Entry direction for [ScrollReveal].
+enum ScrollRevealDirection { up, down, left, right, scale, fade }
+
+/// Reveals its child when it first enters the viewport, then stays revealed.
+///
+/// Defaults: fade in + slide up 30 px over [AppDurations.slow]. Use [delay]
+/// to stagger siblings. Honors reduced motion by rendering immediately.
 class ScrollReveal extends StatefulWidget {
   const ScrollReveal({
     required this.child,
-    this.delay = Duration.zero,
-    this.duration = const Duration(milliseconds: 800),
-    this.offset = 50.0,
     super.key,
+    this.delay = Duration.zero,
+    this.duration = AppDurations.slow,
+    this.direction = ScrollRevealDirection.up,
+    this.offset = 30.0,
+    this.visibleFraction = 0.15,
   });
 
   final Widget child;
   final Duration delay;
   final Duration duration;
+  final ScrollRevealDirection direction;
+
+  /// How far off-position the child starts, in logical px.
   final double offset;
+
+  /// Fraction of the child that must be visible to trigger.
+  final double visibleFraction;
 
   @override
   State<ScrollReveal> createState() => _ScrollRevealState();
 }
 
 class _ScrollRevealState extends State<ScrollReveal> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _opacityAnimation;
-  late Animation<double> _translateAnimation;
-  bool _hasTriggered = false;
+  late final AnimationController _controller;
+  late final CurvedAnimation _eased;
+  bool _triggered = false;
   Timer? _delayTimer;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: widget.duration, vsync: this);
-
-    _opacityAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
-
-    _translateAnimation = Tween<double>(
-      begin: widget.offset,
-      end: 0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    _controller = AnimationController(vsync: this, duration: widget.duration);
+    _eased = CurvedAnimation(parent: _controller, curve: AppCurves.enter);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _controller.value = 1.0;
-      _hasTriggered = true;
+    if (context.reducedMotion) {
+      _controller.value = 1;
+      _triggered = true;
     }
   }
 
   @override
   void dispose() {
     _delayTimer?.cancel();
+    _eased.dispose();
     _controller.dispose();
     super.dispose();
   }
 
-  void _onVisibilityChanged(VisibilityInfo info) {
-    if (!mounted || _hasTriggered) {
+  void _onVisibility(VisibilityInfo info) {
+    if (!mounted || _triggered || info.visibleFraction < widget.visibleFraction) {
       return;
     }
-
-    final isVisible = info.visibleFraction > 0.2; // Increased from 0.1 to 0.2 for better bottom-biased reveals
-
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _controller.value = 1.0;
-      _hasTriggered = true;
-      return;
-    }
-
-    if (isVisible) {
-      _hasTriggered = true;
-
-      _delayTimer?.cancel();
-
-      if (widget.delay == Duration.zero) {
+    _triggered = true;
+    if (widget.delay == Duration.zero) {
+      _controller.forward();
+    } else {
+      _delayTimer = Timer(widget.delay, () {
         if (mounted) {
           _controller.forward();
         }
-      } else {
-        _delayTimer = Timer(widget.delay, () {
-          if (mounted) {
-            _controller.forward();
-          }
-        });
-      }
+      });
+    }
+  }
+
+  Offset _slideFor(double t) {
+    final travel = widget.offset * (1 - t);
+    switch (widget.direction) {
+      case ScrollRevealDirection.up:
+        return Offset(0, travel);
+      case ScrollRevealDirection.down:
+        return Offset(0, -travel);
+      case ScrollRevealDirection.left:
+        return Offset(travel, 0);
+      case ScrollRevealDirection.right:
+        return Offset(-travel, 0);
+      case ScrollRevealDirection.scale:
+      case ScrollRevealDirection.fade:
+        return Offset.zero;
     }
   }
 
   @override
   Widget build(BuildContext context) => VisibilityDetector(
-    key: Key('${widget.key ?? UniqueKey()}_visibility'),
-    onVisibilityChanged: _onVisibilityChanged,
+    key: ValueKey(_controller),
+    onVisibilityChanged: _onVisibility,
     child: AnimatedBuilder(
-      animation: _controller,
-      builder:
-          (context, child) => Transform.translate(
-            offset: Offset(0, _translateAnimation.value),
-            child: Opacity(opacity: _opacityAnimation.value, child: widget.child),
-          ),
+      animation: _eased,
+      builder: (context, child) {
+        final t = _eased.value;
+        Widget result = Opacity(opacity: t, child: child);
+        if (widget.direction == ScrollRevealDirection.scale) {
+          result = Transform.scale(scale: 0.92 + 0.08 * t, child: result);
+        } else if (widget.direction != ScrollRevealDirection.fade) {
+          result = Transform.translate(offset: _slideFor(t), child: result);
+        }
+        return result;
+      },
+      child: widget.child,
     ),
   );
 }

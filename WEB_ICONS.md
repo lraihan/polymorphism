@@ -5,9 +5,12 @@ This project uses a custom code-themed icon design that reflects the developer/e
 ## Icon Design
 
 The icon features:
-- **Background**: Dark theme (#1A1A1A) 
-- **Accent**: Cyan (#64FFDA) - matches the app's accent color
+- **Background**: Deep space (#080810)
+- **Accent**: Bioluminescent teal (#00F5C4) — matches `AppColors.accentPrimary`
 - **Symbol**: Code brackets `< >` with a forward slash `/` representing programming
+
+> Note: the icon PNG/SVG files predate the 2026 redesign; regenerate them with
+> the palette above when convenient (see Customization below).
 
 ## Files Structure
 

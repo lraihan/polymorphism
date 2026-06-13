@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:polymorphism/shell/app_shell.dart';
+import 'package:polymorphism/core/constants/strings.dart';
+import 'package:polymorphism/core/router/app_router.dart';
+import 'package:polymorphism/core/theme/app_theme.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  runApp(const PolymorphismApp());
+}
 
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+/// "Precision in Motion" — Raihan's portfolio.
+class PolymorphismApp extends StatelessWidget {
+  const PolymorphismApp({super.key});
 
-  runApp(const AppShell());
+  @override
+  Widget build(BuildContext context) => MaterialApp.router(
+    title: AppStrings.siteTitle,
+    debugShowCheckedModeBanner: false,
+    theme: AppTheme.dark,
+    routerConfig: AppRouter.router,
+  );
 }

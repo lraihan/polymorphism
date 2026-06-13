@@ -1,221 +1,162 @@
-# Polymorphism Portfolio
+# Polymorphism — Portfolio of Raihan Fadli
 
-A modern, responsive Flutter Web portfolio showcasing the identity of an Ultimate Polymorphism who balances engineering, art, and design.
+> **Precision in Motion.** A Flutter Web portfolio built on the "Deep Space Elegance" design language — generative backgrounds, kinetic typography, and a custom motion system, all rendered at 60 fps.
 
-## ✨ Features
+**Live:** `https://your-deployment-url.vercel.app` <!-- TODO: replace with production URL -->
 
-- **Responsive Design** - Optimized for mobile, tablet, and desktop
-- **Interactive Animations** - Cursor reveal effects, scroll animations, and smooth transitions
-- **Modern UI/UX** - Dark theme with elegant typography and spacing
-- **Real-time Contact Form** - Integrated EmailJS functionality with secure environment variables
-- **Dynamic Timeline** - Interactive career progression showcase
-- **Project Gallery** - Responsive layouts for mobile and desktop projects
-- **Real-time Clock** - Jakarta timezone display in footer
-- **Secure Configuration** - Environment variables for API credentials
+Raihan Fadli is a visual engineer based in Jakarta, Indonesia, balancing engineering, art, and design. This repository is both his live portfolio and a reference implementation of a heavily animated, token-driven Flutter web app.
 
-## 🛠 Tech Stack
+---
 
-- **Flutter** - Cross-platform framework
-- **Dart** - Programming language
-- **GetX** - State management and dependency injection
-- **Custom Animations** - Scroll reveal and cursor effects
+## Tech Stack
 
-## 📦 Dependencies
+| Layer | Technology |
+|---|---|
+| Framework | Flutter 3.41+ (web, CanvasKit renderer) |
+| Language | Dart 3.11+ |
+| Routing | [go_router](https://pub.dev/packages/go_router) — `/` and deep-linkable `/work/:id` |
+| Typography | [google_fonts](https://pub.dev/packages/google_fonts) — Space Grotesk, Inter, JetBrains Mono |
+| Smooth scrolling | [flutter_web_scroll](https://pub.dev/packages/flutter_web_scroll) (Lenis-style) |
+| Icons | [lucide_icons_flutter](https://pub.dev/packages/lucide_icons_flutter) |
+| Motion extras | [confetti](https://pub.dev/packages/confetti), custom painters & implicit animations |
+| Visibility-driven reveals | [visibility_detector](https://pub.dev/packages/visibility_detector) |
+| Contact form | [EmailJS](https://www.emailjs.com/) over [http](https://pub.dev/packages/http), keys injected via `--dart-define` |
+| CI/CD | GitHub Actions → Vercel on push to `main` |
 
-```yaml
-dependencies:
-  flutter: sdk: flutter
-  get: ^4.6.6
-  url_launcher: ^6.3.1
-  google_fonts: ^6.2.1
-  visibility_detector: ^0.4.0
-  grain: ^0.0.1
-  auto_size_text: ^3.0.0
-  flutter_tilt: ^3.2.1
-  stacked_card_carousel: ^0.0.4
-  intl: ^0.19.0
-  lucide_icons_flutter: ^3.0.6
-```
-
-## 🏗 Project Structure
+### Architecture at a Glance
 
 ```
 lib/
-├── core/
-│   ├── constant.dart           # Screen utilities and spacing
-│   ├── services/               # Email service
-│   └── theme/                  # App theme and colors
-├── data/
-│   └── models/                 # Career events model
-├── modules/
-│   ├── contact/                # Contact form section
-│   ├── home/                   # Hero, about sections and main page
-│   ├── standout/               # Typography showcase section
-│   ├── timeline/               # Career timeline section
-│   └── works/                  # Projects showcase section
-├── shared/
-│   ├── animations/             # Scroll reveal animations
-│   ├── footer/                 # Global footer
-│   ├── widgets/                # Reusable UI components
-│   └── scroll_timeline_indicator.dart
-└── main.dart                   # App entry point
+├── core/        # design tokens (app_tokens, app_typography, app_theme),
+│                # constants, router, responsive utils, email service
+├── data/        # models + portfolio_data.dart — single source of ALL content
+├── shared/      # painters (particles/grid/glow), glass cards, custom cursor,
+│                # magnetic buttons, scroll-reveal animations
+└── features/    # intro, hero, about, works, experience, statement, contact,
+                 # shell (portfolio_shell + floating_nav)
 ```
 
-## 🚀 Getting Started
+---
 
-### Prerequisites
+## Quick Start
 
-- Flutter SDK (>=3.7.0)
-- Dart SDK
-- Web browser for testing
-
-### Installation
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/lraihan/polymorphism-portfolio.git
-cd polymorphism-portfolio
-```
-
-2. Install dependencies:
-```bash
+git clone https://github.com/lraihan/polymorphism.git
+cd polymorphism
 flutter pub get
+flutter run -d chrome
 ```
 
-3. **Set up environment variables** (required for email functionality):
-```bash
-cp .env.example .env.local
-# Edit .env.local with your EmailJS credentials
-```
-See [ENVIRONMENT_SETUP.md](ENVIRONMENT_SETUP.md) for detailed instructions.
+The app runs fully without configuration — the contact form simply falls back to a `mailto:` link until EmailJS keys are provided (see [Configuration](#configuration)).
 
-4. Run the application:
+## Environment Requirements
+
+| Requirement | Version |
+|---|---|
+| Flutter SDK | **3.41 or newer** (stable channel) |
+| Dart SDK | **3.11 or newer** (ships with Flutter) |
+| Browser | Any modern browser; Chrome recommended for development |
+
+Verify with `flutter doctor` and `flutter --version`.
+
+## Building for Web
+
 ```bash
-./run_dev.sh
-```
-Or manually:
-```bash
-flutter run -d chrome --dart-define=EMAILJS_SERVICE_ID="your_service_id" --dart-define=EMAILJS_TEMPLATE_ID="your_template_id" --dart-define=EMAILJS_PUBLIC_KEY="your_public_key"
+# Debug / local
+flutter run -d chrome
+
+# Release build (output in build/web/)
+flutter build web --release
 ```
 
-### Build for Production
+> **Note:** the `--web-renderer` flag **no longer exists** in Flutter 3.41+. CanvasKit is the default renderer — do not copy older tutorials that pass `--web-renderer canvaskit`.
+
+The `android/`, `ios/`, `linux/`, `macos/`, and `windows/` directories are untouched platform scaffolds. **Web is the only supported and deployed target.**
+
+## Configuration
+
+All personal content lives in exactly two places — edit these to make the portfolio yours:
+
+| File | What it holds |
+|---|---|
+| `lib/data/portfolio_data.dart` | Projects (titles, descriptions, screenshots, tech stacks), career timeline, skills, social links |
+| `lib/core/constants/strings.dart` | Site title, hero copy, section headings, bio, contact copy |
+
+Project screenshots go in `assets/images/works/` (three per project) and are registered in `pubspec.yaml`.
+
+Design tokens (colors, durations, curves, spacing) live in `lib/core/theme/app_tokens.dart`; typography in `lib/core/theme/app_typography.dart`.
+
+### EmailJS (contact form)
+
+The contact form sends real email through EmailJS. Credentials are injected at build time via `--dart-define` and are never committed:
+
+```bash
+cp .env.example .env.local   # then fill in your credentials
+```
+
+| Variable | Source |
+|---|---|
+| `EMAILJS_SERVICE_ID` | EmailJS dashboard → Services |
+| `EMAILJS_TEMPLATE_ID` | EmailJS dashboard → Email Templates |
+| `EMAILJS_PUBLIC_KEY` | EmailJS dashboard → Account → API Keys |
+
+Run with the keys:
+
+```bash
+flutter run -d chrome \
+  --dart-define=EMAILJS_SERVICE_ID="..." \
+  --dart-define=EMAILJS_TEMPLATE_ID="..." \
+  --dart-define=EMAILJS_PUBLIC_KEY="..."
+```
+
+Without keys, the form gracefully degrades to a `mailto:` fallback. Full walkthrough: [ENVIRONMENT_SETUP.md](ENVIRONMENT_SETUP.md).
+
+## Deployment
+
+### Vercel via GitHub Actions (primary)
+
+Every push to `main` triggers `.github/workflows/flutter_web.yml`, which builds the web bundle with the EmailJS `--dart-define`s and deploys `build/web` to Vercel. Required repository secrets:
+
+- `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID`, `EMAILJS_PUBLIC_KEY`
+- `VERCEL_TOKEN`
+
+### Manual production build
 
 ```bash
 ./build_prod.sh
 ```
-Or manually:
-```bash
-flutter build web --release --dart-define=EMAILJS_SERVICE_ID="your_service_id" --dart-define=EMAILJS_TEMPLATE_ID="your_template_id" --dart-define=EMAILJS_PUBLIC_KEY="your_public_key"
-```
 
-## 🎨 Customization
+The script loads `.env.production` (or system/CI environment variables), validates that all three EmailJS variables are set, and produces a release build in `build/web/`.
 
-### Personal Information
+### Alternative hosts
 
-Update personal details in:
-- `lib/modules/home/cursor_reveal_hero_section.dart` - Name and titles
-- `lib/modules/home/about_section.dart` - About text and statistics
-- `lib/data/models/career_event.dart` - Career timeline events
-- `lib/shared/footer/footer.dart` - Social links and contact info
+- **Firebase Hosting** — `flutter build web --release`, then `firebase init hosting` (public dir: `build/web`) and `firebase deploy`.
+- **GitHub Pages** — `flutter build web --release --base-href "/<repo-name>/"`, then publish `build/web` to the `gh-pages` branch.
 
-### Projects
+## Contributing
 
-Add your projects in `lib/modules/works/works_section.dart`:
+This is a personal portfolio, but fixes and improvements are welcome:
 
-```dart
-_buildProject(
-  context,
-  'Your Project Title',
-  'Project description and details',
-  'assets/images/works/your-project-1.png',
-  ProjectType.mobile, // or ProjectType.desktop
-),
-```
+1. Fork and create a feature branch from `main`.
+2. Keep `flutter analyze` clean — the project enforces ~150 strict lint rules (package imports only, `require_trailing_commas`, `prefer_expression_function_bodies`, `prefer_const_constructors`, …). No warnings, no exceptions.
+3. Respect the design system: use tokens from `app_tokens.dart` (`AppDurations`, `AppCurves`, color constants) rather than hardcoding values.
+4. Keep content in `lib/data/portfolio_data.dart` / `lib/core/constants/strings.dart` — never inline copy inside widgets.
+5. Open a pull request with a clear description of the change.
 
-### Assets
+## Documentation
 
-Place your images in:
-- `assets/images/` - General images (logo, backgrounds)
-- `assets/images/works/` - Project screenshots
-- `assets/fonts/` - Custom fonts (if any)
+- [`docs/`](docs/) — design language, architecture notes, and development guides
+- [`AUDIT_REPORT.md`](AUDIT_REPORT.md) — the pre-redesign audit (architecture, technical debt, keep/refactor/rebuild decisions)
+- [`CHANGELOG.md`](CHANGELOG.md) — release history
+- [`ENVIRONMENT_SETUP.md`](ENVIRONMENT_SETUP.md) — EmailJS environment variable setup
 
-### Contact Form
+## Contact
 
-The contact form currently simulates email sending. To enable real email functionality:
-
-1. Set up an email service (EmailJS, Firebase, or custom backend)
-2. Update `lib/core/services/email_service.dart`
-3. Configure your email credentials
-
-### Theme Colors
-
-Customize colors in `lib/core/theme/app_theme.dart`:
-
-```dart
-class AppColors {
-  static const Color accent = Color(0xFFYourColor);
-  static const Color textPrimary = Color(0xFFYourColor);
-  static const Color bgDark = Color(0xFFYourColor);
-}
-```
-
-## 🌐 Deployment
-
-### GitHub Pages
-
-1. Build the web version:
-```bash
-flutter build web --base-href "/your-repo-name/"
-```
-
-2. Deploy the `build/web` folder to GitHub Pages
-
-### Netlify
-
-1. Build for web:
-```bash
-flutter build web
-```
-
-2. Deploy the `build/web` folder to Netlify
-
-## 📊 Performance
-
-- **Lighthouse Score**: 95+ Performance
-- **First Paint**: <1.5s
-- **Interactive**: <2.0s
-- **Mobile Optimized**: Full responsive design
-
-## 🔧 Development
-
-### Code Style
-
-- Follow Dart/Flutter style guidelines
-- Use meaningful variable and function names
-- Keep functions small and focused
-- Document complex logic
-
-### Adding New Sections
-
-1. Create a new widget in `lib/modules/your_section/`
-2. Add it to the main page in `lib/modules/home/pages/home_page.dart`
-3. Update navigation in `lib/shared/widgets/glass_navbar.dart`
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📞 Contact
-
-- **Email**: lraihan@hackermail.com
-- **LinkedIn**: [Raihan Fadli](https://www.linkedin.com/in/raihan-fadli-dev/)
-- **GitHub**: [@lraihan](https://github.com/lraihan)
-- **Instagram**: [@locio_raihan](https://www.instagram.com/locio_raihan/)
+- Email: [lraihan@hackermail.com](mailto:lraihan@hackermail.com)
+- GitHub: [@lraihan](https://github.com/lraihan)
+- LinkedIn: [Raihan Fadli](https://www.linkedin.com/in/raihan-fadli-dev/)
+- Instagram: [@locio_raihan](https://www.instagram.com/locio_raihan/)
 
 ---
 
-**Built with ❤️ using Flutter Web**
+Built with Flutter Web ✦ Jakarta, Indonesia
