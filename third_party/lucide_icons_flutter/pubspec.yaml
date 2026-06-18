@@ -1,0 +1,24 @@
+name: lucide_icons_flutter
+description: >-
+  Vendored, patched copy of lucide_icons_flutter 3.1.10. Pinned because it is
+  the last release that still ships the github/figma/linkedin brand glyphs,
+  patched so it compiles against Flutter SDKs where IconData is a final class
+  (the upstream `LucideIconData extends IconData` was rewritten to plain
+  `const IconData(...)`). Only the base `Lucide` weight is bundled.
+version: 3.1.10
+homepage: https://pub.dev/packages/lucide_icons_flutter
+publish_to: none
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  fonts:
+    - family: Lucide
+      fonts:
+        - asset: assets/lucide.ttf

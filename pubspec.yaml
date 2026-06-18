@@ -29,8 +29,17 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
 
+# Pinned to a vendored, patched copy of lucide_icons_flutter 3.1.10 — the last
+# release with the github/figma/linkedin brand glyphs, patched so it compiles
+# against Flutter SDKs where IconData is a final class (upstream's
+# `LucideIconData extends IconData` was rewritten to plain `const IconData(...)`).
+dependency_overrides:
+  lucide_icons_flutter:
+    path: third_party/lucide_icons_flutter
+
 flutter:
-  assets: 
+  assets:
     - assets/images/
     - assets/images/works/
+    - assets/fonts/
   uses-material-design: true
