@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Balai — Curated Drops</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #14110f; --ink2: #1b1611; --surf: #221c16; --line: #3a3026;
+    --gold: #c2a24e; --gold-soft: #d8bd78; --cream: #f2ebdd; --muted: #97897a;
+    --paper: #ece4d4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0c0b0a; padding: 40px; display: flex; gap: 36px; align-items: flex-start;
+    font-family: 'Inter', sans-serif; }
+  .phone {
+    width: 360px; height: 760px; border-radius: 44px; background: #060504;
+    padding: 11px; box-shadow: 0 40px 90px rgba(0,0,0,.6); position: relative;
+  }
+  .screen {
+    width: 100%; height: 100%; border-radius: 34px; overflow: hidden; position: relative;
+    background: var(--ink); color: var(--cream);
+  }
+  .notch { position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+    width: 104px; height: 26px; background: #060504; border-radius: 0 0 16px 16px; z-index: 9; }
+  .statusbar { display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 24px 0; font-size: 12px; font-weight: 600; color: var(--cream); }
+  .statusbar .dots { letter-spacing: 2px; opacity: .8; }
+  .pad { padding: 14px 22px; }
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .22em;
+    color: var(--gold); text-transform: uppercase; }
+  .serif { font-family: 'Cormorant Garamond', serif; }
+  .live { display: inline-flex; align-items: center; gap: 7px; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .16em; color: var(--gold); }
+  .live .dot { width: 7px; height: 7px; border-radius: 50%; background: #e0563a;
+    box-shadow: 0 0 8px #e0563a; }
+  .lot-thumb { border-radius: 10px; position: relative; overflow: hidden; flex: none;
+    border: 1px solid var(--line); }
+  .frame { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+  .frame::after { content: ''; position: absolute; inset: 0; border-radius: 12px;
+    box-shadow: inset 0 0 0 1px rgba(216,189,120,.18), inset 0 30px 60px rgba(0,0,0,.35); }
+  .price { font-family: 'Cormorant Garamond', serif; font-weight: 600; letter-spacing: -.01em; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 100px;
+    font-size: 11px; font-weight: 600; }
+  .btn { width: 100%; border: none; border-radius: 14px; padding: 16px; font-family: 'Inter';
+    font-weight: 600; font-size: 15px; cursor: pointer; }
+  .btn-gold { background: linear-gradient(180deg, var(--gold-soft), var(--gold)); color: #1a1408; }
+  .nav { position: absolute; bottom: 0; left: 0; right: 0; height: 64px; display: flex;
+    justify-content: space-around; align-items: center; border-top: 1px solid var(--line);
+    background: rgba(10,8,6,.85); backdrop-filter: blur(8px); }
+  .nav span { font-size: 10px; color: var(--muted); display: flex; flex-direction: column;
+    align-items: center; gap: 5px; font-family: 'JetBrains Mono', monospace; letter-spacing: .08em; }
+  .nav .ico { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--muted); }
+  .nav .on { color: var(--gold); }
+  .nav .on .ico { border-color: var(--gold); background: rgba(194,162,78,.18); }
+  /* curated "art" placeholders — gilded gradients, intentional and editorial */
+  .art1 { background: radial-gradient(120% 90% at 30% 20%, #6a4e2e, #2a2018 60%), #221c16; }
+  .art2 { background: radial-gradient(110% 90% at 70% 25%, #7a5a3a, #241a12 65%); }
+  .art3 { background: linear-gradient(135deg, #3a4a55, #1c2228 70%); }
+  .art4 { background: radial-gradient(120% 100% at 50% 18%, #8a6a40, #1e1812 70%); }
+  .grain { position: absolute; inset: 0; opacity: .14; mix-blend-mode: overlay;
+    background-image: radial-gradient(circle at 20% 30%, #fff2 1px, transparent 1px),
+      radial-gradient(circle at 70% 60%, #fff1 1px, transparent 1px); background-size: 7px 7px, 11px 11px; }
+  .ring { transform: rotate(-90deg); }
+</style>
+</head>
+<body>
+
+<!-- ============ 1 · CURATED DROP (browse) ============ -->
+<div class="phone"><div class="screen" data-phone>
+  <div class="notch"></div>
+  <div class="statusbar"><span>21:14</span><span class="dots">● ● ▮</span></div>
+  <div class="pad" style="padding-top:30px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="live"><span class="dot"></span>LIVE TONIGHT · 21:00</span>
+      <span class="eyebrow">Drop №07</span>
+    </div>
+    <div class="serif" style="font-size:46px;line-height:.95;margin-top:18px;color:var(--cream)">Mid-Century<br><span style="font-style:italic;color:var(--gold-soft)">Icons</span></div>
+    <div style="display:flex;align-items:center;gap:9px;margin-top:14px;color:var(--muted);font-size:13px">
+      <div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#c2a24e,#6a4e2e)"></div>
+      Curated by Anjas R. · 8 lots
+    </div>
+    <div style="height:1px;background:var(--line);margin:18px 0"></div>
+
+    <!-- lot rows -->
+    <div style="display:flex;gap:14px;margin-bottom:16px;align-items:center">
+      <div class="lot-thumb art1" style="width:78px;height:78px"><div class="grain"></div></div>
+      <div style="flex:1">
+        <div class="serif" style="font-size:21px;color:var(--cream)">Eames Lounge, 1956</div>
+        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:3px">LOT 03 · EST. 4–6JT</div>
+        <div style="margin-top:6px"><span class="price" style="font-size:18px;color:var(--gold-soft)">Rp 4.200.000</span><span style="font-size:11px;color:var(--muted)"> · 12 bids</span></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:14px;margin-bottom:16px;align-items:center">
+      <div class="lot-thumb art2" style="width:78px;height:78px"><div class="grain"></div></div>
+      <div style="flex:1">
+        <div class="serif" style="font-size:21px;color:var(--cream)">Noguchi Table</div>
+        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:3px">LOT 04 · EST. 6–9JT</div>
+        <div style="margin-top:6px"><span class="pill" style="background:rgba(194,162,78,.16);color:var(--gold-soft)">Opens in 4 min</span></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:14px;align-items:center;opacity:.7">
+      <div class="lot-thumb art3" style="width:78px;height:78px"><div class="grain"></div></div>
+      <div style="flex:1">
+        <div class="serif" style="font-size:21px;color:var(--cream)">Wegner CH24</div>
+        <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:3px">LOT 05 · EST. 3–4JT</div>
+      </div>
+    </div>
+  </div>
+  <div class="nav">
+    <span class="on"><span class="ico"></span>DROPS</span>
+    <span><span class="ico"></span>WATCHING</span>
+    <span><span class="ico"></span>PROFILE</span>
+  </div>
+</div></div>
+
+<!-- ============ 2 · LIVE LOT (hero) ============ -->
+<div class="phone"><div class="screen" data-phone style="background:radial-gradient(120% 70% at 50% 0%, #241a10, #100d0a 70%)">
+  <div class="notch"></div>
+  <div class="statusbar"><span>21:14</span><span class="dots">● ● ▮</span></div>
+  <div class="pad" style="padding-top:26px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="eyebrow">Lot 03 of 08</span>
+      <span class="live"><span class="dot"></span>LIVE</span>
+    </div>
+    <div class="frame art1" style="height:206px;margin-top:14px"><div class="grain"></div>
+      <div class="serif" style="position:absolute;left:14px;bottom:10px;font-size:13px;color:var(--gold-soft)">№ 03</div>
+    </div>
+    <div class="serif" style="font-size:29px;margin-top:16px;color:var(--cream)">Eames Lounge<span style="font-style:italic;color:var(--muted);font-size:21px"> , 1956</span></div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
+      <div>
+        <div class="eyebrow" style="color:var(--muted)">Current bid</div>
+        <div class="price" style="font-size:38px;color:var(--cream);line-height:1.1">Rp 4.200.000</div>
+      </div>
+      <div style="position:relative;width:84px;height:84px;flex:none">
+        <svg width="84" height="84" class="ring" viewBox="0 0 84 84">
+          <circle cx="42" cy="42" r="36" fill="none" stroke="#3a3026" stroke-width="4"/>
+          <circle cx="42" cy="42" r="36" fill="none" stroke="#c2a24e" stroke-width="4" stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="156"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--gold-soft)">0:14</div>
+      </div>
+    </div>
+    <div style="margin-top:14px"><span class="pill" style="background:rgba(122,200,140,.16);color:#7ac88c">▲ You're winning</span></div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:16px;letter-spacing:.06em">12 WATCHING · PROXY TO RP 5JT · ANTI-SNIPE ON</div>
+  </div>
+  <div style="position:absolute;bottom:18px;left:22px;right:22px">
+    <button class="btn btn-gold">Bid Rp 4.400.000</button>
+  </div>
+</div></div>
+
+<!-- ============ 3 · LOT DETAIL (proxy) ============ -->
+<div class="phone"><div class="screen" data-phone>
+  <div class="notch"></div>
+  <div class="statusbar"><span>21:14</span><span class="dots">● ● ▮</span></div>
+  <div class="pad" style="padding-top:26px">
+    <div style="display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px">
+      <span style="font-size:20px">‹</span> Back to drop
+    </div>
+    <div class="frame art2" style="height:200px;margin-top:14px"><div class="grain"></div></div>
+    <div class="serif" style="font-size:28px;margin-top:14px;color:var(--cream)">Noguchi Coffee Table</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:4px">LOT 04 · ISAMU NOGUCHI · 1948</div>
+    <div style="font-size:13px;line-height:1.7;color:#c9bda9;margin-top:14px">Biomorphic walnut base, original glass top. Acquired from a Bandung estate; light patina consistent with age. Estimate Rp 6–9jt.</div>
+
+    <div style="background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:18px">
+      <div class="eyebrow" style="color:var(--muted)">Set your maximum — we bid for you</div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-top:10px">
+        <span class="serif" style="font-size:30px;color:var(--gold-soft)">Rp 8.500.000</span>
+        <span style="font-size:11px;color:var(--muted)">proxy ceiling</span>
+      </div>
+      <div style="height:4px;background:var(--line);border-radius:4px;margin-top:14px;position:relative">
+        <div style="position:absolute;left:0;top:0;height:4px;width:64%;background:var(--gold);border-radius:4px"></div>
+        <div style="position:absolute;left:64%;top:-4px;width:12px;height:12px;border-radius:50%;background:var(--gold-soft)"></div>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:18px;left:22px;right:22px">
+    <button class="btn btn-gold">Place proxy bid</button>
+  </div>
+</div></div>
+
+<!-- ============ 4 · WON ============ -->
+<div class="phone"><div class="screen" data-phone style="background:radial-gradient(120% 80% at 50% 25%, #2a200f, #100d0a 72%)">
+  <div class="notch"></div>
+  <div class="statusbar"><span>21:21</span><span class="dots">● ● ▮</span></div>
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:0 32px;text-align:center">
+    <svg width="64" height="64" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="30" fill="none" stroke="#c2a24e" stroke-width="2"/>
+      <path d="M22 33 l7 7 l14 -16" fill="none" stroke="#d8bd78" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="serif" style="font-size:54px;margin-top:18px;color:var(--cream);font-style:italic">Yours.</div>
+    <div style="font-size:14px;color:var(--muted);margin-top:8px">You won <span style="color:var(--cream)">Lot 03 — Eames Lounge</span></div>
+    <div class="frame art1" style="height:150px;width:200px;margin-top:24px"><div class="grain"></div></div>
+    <div style="margin-top:22px" class="eyebrow">Winning bid</div>
+    <div class="price" style="font-size:36px;color:var(--gold-soft);margin-top:4px">Rp 4.600.000</div>
+    <div style="position:absolute;bottom:30px;left:32px;right:32px">
+      <button class="btn" style="background:transparent;border:1.5px solid var(--gold);color:var(--gold-soft)">Arrange collection</button>
+    </div>
+  </div>
+</div></div>
+
+</body>
+</html>

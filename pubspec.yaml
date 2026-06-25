@@ -40,6 +40,12 @@ dependency_overrides:
 flutter:
   assets:
     - assets/images/
-    - assets/images/works/
     - assets/fonts/
+    - assets/works/_gallery/roast/
+    - assets/works/_gallery/fe-teller/
+    - assets/works/_gallery/elssa/
+    - assets/works/_gallery/profund/
+    - assets/works/_gallery/sigap/
+    - assets/works/_gallery/balai/
+    - assets/works/_gallery/fitx/
   uses-material-design: true

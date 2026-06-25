@@ -1,0 +1,5 @@
+# Scratch render harness — keep the scripts, ignore deps and generated images.
+node_modules/
+out/
+out_verify/
+package-lock.json

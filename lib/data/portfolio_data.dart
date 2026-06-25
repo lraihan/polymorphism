@@ -1,3 +1,7 @@
+// Long-form portfolio copy is wrapped across lines as adjacent string literals
+// inside list elements (highlights); that is deliberate, not a missing comma.
+// ignore_for_file: no_adjacent_strings_in_list
+
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:polymorphism/core/constants/assets.dart';
@@ -13,111 +17,310 @@ import 'package:polymorphism/data/models/skill.dart';
 class PortfolioData {
   PortfolioData._();
 
-  // ── Projects (bento order) ─────────────────────────────────────────────
+  // ── Projects (spotlight order — variety-first) ─────────────────────────
+  //
+  // Per-project colors come from each product's own design language; ROAST and
+  // FE Touch use real screenshots, ELSSA/ProFund/SIGAP use imagery rendered
+  // from their live prototypes, Balai is presented as an editorial art panel.
 
   static final List<Project> projects = [
-    Project(
-      id: 'fe-touch',
-      title: 'FE Touch',
-      category: 'TABLET APP',
-      tagline: 'A modern teller workspace for everyday banking.',
-      description:
-          'A sleek, tablet-based app made for bank tellers — built with '
-          'PT Collega Inti Pratama. FE Touch brings a fresh, modern interface '
-          'to everyday banking tasks: something that feels fast, clean, and '
-          'easy to use, even at the counter during rush hour.',
-      tech: const ['Flutter', 'REST APIs', 'Tablet UI'],
-      images: AppAssets.projectImages(1),
-      scale: ProjectScale.featured,
-      screenshots: ScreenshotKind.landscape,
-      accent: AppColors.accentPrimary,
-    ),
-    Project(
-      id: 'panic-button',
-      title: 'Panic Button',
-      category: 'MOBILE APP',
-      tagline: 'Real-time SOS reporting for Damkar Banten.',
-      description:
-          'A simple yet essential SOS app built for Damkar Banten. Designed '
-          'for quick, real-time emergency reporting and tracking, it helps '
-          'firefighters receive, manage, and respond to incidents faster. '
-          'Clean UI meets critical functionality — because in emergencies, '
-          'every second (and every tap) counts.',
-      tech: const ['Flutter', 'Real-time', 'Geo Tracking'],
-      images: AppAssets.projectImages(3),
-      scale: ProjectScale.standard,
-      screenshots: ScreenshotKind.portrait,
-      accent: AppColors.errorRed,
-    ),
-    Project(
-      id: 'digital-lending',
-      title: 'Digital Lending',
-      category: 'MOBILE APP',
-      tagline: 'The lending process, fully online.',
-      description:
-          'A seamless loan application platform that brings the lending '
-          'process fully online — from registration to approval. Built to '
-          'simplify and speed up credit access for users, while giving banks '
-          'a smarter way to manage risk and workflow. Digital Lending makes '
-          'borrowing feel less like paperwork and more like progress.',
-      tech: const ['Flutter', 'Fintech', 'REST APIs'],
-      images: AppAssets.projectImages(4),
-      scale: ProjectScale.standard,
-      screenshots: ScreenshotKind.portrait,
-      accent: AppColors.accentSecondary,
-    ),
-    Project(
-      id: 'core-x',
-      title: 'Core X',
-      category: 'CORE BANKING',
-      tagline: 'The heart of banking operations, rebuilt.',
-      description:
-          'A modern core banking solution built to replace the aging '
-          'Olibs 724 system. Designed to handle the heart of banking '
-          'operations with a more scalable, efficient, and user-friendly '
-          'approach, Core X brings a fresh layer of clarity and performance '
-          'to complex processes — all while keeping the reliability banks '
-          'depend on.',
-      tech: const ['Flutter', 'Java', 'Banking Core'],
-      images: AppAssets.projectImages(2),
-      scale: ProjectScale.featured,
-      screenshots: ScreenshotKind.landscape,
-      accent: AppColors.accentPrimary,
-    ),
-    Project(
-      id: 'lelang-online',
-      title: 'Lelang Online',
-      category: 'MOBILE APP',
-      tagline: 'Live auctions, on your screen.',
-      description:
-          'A digital platform that brings the excitement of live auctions to '
-          'your screen. Built to simplify the bidding process, manage '
-          'listings, and ensure a fair, transparent experience for all '
-          "users. Whether you're buying or selling, Lelang Online makes "
-          'auctions feel accessible, fast, and just a little more fun.',
-      tech: const ['Flutter', 'Live Bidding', 'Marketplace'],
-      images: AppAssets.projectImages(5),
-      scale: ProjectScale.standard,
-      screenshots: ScreenshotKind.portrait,
-      accent: AppColors.warningAmber,
-    ),
-    Project(
+    const Project(
       id: 'roast-pos',
-      title: 'Roast POS',
+      name: 'ROAST POS',
       category: 'POS PLATFORM',
-      tagline: 'Restaurant operations, end to end.',
-      description:
-          'An all-in-one restaurant operations app built to handle everything '
-          'from POS transactions to inventory, stock tracking, staff '
-          'presence, and real-time dashboards. Designed for smooth day-to-day '
-          "operations — whether you're managing the floor, the kitchen, or "
-          'the cash flow. Roast POS brings structure, clarity, and speed to '
-          'the hustle of running a restaurant.',
-      tech: const ['Flutter', 'POS', 'Dashboards'],
-      images: AppAssets.projectImages(6),
-      scale: ProjectScale.standard,
-      screenshots: ScreenshotKind.landscape,
-      accent: AppColors.successGreen,
+      platform: ProjectPlatform.pos,
+      tagline: "Six products, one codebase — a restaurant's entire operating day.",
+      shortDesc:
+          'A multi-tenant SaaS platform for Indonesian F&B: a tablet POS, mobile '
+          'companion, time-clock, web ordering, admin console, and terminal — all '
+          'built from one Flutter monorepo over a single shared business-logic core.',
+      fullDesc:
+          "ROAST POS doesn't just record transactions; it models how a restaurant "
+          'actually runs — from opening the doors in the morning to counting the cash '
+          'drawer at night. It covers the full operational day, multi-station inventory '
+          'down to individual ingredient lots, an owner-configurable menu and modifier '
+          'system, dynamic payment methods from cash to QRIS, per-cashier cash '
+          'reconciliation, configurable approval workflows, loyalty, attendance, and '
+          'financial reporting — as one coherent, multi-tenant whole. The defining '
+          'constraint: six products, one codebase, zero duplicated business logic.',
+      tech: ['Flutter', 'Dart 3', 'GetX', 'Firebase', 'freezed', 'fl_chart'],
+      images: AppAssets.roast,
+      media: ProjectMedia.framedGallery,
+      frame: ProjectFrame.tablet,
+      dominantColor: Color(0xFF0E3B38),
+      accentColor: Color(0xFFE0A33C),
+      metrics: [
+        ProjectMetric('6', 'Products'),
+        ProjectMetric('680+', 'Passing tests'),
+        ProjectMetric('1', 'Shared core'),
+      ],
+      highlights: [
+        'A repository-pattern data layer is the only way to the database — business '
+            'rules live in exactly one place and every product inherits them identically.',
+        'A single toggle swaps the entire data layer between live Firebase and an '
+            'in-memory mock — the full app develops, runs, and tests offline.',
+        'An enforced operational state machine (Closed → Preparing → Open → Closing) '
+            'gates real behavior, keeping the books clean by construction.',
+        'Multi-station inventory tracked per location and per lot, with '
+            'station-relative dish availability and expiry-to-waste disposal.',
+      ],
+      role: 'Architecture, system design & technical direction',
+      year: '2025',
+      status: 'In active development',
+      isFeatured: true,
+    ),
+    const Project(
+      id: 'elssa',
+      name: 'ELSSA',
+      category: 'SCHOOL SAAS',
+      platform: ProjectPlatform.crossPlatform,
+      tagline: 'The platform that runs the school — and that parents open every morning.',
+      shortDesc:
+          'A school-management and parent-engagement platform for Indonesian high '
+          'schools. Its wedge is the morning moment: a student taps in at the gate '
+          "and the parent's phone lights up — attendance, grades, and tuition one tap away.",
+      fullDesc:
+          'A single school day runs on a dozen disconnected tools — announcements in '
+          'WhatsApp, attendance on paper, tuition billed by hand. ELSSA is one connected '
+          'platform that runs daily operations and gives every parent a live window into '
+          "their child's day. It rides the systems schools already use — importing rosters "
+          'from Dapodik and exporting grades to e-Rapor — so it complements government '
+          'systems instead of fighting them. The signature moment is the morning hadir: '
+          "when a student taps in at the gate, the parent's phone lights up, and opens "
+          'into attendance, grades, the SPP balance, and announcements.',
+      tech: ['Flutter', 'Firebase', 'Multi-role', 'Design System'],
+      images: AppAssets.elssa,
+      media: ProjectMedia.mockupGallery,
+      dominantColor: Color(0xFF1E4D3A),
+      accentColor: Color(0xFFE8833A),
+      metrics: [
+        ProjectMetric('7', 'Roles'),
+        ProjectMetric('4', 'Surfaces'),
+        ProjectMetric('3', 'Capture methods'),
+      ],
+      highlights: [
+        'Rides the systems schools already use — imports rosters from Dapodik, exports '
+            'grades to e-Rapor (supporting both Kurikulum 2013 and Merdeka).',
+        'The signature morning hadir: a gate tap-in fires an instant parent '
+            'notification — the daily reassurance that earns a school its trust.',
+        'Per-school isolated Firebase projects — the strongest privacy posture for '
+            "children's attendance, grades, money, and biometrics.",
+        'Seven roles prototyped at high fidelity, including the loading, empty, error '
+            'and offline states products usually skip.',
+      ],
+      role: 'Solo founder — product, UX/UI, prototype, architecture',
+      year: '2025–2026',
+      status: 'Pilot-ready prototype',
+      isFeatured: true,
+    ),
+    const Project(
+      id: 'profund-manager',
+      name: 'ProFund Manager',
+      category: 'FINANCE SAAS',
+      platform: ProjectPlatform.web,
+      tagline: 'Control project cost at the point of spend — before the money is gone.',
+      shortDesc:
+          'A B2B project-finance platform that tracks every rupiah across four states — '
+          'budget, reserved, committed, actual — for real-time cost visibility. A dense '
+          'web console plus a focused mobile companion, from one Flutter codebase.',
+      fullDesc:
+          'Project budgets in Indonesia are usually managed across disconnected '
+          'spreadsheets and accounting software that only records costs after they '
+          'happen. ProFund instead controls cost at the point of spend. Every rupiah '
+          'moves through Budget → Reserved → Committed → Actual, with automatic relief '
+          'at each transition, so exposure always reflects reality — not just what has '
+          'been invoiced. Over-budget is a deliberate, record-first state: never '
+          'blocked, but flagged loud, propagated up the work-breakdown tree, and forced '
+          'to a director sign-off. Overruns become conscious decisions, not month-end surprises.',
+      tech: ['Flutter', 'GetX', 'Firebase', 'freezed', 'Repository'],
+      images: AppAssets.profund,
+      media: ProjectMedia.framedGallery,
+      frame: ProjectFrame.browser,
+      dominantColor: Color(0xFF0E2A47),
+      accentColor: Color(0xFF1FA89A),
+      metrics: [
+        ProjectMetric('4', 'State model'),
+        ProjectMetric('~30', 'Reports'),
+        ProjectMetric('7', 'Roles'),
+      ],
+      highlights: [
+        'A four-state money model — Budget → Reserved → Committed → Actual — with '
+            'pre-encumbrance first-class and automatic relief at every transition.',
+        'Over-budget is record-first: never blocked, always flagged loud and escalated '
+            'to a director — soft control over hard blocks.',
+        'A flat Firestore schema with denormalized ancestor arrays turns arbitrary-depth '
+            'WBS aggregation into a single transactional walk, not recursive reads.',
+        'One codebase, two adaptive flavors — dense tables and Miller-column WBS on the '
+            'console; drill-down and bottom sheets on mobile, at full parity.',
+      ],
+      role: 'Solo founder & builder — product, UX, architecture, build',
+      year: '2026',
+      status: 'Functional prototypes · in development',
+    ),
+    const Project(
+      id: 'fitx',
+      name: 'FitX',
+      category: 'FITNESS APP',
+      platform: ProjectPlatform.mobile,
+      tagline: 'Turn everyday attendance into a habit — built around a daily streak.',
+      shortDesc:
+          'A mobile app for a multi-branch Indonesian gym that turns attendance into a habit '
+          'and brings class booking, personal training, barber & nail appointments, retail, '
+          'and membership into one connected, two-sided experience.',
+      fullDesc:
+          'Most gym apps bolt features onto a login screen and stop at booking. The harder, '
+          'more valuable problem is retention — getting members to come back. FitX is built '
+          'around a daily habit loop: scan in at the gym, watch a visit streak grow, book the '
+          'next session. Everything else — progress, retail, membership — is arranged as '
+          'satellites around that core, so the app earns a daily open rather than an occasional '
+          'one. Members and personal trainers share a single app behind role-based access, with '
+          'a separate admin application, so the two sides connect directly — a trainer-assigned '
+          "workout surfaces in that member's progress log.",
+      tech: ['Flutter', 'Firebase', 'Repository', 'Mock-data-first'],
+      images: AppAssets.fitx,
+      media: ProjectMedia.mockupGallery,
+      dominantColor: Color(0xFF19220C),
+      accentColor: Color(0xFFC6F23C),
+      metrics: [
+        ProjectMetric('2', 'Sides, one app'),
+        ProjectMetric('2', 'Booking engines'),
+        ProjectMetric('Multi', 'Branch'),
+      ],
+      highlights: [
+        'Two-sided, one system — members and trainers share one app behind role-based access; '
+            "a trainer's bookable hours become the very slots a member sees.",
+        'One booking layer, two engines — every reservation is either seat-claiming (group '
+            'classes, with capacity and waitlists) or provider-reservation (PT, barber, nails).',
+        'Built around a daily habit loop — scan in, watch the streak grow, book the next '
+            'session; progress, retail, and membership all orbit that core.',
+        'Built for the Indonesian market — per-branch barcode check-in, QRIS and bank transfer, '
+            'reserve-and-collect retail, and Bahasa Indonesia throughout.',
+      ],
+      role: 'Solo founder & builder — product, IA, system design, UX & art direction',
+      year: '2026',
+      status: 'Client pitch prototype · in design',
+    ),
+    const Project(
+      id: 'sigap',
+      name: 'SIGAP',
+      category: 'EMERGENCY · B2G',
+      platform: ProjectPlatform.crossPlatform,
+      tagline: "Don't sell the panic button — prove and improve the response time.",
+      shortDesc:
+          'An emergency reporting and response platform for Indonesian fire & rescue '
+          'services. A citizen reports in one tap with exact location; crews respond — '
+          'every incident timestamped against the mandated 15-minute response standard.',
+      fullDesc:
+          'When someone calls for help, the most common reason a crew reaches the wrong '
+          "place is that the caller can't describe their location. Meanwhile, every "
+          'Indonesian fire service answers to a mandated 15-minute response time. A panic '
+          'button on its own is a commodity that competes with a free national line. The '
+          'defensible product is the operational layer that measures and improves a '
+          "department's response time — so the response clock is the spine of the entire "
+          'system, and the citizen app is one intake channel feeding it. That reframed it '
+          'from "here\'s a panic button" to "prove and improve your mandated response time."',
+      tech: ['Flutter', 'Firebase', 'Real-time', 'Offline-first'],
+      images: AppAssets.sigap,
+      media: ProjectMedia.mockupGallery,
+      dominantColor: Color(0xFF16202E),
+      accentColor: Color(0xFFE23B3B),
+      metrics: [
+        ProjectMetric('15 min', 'Response standard'),
+        ProjectMetric('3', 'Surfaces'),
+        ProjectMetric('1-tap', 'Report'),
+      ],
+      highlights: [
+        'Reframed from "a panic button" to the operational layer that measures and '
+            'improves response time — something a fire-service director is accountable for.',
+        'Three surfaces on one incident lifecycle: a citizen app, a field-hardened '
+            'responder app, and a real-time command dashboard with a ticking response clock.',
+        'A multi-tenant model where each department owns a coverage area and incidents '
+            'route by location, with a co-brandable citizen app.',
+        'Offline-first resilience — queued reports with an SMS fallback for the moments '
+            'connectivity matters most.',
+      ],
+      role: 'Solo founder — product, research, UX, architecture',
+      year: '2026',
+      status: 'Concept & product design',
+    ),
+    const Project(
+      id: 'fe-touch',
+      name: 'FE Touch',
+      category: 'BANKING · CLIENT WORK',
+      platform: ProjectPlatform.tablet,
+      tagline: 'A modern teller workspace for everyday banking.',
+      shortDesc:
+          'A teller application built with PT Collega Inti Pratama — a fast, clean '
+          'interface for everyday banking at the counter. Designed to feel effortless '
+          'even during the rush-hour queue, with the rigor a banking product demands.',
+      fullDesc:
+          'FE Touch brings a fresh, modern interface to everyday banking tasks for bank '
+          'tellers: cash transactions, account inquiry, and the daily reconciliation a '
+          'teller closes their shift on. Built to feel fast, clean, and easy to use even '
+          'at the counter during rush hour, it pairs a considered visual layer with the '
+          'reliability and correctness a financial product depends on. This was client '
+          'work — translating real banking workflows into an interface tellers reach for '
+          'hundreds of times a day without friction.',
+      tech: ['Flutter', 'REST APIs', 'Banking'],
+      images: AppAssets.feTouch,
+      media: ProjectMedia.framedGallery,
+      frame: ProjectFrame.browser,
+      dominantColor: Color(0xFF5E9C90),
+      accentColor: Color(0xFF2F6F64),
+      highlights: [
+        'A teller-first workspace: cash transactions, inquiry, and end-of-shift '
+            'reconciliation, all a tap or two away.',
+        'A calm, modern interface layered over real banking workflows — fast to read '
+            'and act on at a busy counter.',
+        'Built with the correctness and reliability discipline a financial product '
+            'demands, as client work for PT Collega Inti Pratama.',
+      ],
+      role: 'Flutter UI engineering · client work',
+      year: '2022',
+      status: 'Shipped',
+    ),
+    const Project(
+      id: 'balai',
+      name: 'Balai',
+      category: 'AUCTION APP',
+      platform: ProjectPlatform.mobile,
+      tagline: "An auction app with a curator's eye — themed, timed drops, not an endless feed.",
+      shortDesc:
+          'A mobile auction platform reframed around curated drops: a curator assembles '
+          'a themed sale of a few lots and runs it as a live, timed event. Auction-house '
+          'proxy bidding with staggered closes and anti-snipe extensions.',
+      fullDesc:
+          'Most auction apps are endless marketplaces — infinite listings, no point of '
+          'view. Balai is built on the opposite instinct: scarcity and taste. It centres '
+          'on curated drops, where a curator assembles a themed sale of a handful of lots, '
+          'sets the schedule, and the whole thing runs as a live, timed event with a real '
+          'sense of occasion. Bidding follows an auction-house model — ascending proxy '
+          'bidding with staggered closes and anti-snipe soft closes — and the design is '
+          'editorial and image-forward, with a calm paper-toned browse and a dramatic '
+          'dark "gallery spotlight" mode for the live moment.',
+      tech: ['Flutter', 'Firebase', 'Cloud Functions', 'Real-time'],
+      images: AppAssets.balai,
+      media: ProjectMedia.mockupGallery,
+      dominantColor: Color(0xFF14110F),
+      accentColor: Color(0xFFC2A24E),
+      metrics: [
+        ProjectMetric('3', 'Roles'),
+        ProjectMetric('Proxy', 'Bidding'),
+        ProjectMetric('Live', 'Timed drops'),
+      ],
+      highlights: [
+        'Reframed a generic auction concept into a curated, event-driven "drops" model '
+            'built on scarcity and taste.',
+        'An auction-house proxy-bidding engine with staggered closes and anti-snipe '
+            'soft-close extensions.',
+        'A three-role system — seller → curator → buyer — with the curator as the '
+            'editorial layer that turns listings into a show.',
+        'Server-side, transactional bid resolution via Cloud Functions keeps the proxy '
+            'logic fair and race-condition-free.',
+      ],
+      role: 'Solo — product reframe, system design, visual language',
+      year: '2026',
+      status: 'In design',
     ),
   ];
 

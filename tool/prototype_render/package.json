@@ -1,0 +1,10 @@
+{
+  "name": "prototype-render",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Headless-Chrome render harness for Works prototypes",
+  "dependencies": {
+    "playwright-core": "^1.61.1"
+  }
+}
