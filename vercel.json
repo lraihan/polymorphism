@@ -1,4 +1,7 @@
 {
+  "buildCommand": "git clone https://github.com/flutter/flutter.git --depth 1 -b 3.44.2 _flutter && ./_flutter/bin/flutter config --enable-web && ./_flutter/bin/flutter build web --release --no-tree-shake-icons",
+  "outputDirectory": "build/web",
+  "installCommand": "echo 'no npm install needed'",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ],

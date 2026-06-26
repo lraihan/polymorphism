@@ -1,0 +1,12 @@
+import { chromium } from 'playwright-core';
+import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path'; import { fileURLToPath } from 'node:url';
+const REPO=path.resolve(fileURLToPath(import.meta.url),'../../..');
+const server=http.createServer((req,res)=>{const fp=path.join(REPO,decodeURIComponent(req.url.split('?')[0]));if(!fs.existsSync(fp)){res.writeHead(404);return res.end();}res.writeHead(200,{'Content-Type':'text/html'});fs.createReadStream(fp).pipe(res);});
+await new Promise(r=>server.listen(7367,r));
+const browser=await chromium.launch({channel:'chrome',headless:true,args:['--disable-background-timer-throttling']});
+const page=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:2});
+await page.goto('http://localhost:7367/'+'assets/works/Balai/Curated Drops Auction All Flows.html'.split('/').map(encodeURIComponent).join('/'),{waitUntil:'networkidle'}).catch(()=>{});
+await new Promise(r=>setTimeout(r,3000));
+const cands=await page.evaluate(()=>{const out=[];document.querySelectorAll('*').forEach(el=>{const r=el.getBoundingClientRect();const cs=getComputedStyle(el);const rad=parseFloat(cs.borderRadius)||0;if(r.height>600&&r.width>240&&r.width<640){out.push({tag:el.tagName.toLowerCase(),cls:(el.className||'').toString().slice(0,30),w:Math.round(r.width),h:Math.round(r.height),rad:Math.round(rad),x:Math.round(r.x),y:Math.round(r.y),of:cs.overflow});}});return out.sort((a,b)=>b.w*b.h-a.w*a.h).slice(0,10);});
+console.log(JSON.stringify(cands,null,1));
+await browser.close();server.close();

@@ -90,7 +90,7 @@ class PortfolioData {
           'into attendance, grades, the SPP balance, and announcements.',
       tech: ['Flutter', 'Firebase', 'Multi-role', 'Design System'],
       images: AppAssets.elssa,
-      media: ProjectMedia.mockupGallery,
+      media: ProjectMedia.framedGallery,
       dominantColor: Color(0xFF1E4D3A),
       accentColor: Color(0xFFE8833A),
       metrics: [
@@ -111,6 +111,7 @@ class PortfolioData {
       role: 'Solo founder — product, UX/UI, prototype, architecture',
       year: '2025–2026',
       status: 'Pilot-ready prototype',
+      prototypeUrl: 'prototypes/elssa.html',
       isFeatured: true,
     ),
     const Project(
@@ -156,6 +157,7 @@ class PortfolioData {
       role: 'Solo founder & builder — product, UX, architecture, build',
       year: '2026',
       status: 'Functional prototypes · in development',
+      prototypeUrl: 'prototypes/profund.html',
     ),
     const Project(
       id: 'fitx',
@@ -199,6 +201,7 @@ class PortfolioData {
       role: 'Solo founder & builder — product, IA, system design, UX & art direction',
       year: '2026',
       status: 'Client pitch prototype · in design',
+      prototypeUrl: 'prototypes/fitx.html',
     ),
     const Project(
       id: 'sigap',
@@ -221,7 +224,7 @@ class PortfolioData {
           'from "here\'s a panic button" to "prove and improve your mandated response time."',
       tech: ['Flutter', 'Firebase', 'Real-time', 'Offline-first'],
       images: AppAssets.sigap,
-      media: ProjectMedia.mockupGallery,
+      media: ProjectMedia.framedGallery,
       dominantColor: Color(0xFF16202E),
       accentColor: Color(0xFFE23B3B),
       metrics: [
@@ -242,6 +245,7 @@ class PortfolioData {
       role: 'Solo founder — product, research, UX, architecture',
       year: '2026',
       status: 'Concept & product design',
+      prototypeUrl: 'prototypes/sigap.html',
     ),
     const Project(
       id: 'fe-touch',
@@ -321,6 +325,7 @@ class PortfolioData {
       role: 'Solo — product reframe, system design, visual language',
       year: '2026',
       status: 'In design',
+      prototypeUrl: 'prototypes/balai.html',
     ),
   ];
 

@@ -12,6 +12,7 @@ import 'package:polymorphism/features/works/widgets/abstract_art_panel.dart';
 import 'package:polymorphism/shared/widgets/count_up_text.dart';
 import 'package:polymorphism/shared/widgets/custom_cursor.dart';
 import 'package:polymorphism/shared/widgets/noise_overlay.dart';
+import 'package:polymorphism/shared/widgets/prototype_view/prototype_view.dart';
 import 'package:polymorphism/shared/widgets/shimmer_placeholder.dart';
 import 'package:polymorphism/shared/widgets/tech_badge.dart';
 
@@ -86,16 +87,8 @@ class ProjectDetailPage extends StatelessWidget {
                             style: AppTypography.bodyL.copyWith(color: AppColors.textSecondary, fontStyle: FontStyle.italic),
                           ),
                           const SizedBox(height: Spacing.xl),
-                          // ── gallery ──
-                          SizedBox(
-                            height: context.responsive<double>(mobile: 320, tablet: 460, desktop: 540),
-                            child: project.hasImages
-                                ? _CaseStudyGallery(project: project)
-                                : ClipRRect(
-                                    borderRadius: BorderRadius.circular(Radii.lg),
-                                    child: AbstractArtPanel(project: project),
-                                  ),
-                          ),
+                          // ── media: gallery + optional live prototype ──
+                          _CaseStudyMedia(project: project),
                           const SizedBox(height: Spacing.xxl),
                           // ── overview ──
                           _Flow(
@@ -294,32 +287,40 @@ class _BigMetrics extends StatelessWidget {
           colors: [project.dominantColor.withValues(alpha: 0.18), Colors.transparent],
         ),
       ),
-      child: IntrinsicHeight(
-        child: Row(
-          children: [
-            for (var i = 0; i < project.metrics.length; i++) ...[
-              if (i > 0) Container(width: 0.5, color: AppColors.borderSubtle),
-              Expanded(
-                child: Column(
-                  children: [
-                    CountUpText(
-                      project.metrics[i].value,
-                      style: context
-                          .responsive(mobile: AppTypography.titleL, desktop: AppTypography.displayM)
-                          .copyWith(color: project.accentColor, fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(height: Spacing.xs),
-                    Text(
-                      project.metrics[i].label,
-                      textAlign: TextAlign.center,
-                      style: AppTypography.caption,
-                    ),
-                  ],
-                ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (var i = 0; i < project.metrics.length; i++) ...[
+            if (i > 0)
+              Container(
+                width: 0.5,
+                height: 48,
+                color: AppColors.borderSubtle,
+                margin: const EdgeInsets.symmetric(horizontal: Spacing.sm),
               ),
-            ],
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CountUpText(
+                    project.metrics[i].value,
+                    style: context
+                        .responsive(mobile: AppTypography.titleL, desktop: AppTypography.displayM)
+                        .copyWith(color: project.accentColor, fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: Spacing.xs),
+                  Text(
+                    project.metrics[i].label,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.caption,
+                  ),
+                ],
+              ),
+            ),
           ],
-        ),
+        ],
       ),
     );
 }
@@ -448,6 +449,126 @@ class _CloseButtonState extends State<_CloseButton> {
               border: Border.all(color: _hovered ? AppColors.accentPrimary : AppColors.borderSubtle),
             ),
             child: Icon(LucideIcons.x, size: 18, color: _hovered ? AppColors.textOnAccent : AppColors.textPrimary),
+          ),
+        ),
+      );
+}
+
+/// The case-study media area: a screenshot gallery with an optional
+/// [Gallery | Live Prototype] toggle that swaps in the live HTML prototype.
+class _CaseStudyMedia extends StatefulWidget {
+  const _CaseStudyMedia({required this.project});
+
+  final Project project;
+
+  @override
+  State<_CaseStudyMedia> createState() => _CaseStudyMediaState();
+}
+
+class _CaseStudyMediaState extends State<_CaseStudyMedia> {
+  bool _live = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = widget.project;
+    final hasProto = p.hasPrototype;
+    final galleryH = context.responsive<double>(mobile: 320, tablet: 460, desktop: 540);
+    final liveH = context.responsive<double>(mobile: 560, tablet: 640, desktop: 720);
+
+    final Widget content;
+    if (_live && hasProto) {
+      content = DecoratedBox(
+        decoration: BoxDecoration(
+          color: AppColors.inkBlack,
+          border: Border.all(color: AppColors.borderSubtle),
+          borderRadius: BorderRadius.circular(Radii.lg),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(Radii.lg),
+          child: PrototypeView(url: p.prototypeUrl!),
+        ),
+      );
+    } else if (p.hasImages) {
+      content = _CaseStudyGallery(project: p);
+    } else {
+      content = ClipRRect(borderRadius: BorderRadius.circular(Radii.lg), child: AbstractArtPanel(project: p));
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (hasProto) ...[
+          _MediaToggle(live: _live, accent: p.accentColor, onChanged: (v) => setState(() => _live = v)),
+          const SizedBox(height: Spacing.md),
+        ],
+        AnimatedSize(
+          duration: AppDurations.normal,
+          curve: AppCurves.enter,
+          alignment: Alignment.topCenter,
+          child: SizedBox(height: _live && hasProto ? liveH : galleryH, child: content),
+        ),
+        if (_live && hasProto) ...[
+          const SizedBox(height: Spacing.sm),
+          Row(
+            children: [
+              const Icon(LucideIcons.pointer, size: 13, color: AppColors.textMuted),
+              const SizedBox(width: Spacing.sm),
+              Expanded(
+                child: Text(
+                  'Live, interactive prototype — click around. Best viewed on desktop.',
+                  style: AppTypography.caption,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _MediaToggle extends StatelessWidget {
+  const _MediaToggle({required this.live, required this.accent, required this.onChanged});
+
+  final bool live;
+  final Color accent;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceCard,
+          borderRadius: BorderRadius.circular(Radii.pill),
+          border: Border.all(color: AppColors.borderSubtle),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _seg('Gallery', !live, () => onChanged(false)),
+            _seg('Live Prototype', live, () => onChanged(true)),
+          ],
+        ),
+      );
+
+  Widget _seg(String label, bool active, VoidCallback onTap) => CursorTarget(
+        child: GestureDetector(
+          onTap: onTap,
+          child: AnimatedContainer(
+            duration: AppDurations.fast,
+            curve: AppCurves.enter,
+            padding: const EdgeInsets.symmetric(horizontal: Spacing.md, vertical: Spacing.sm),
+            decoration: BoxDecoration(
+              color: active ? accent : Colors.transparent,
+              borderRadius: BorderRadius.circular(Radii.pill),
+            ),
+            child: Text(
+              label,
+              style: AppTypography.mono.copyWith(
+                fontSize: 11,
+                color: active ? AppColors.deepSpace : AppColors.textSecondary,
+              ),
+            ),
           ),
         ),
       );

@@ -51,3 +51,6 @@ app.*.map.json
 .env.production
 .env
 *.env
+
+# Vercel Flutter SDK clone (build-time)
+/_flutter/

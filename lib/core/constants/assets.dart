@@ -51,7 +51,6 @@ class AppAssets {
     '$_g/elssa/04-teacher.jpg',
     '$_g/elssa/05-homeroom.jpg',
     '$_g/elssa/06-principal.jpg',
-    '$_g/elssa/07-counselor.jpg',
   ];
 
   static const List<String> profund = [
@@ -65,20 +64,17 @@ class AppAssets {
   ];
 
   static const List<String> sigap = [
-    '$_g/sigap/01-panic.jpg',
+    '$_g/sigap/01-idle.jpg',
     '$_g/sigap/02-alert.jpg',
-    '$_g/sigap/03-tracking.jpg',
-    '$_g/sigap/04-dispatch.jpg',
-    '$_g/sigap/05-resolved.jpg',
-    '$_g/sigap/06-standby.jpg',
-    '$_g/sigap/07-located.jpg',
+    '$_g/sigap/03-dispatch.jpg',
+    '$_g/sigap/04-resolved.jpg',
   ];
 
   static const List<String> balai = [
-    '$_g/balai/01-drop.jpg',
-    '$_g/balai/02-live.jpg',
-    '$_g/balai/03-detail.jpg',
-    '$_g/balai/04-won.jpg',
+    '$_g/balai/01-home.jpg',
+    '$_g/balai/02-seller.jpg',
+    '$_g/balai/03-curator.jpg',
+    '$_g/balai/04-drops.jpg',
   ];
 
   static const List<String> fitx = [

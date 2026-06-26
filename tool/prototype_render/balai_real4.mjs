@@ -1,0 +1,23 @@
+import { chromium } from 'playwright-core';
+import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path'; import { fileURLToPath } from 'node:url';
+const REPO=path.resolve(fileURLToPath(import.meta.url),'../../..');
+const OUT=path.join(REPO,'tool/prototype_render/out/balai-real'); fs.rmSync(OUT,{recursive:true,force:true}); fs.mkdirSync(OUT,{recursive:true});
+const MIME={'.html':'text/html','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.css':'text/css','.js':'text/javascript','.woff2':'font/woff2','.svg':'image/svg+xml'};
+const server=http.createServer((req,res)=>{const fp=path.join(REPO,decodeURIComponent(req.url.split('?')[0]));if(!fs.existsSync(fp)){res.writeHead(404);return res.end();}res.writeHead(200,{'Content-Type':MIME[path.extname(fp).toLowerCase()]||'application/octet-stream'});fs.createReadStream(fp).pipe(res);});
+await new Promise(r=>server.listen(7370,r));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const browser=await chromium.launch({channel:'chrome',headless:true,args:['--disable-background-timer-throttling']});
+const page=await browser.newPage({viewport:{width:1200,height:1040},deviceScaleFactor:3});
+await page.goto('http://localhost:7370/'+'assets/works/Balai/Curated Drops Auction All Flows.html'.split('/').map(encodeURIComponent).join('/'),{waitUntil:'networkidle'}).catch(()=>{});
+await sleep(3500);
+const ib=await (await page.$('iframe')).boundingBox();
+// clip just the phone: crop the tab bar (~52px) off the top
+const clip={x:Math.round(ib.x),y:Math.round(ib.y),width:Math.round(ib.width),height:Math.round(ib.height)};
+const shot=async(name)=>{try{await page.screenshot({path:path.join(OUT,name),clip});console.log('  ok',name);}catch(e){console.log('  fail',name);}};
+const tab=async(t)=>{for(const m of [()=>page.getByRole('button',{name:t}).first().click({timeout:1500}),()=>page.locator(`button:has-text("${t}")`).first().click({timeout:1500})]){try{await m();await sleep(1400);return true;}catch{}}console.log('  tab miss',t);return false;};
+await shot('01-buyer.png');
+await tab('Seller'); await shot('02-seller.png');
+await tab('Curator'); await shot('03-curator.png');
+await tab('Buyer'); await sleep(400);
+await page.mouse.move(ib.x+ib.width/2, ib.y+ib.height/2); await page.mouse.wheel(0,500); await sleep(900); await shot('04-buyer-past.png');
+await browser.close();server.close();console.log('done');

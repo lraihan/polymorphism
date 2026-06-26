@@ -52,6 +52,7 @@ class Project {
     this.status,
     this.githubUrl,
     this.liveUrl,
+    this.prototypeUrl,
     this.isFeatured = false,
   });
 
@@ -103,8 +104,14 @@ class Project {
   final String? githubUrl;
   final String? liveUrl;
 
+  /// Served URL of a live HTML prototype (Flutter-web iframe), e.g.
+  /// `prototypes/elssa.html` under `web/`. Null when there's no prototype.
+  final String? prototypeUrl;
+
   /// Featured projects get slightly more vertical weight.
   final bool isFeatured;
+
+  bool get hasPrototype => prototypeUrl != null;
 
   String get heroTag => 'project-$id';
 
