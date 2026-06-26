@@ -1,8 +1,12 @@
 name: Build and Deploy Flutter Web to Vercel
 
+# Legacy CI — superseded by Vercel's native GitHub integration (see vercel.json,
+# which builds Flutter web and injects the EMAILJS_* defines from Vercel env vars).
+# Disabled on push to avoid a duplicate/conflicting deploy and the v3-artifact
+# failures. Runs only on manual dispatch; update upload/download-artifact to @v4
+# before relying on it again.
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:

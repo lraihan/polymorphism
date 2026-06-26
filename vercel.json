@@ -1,5 +1,5 @@
 {
-  "buildCommand": "git clone https://github.com/flutter/flutter.git --depth 1 -b 3.44.2 _flutter && ./_flutter/bin/flutter config --enable-web && ./_flutter/bin/flutter build web --release --no-tree-shake-icons",
+  "buildCommand": "git clone https://github.com/flutter/flutter.git --depth 1 -b 3.44.2 _flutter && ./_flutter/bin/flutter config --enable-web && ./_flutter/bin/flutter build web --release --no-tree-shake-icons --dart-define=EMAILJS_SERVICE_ID=$EMAILJS_SERVICE_ID --dart-define=EMAILJS_TEMPLATE_ID=$EMAILJS_TEMPLATE_ID --dart-define=EMAILJS_PUBLIC_KEY=$EMAILJS_PUBLIC_KEY",
   "outputDirectory": "build/web",
   "installCommand": "echo 'no npm install needed'",
   "rewrites": [
