@@ -24,7 +24,7 @@ class AppStrings {
 
   // ── Section headers ────────────────────────────────────────────────────
   static const String aboutEyebrow = '01 / ABOUT';
-  static const String aboutTitle = 'Jack of All Trades, Master of Visuals';
+  static const String aboutTitle = 'The Da Vinci of Flutter';
   static const String worksEyebrow = '02 / WORKS';
   static const String worksTitle = 'Selected Projects';
   static const String worksSubtitle = 'This creation is a confession, written in dark and dart.';
