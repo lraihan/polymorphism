@@ -1,0 +1,4 @@
+# Shell scripts must stay LF: they run on Linux build agents and are uploaded
+# verbatim by the Vercel CLI from Windows — a CRLF would make bash choke on the
+# trailing \r (e.g. `set -euo pipefail\r` → "invalid option name").
+*.sh text eol=lf
