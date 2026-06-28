@@ -2,7 +2,7 @@
 
 > **Precision in Motion.** A Flutter Web portfolio built on the "Deep Space Elegance" design language — generative backgrounds, kinetic typography, and a custom motion system, all rendered at 60 fps.
 
-**Live:** `https://your-deployment-url.vercel.app` <!-- TODO: replace with production URL -->
+**Live:** [www.raihandev.space](https://www.raihandev.space)
 
 Raihan Fadli is a visual engineer based in Jakarta, Indonesia, balancing engineering, art, and design. This repository is both his live portfolio and a reference implementation of a heavily animated, token-driven Flutter web app.
 
@@ -21,7 +21,7 @@ Raihan Fadli is a visual engineer based in Jakarta, Indonesia, balancing enginee
 | Motion extras | [confetti](https://pub.dev/packages/confetti), custom painters & implicit animations |
 | Visibility-driven reveals | [visibility_detector](https://pub.dev/packages/visibility_detector) |
 | Contact form | [EmailJS](https://www.emailjs.com/) over [http](https://pub.dev/packages/http), keys injected via `--dart-define` |
-| CI/CD | GitHub Actions → Vercel on push to `main` |
+| CI/CD | Vercel Git integration (`vercel_build.sh`) on push to `main` |
 
 ### Architecture at a Glance
 
@@ -82,7 +82,7 @@ All personal content lives in exactly two places — edit these to make the port
 | `lib/data/portfolio_data.dart` | Projects (titles, descriptions, screenshots, tech stacks), career timeline, skills, social links |
 | `lib/core/constants/strings.dart` | Site title, hero copy, section headings, bio, contact copy |
 
-Project screenshots go in `assets/images/works/` (three per project) and are registered in `pubspec.yaml`.
+Project galleries live in `assets/works/_gallery/<project>/` (referenced from `lib/core/constants/assets.dart`) and are registered in `pubspec.yaml`.
 
 Design tokens (colors, durations, curves, spacing) live in `lib/core/theme/app_tokens.dart`; typography in `lib/core/theme/app_typography.dart`.
 
@@ -113,12 +113,23 @@ Without keys, the form gracefully degrades to a `mailto:` fallback. Full walkthr
 
 ## Deployment
 
-### Vercel via GitHub Actions (primary)
+Hosted on Vercel at [www.raihandev.space](https://www.raihandev.space).
 
-Every push to `main` triggers `.github/workflows/flutter_web.yml`, which builds the web bundle with the EmailJS `--dart-define`s and deploys `build/web` to Vercel. Required repository secrets:
+### Vercel Git integration (primary)
+
+Every push to `main` triggers Vercel's build, which runs `vercel_build.sh` — it fetches the pinned Flutter SDK and runs `flutter build web --release --no-tree-shake-icons`, injecting the EmailJS keys as `--dart-define`s. Config lives in `vercel.json` (`buildCommand`, `outputDirectory: build/web`, SPA rewrites). The EmailJS values are set as Vercel **Project → Environment Variables**:
 
 - `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID`, `EMAILJS_PUBLIC_KEY`
-- `VERCEL_TOKEN`
+
+> `vercel_build.sh` must stay LF (enforced by `.gitattributes`) — a CRLF would make bash choke when the Vercel CLI uploads it from Windows.
+
+### Manual deploy via the Vercel CLI
+
+```bash
+npm i -g vercel
+vercel link        # link to the existing "polymorphism" project
+vercel --prod      # build on Vercel's infra and alias to production
+```
 
 ### Manual production build
 
