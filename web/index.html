@@ -50,11 +50,8 @@
   <link rel="icon" type="image/png" href="favicon.png"/>
   <link rel="shortcut icon" href="favicon.svg">
 
-  <!-- Typography is served by the google_fonts package at runtime;
-       preconnect shaves the handshake off the first font request. -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
+  <!-- Fonts are bundled and loaded locally (google_fonts runtime fetching is
+       disabled), so no gstatic preconnect is needed — text paints with the app. -->
   <title>Raihan — Flutter & Visual Engineer</title>
   <link rel="manifest" href="manifest.json">
 

@@ -4,7 +4,7 @@
 		{
 			"label": "CI Pipeline - Test, Analyze, Build",
 			"type": "shell",
-			"command": "flutter test && flutter analyze && flutter build web --no-tree-shake-icons",
+			"command": "flutter test && flutter analyze && flutter build web",
 			"group": "build",
 			"isBackground": false,
 			"problemMatcher": [

@@ -675,7 +675,11 @@ class _CaseStudyGalleryState extends State<_CaseStudyGallery> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(Radii.sm - 1),
-                    child: ProjectImage(path: images[i], tint: widget.project.dominantColor),
+                    child: ProjectImage(
+                      path: images[i],
+                      tint: widget.project.dominantColor,
+                      cacheWidth: 160,
+                    ),
                   ),
                 ),
               ),

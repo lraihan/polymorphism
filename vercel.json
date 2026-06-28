@@ -5,6 +5,20 @@
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ],
+  "headers": [
+    {
+      "source": "/(.*)\\.(webp|png|jpg|jpeg|gif|svg|ico|otf|ttf|woff2)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(index.html|flutter_bootstrap.js|flutter.js|main.dart.js|flutter_service_worker.js|version.json)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+      ]
+    }
+  ],
   "cleanUrls": true,
   "trailingSlash": false
 }

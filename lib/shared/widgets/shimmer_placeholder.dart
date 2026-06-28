@@ -59,6 +59,7 @@ class ProjectImage extends StatelessWidget {
     super.key,
     this.fit = BoxFit.cover,
     this.alignment = Alignment.topCenter,
+    this.cacheWidth,
   });
 
   final String path;
@@ -66,11 +67,16 @@ class ProjectImage extends StatelessWidget {
   final BoxFit fit;
   final Alignment alignment;
 
+  /// Decode the asset at this pixel width to cap decode RAM — use only for
+  /// thumbnails. Leave null for full-resolution viewers.
+  final int? cacheWidth;
+
   @override
   Widget build(BuildContext context) => Image.asset(
       path,
       fit: fit,
       alignment: alignment,
+      cacheWidth: cacheWidth,
       gaplessPlayback: true,
       frameBuilder: (context, child, frame, wasSync) {
         if (wasSync) {

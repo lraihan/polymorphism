@@ -198,7 +198,7 @@ class _FragmentPortraitState extends State<FragmentPortrait> with SingleTickerPr
                 ),
               ],
             ),
-            child: Image.asset('assets/images/fragment${f.asset}.png', fit: BoxFit.contain),
+            child: Image.asset('assets/images/fragment${f.asset}.webp', fit: BoxFit.contain),
           ),
         ),
       ),

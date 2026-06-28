@@ -1,0 +1,36 @@
+# Keep Vercel uploads lean — only what vercel_build.sh needs to build the web app.
+# (Git-integration deploys also honor this on top of .gitignore; it makes the
+# `vercel --prod` CLI upload small instead of ~400 MB.)
+
+# Regenerated / cloned during the build
+build/
+_flutter/
+.dart_tool/
+.git/
+
+# Non-web platform scaffolds (web is the only deployed target)
+android/
+ios/
+linux/
+macos/
+windows/
+
+# Dev-only
+test/
+docs/
+tool/
+*.md
+.vscode/
+
+# Legacy raw exports + prototype source — superseded by assets/works/_gallery/,
+# which is the only set registered in pubspec and bundled into the app.
+assets/works/ROAST/
+assets/works/FE Touch/
+assets/works/ELSSA/
+assets/works/Profund Manager/
+assets/works/SIGAP - Panic Button/
+assets/works/FITX/
+assets/works/Balai/
+
+# Crash-symbolication maps (also stripped post-build)
+*.symbols

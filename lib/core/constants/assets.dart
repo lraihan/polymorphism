@@ -4,17 +4,16 @@ import 'package:flutter/widgets.dart';
 class AppAssets {
   AppAssets._();
 
-  static const String logo = 'assets/images/logo.png';
-  static const String avatar = 'assets/images/avatar.png';
+  static const String logo = 'assets/images/logo.webp';
 
   /// Hero portrait layers. [heroForeground] is the composed, low-poly face on
   /// black (the default); [heroBackground] is the colourful, smiling self
   /// surrounded by real work, revealed under the cursor mask.
-  static const String heroForeground = 'assets/images/Foreground.jpg';
-  static const String heroBackground = 'assets/images/Background--.jpg';
+  static const String heroForeground = 'assets/images/Foreground.webp';
+  static const String heroBackground = 'assets/images/Background--.webp';
 
   /// The six B&W "ink-drip" portrait fragments used in the About collage.
-  static List<String> get fragments => [for (var n = 1; n <= 6; n++) 'assets/images/fragment$n.png'];
+  static List<String> get fragments => [for (var n = 1; n <= 6; n++) 'assets/images/fragment$n.webp'];
 
   /// Both hero photos are 3840×2160. Decode them once at a capped width so the
   /// pair doesn't blow the 100 MB image cache, and share the *same* provider

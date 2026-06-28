@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:polymorphism/core/constants/assets.dart';
 import 'package:polymorphism/core/constants/strings.dart';
@@ -41,7 +40,11 @@ class _PortfolioFooterState extends State<PortfolioFooter> {
 
   void _tick() {
     final jakarta = DateTime.now().toUtc().add(const Duration(hours: 7));
-    final next = DateFormat('h:mm a').format(jakarta);
+    // 12-hour clock with AM/PM — equivalent to DateFormat('h:mm a').
+    final h12 = jakarta.hour % 12 == 0 ? 12 : jakarta.hour % 12;
+    final minute = jakarta.minute.toString().padLeft(2, '0');
+    final period = jakarta.hour < 12 ? 'AM' : 'PM';
+    final next = '$h12:$minute $period';
     if (next != _jakartaTime && mounted) {
       setState(() => _jakartaTime = next);
     }
