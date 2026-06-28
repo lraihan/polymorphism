@@ -1,12 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polymorphism/core/constants/assets.dart';
-import 'package:polymorphism/data/models/project.dart';
 import 'package:polymorphism/data/portfolio_data.dart';
 
 void main() {
   group('PortfolioData.projects', () {
-    test('contains exactly 6 projects', () {
-      expect(PortfolioData.projects, hasLength(6));
+    test('contains exactly 7 projects', () {
+      expect(PortfolioData.projects, hasLength(7));
     });
 
     test('ids are unique and slug-safe', () {
@@ -18,31 +17,32 @@ void main() {
       }
     });
 
-    test('every project has exactly 3 images under assets/images/works/', () {
+    test('every project ships its gallery under assets/works/_gallery/', () {
       for (final project in PortfolioData.projects) {
-        expect(project.images, hasLength(3), reason: '${project.title} must have 3 screenshots');
+        expect(project.images, isNotEmpty, reason: '${project.name} must have screenshots');
+        expect(project.images.length, greaterThanOrEqualTo(3), reason: '${project.name} needs ≥3 shots');
         for (final image in project.images) {
-          expect(image, startsWith('assets/images/works/'), reason: '${project.title} image path');
+          expect(image, startsWith('assets/works/_gallery/'), reason: '${project.name} image path');
         }
       }
     });
 
     test('every project lists a non-empty tech stack', () {
       for (final project in PortfolioData.projects) {
-        expect(project.tech, isNotEmpty, reason: '${project.title} must list its tech');
+        expect(project.tech, isNotEmpty, reason: '${project.name} must list its tech');
       }
     });
 
     test('exactly 2 projects are featured', () {
-      final featured = PortfolioData.projects.where((p) => p.scale == ProjectScale.featured);
+      final featured = PortfolioData.projects.where((p) => p.isFeatured);
       expect(featured, hasLength(2));
     });
 
     test('projectById returns the matching project', () {
-      final project = PortfolioData.projectById('core-x');
+      final project = PortfolioData.projectById('roast-pos');
       expect(project, isNotNull);
-      expect(project?.title, 'Core X');
-      expect(project?.id, 'core-x');
+      expect(project?.name, 'ROAST POS');
+      expect(project?.id, 'roast-pos');
     });
 
     test('projectById returns null for unknown ids', () {
@@ -106,28 +106,27 @@ void main() {
   });
 
   group('AppAssets', () {
-    test('projectImages(2) returns the three project2 paths', () {
-      expect(AppAssets.projectImages(2), [
-        'assets/images/works/project2-1.png',
-        'assets/images/works/project2-2.png',
-        'assets/images/works/project2-3.png',
-      ]);
-    });
-
-    test('preload is first-two-screens: logo, 6 project covers, 6 fragments', () {
+    test('preload is first-two-screens: logo, 6 fragments, 6 project heroes', () {
       final preload = AppAssets.preload;
-      // Detail-route screenshots (2 of 3 per project) and the 4 MB hero
-      // background are intentionally NOT preloaded — they load lazily.
+      // The heavy 4 MB hero background and the deeper gallery shots are
+      // intentionally NOT preloaded — they load lazily.
       expect(preload, hasLength(13));
       expect(preload, contains(AppAssets.logo));
       expect(preload, isNot(contains(AppAssets.heroBackground)));
-      final covers = preload.where((path) => path.startsWith('assets/images/works/'));
-      expect(covers, hasLength(6));
-      for (var n = 1; n <= 6; n++) {
-        expect(preload, contains(AppAssets.projectCover(n)));
-      }
       for (final fragment in AppAssets.fragments) {
         expect(preload, contains(fragment));
+      }
+      final heroes = preload.where((path) => path.startsWith('assets/works/_gallery/'));
+      expect(heroes, hasLength(6));
+      for (final gallery in [
+        AppAssets.roast,
+        AppAssets.feTouch,
+        AppAssets.elssa,
+        AppAssets.profund,
+        AppAssets.fitx,
+        AppAssets.sigap,
+      ]) {
+        expect(preload, contains(gallery.first), reason: 'each preloaded gallery contributes its hero shot');
       }
     });
   });

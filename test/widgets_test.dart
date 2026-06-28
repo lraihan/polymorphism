@@ -6,7 +6,7 @@ import 'package:polymorphism/data/portfolio_data.dart';
 import 'package:polymorphism/features/about/about_section.dart';
 import 'package:polymorphism/features/contact/availability_badge.dart';
 import 'package:polymorphism/features/experience/experience_section.dart';
-import 'package:polymorphism/features/works/project_card.dart';
+import 'package:polymorphism/features/works/widgets/bento_card.dart';
 import 'package:polymorphism/shared/animations/scroll_reveal.dart';
 import 'package:polymorphism/shared/widgets/cta_button.dart';
 import 'package:polymorphism/shared/widgets/section_header.dart';
@@ -143,7 +143,7 @@ void main() {
     expect(opacity.opacity, 1);
   });
 
-  testWidgets('ProjectCard renders title and category and opens on tap', (tester) async {
+  testWidgets('BentoCard renders name and category and opens on tap', (tester) async {
     _useViewSize(tester, const Size(1280, 900));
     final project = PortfolioData.projects.first;
     var opened = false;
@@ -154,17 +154,17 @@ void main() {
           child: SizedBox(
             width: 400,
             height: 420,
-            child: ProjectCard(project: project, onOpen: () => opened = true),
+            child: BentoCard(project: project, onOpen: () => opened = true),
           ),
         ),
       ),
     );
     await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.text(project.title), findsOneWidget);
+    expect(find.text(project.name), findsOneWidget);
     expect(find.text(project.category), findsOneWidget);
 
-    await tester.tap(find.byType(ProjectCard));
+    await tester.tap(find.byType(BentoCard));
     await tester.pump();
 
     expect(opened, isTrue);
