@@ -7,11 +7,13 @@ import 'package:polymorphism/core/constants/strings.dart';
 import 'package:polymorphism/core/services/email_service.dart';
 import 'package:polymorphism/core/theme/app_tokens.dart';
 import 'package:polymorphism/core/theme/app_typography.dart';
+import 'package:polymorphism/core/utils/download/download_file.dart';
 import 'package:polymorphism/core/utils/extensions.dart';
 import 'package:polymorphism/core/utils/responsive.dart';
 import 'package:polymorphism/data/portfolio_data.dart';
 import 'package:polymorphism/features/contact/availability_badge.dart';
 import 'package:polymorphism/shared/animations/scroll_reveal.dart';
+import 'package:polymorphism/shared/widgets/cta_button.dart';
 import 'package:polymorphism/shared/widgets/custom_cursor.dart';
 import 'package:polymorphism/shared/widgets/magnetic_button.dart';
 import 'package:polymorphism/shared/widgets/section_header.dart';
@@ -177,7 +179,16 @@ class _ContactSectionState extends State<ContactSection> {
         ),
       ),
       const SizedBox(height: Spacing.xl),
-      ScrollReveal(delay: AppDurations.fast, child: _directLinks(context)),
+      ScrollReveal(
+        delay: AppDurations.fast,
+        child: CtaButton.primary(
+          label: AppStrings.ctaDownloadCv,
+          icon: Icons.file_download_outlined,
+          onTap: () => downloadFile(AppStrings.cvUrl, filename: 'Raihan_Fadli_CV.pdf'),
+        ),
+      ),
+      const SizedBox(height: Spacing.lg),
+      ScrollReveal(delay: AppDurations.normal, child: _directLinks(context)),
     ],
   );
 

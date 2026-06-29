@@ -3,6 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:polymorphism/core/constants/strings.dart';
 import 'package:polymorphism/core/theme/app_tokens.dart';
 import 'package:polymorphism/core/theme/app_typography.dart';
+import 'package:polymorphism/core/utils/download/download_file.dart';
 import 'package:polymorphism/core/utils/extensions.dart';
 import 'package:polymorphism/core/utils/responsive.dart';
 import 'package:polymorphism/features/contact/availability_badge.dart';
@@ -263,6 +264,19 @@ class _HeroSectionState extends State<HeroSection>
                                                       () =>
                                                           widget.onContact
                                                               ?.call(),
+                                                ),
+                                                CtaButton.ghost(
+                                                  label:
+                                                      AppStrings.ctaDownloadCv,
+                                                  icon:
+                                                      Icons
+                                                          .file_download_outlined,
+                                                  onTap:
+                                                      () => downloadFile(
+                                                        AppStrings.cvUrl,
+                                                        filename:
+                                                            'Raihan_Fadli_CV.pdf',
+                                                      ),
                                                 ),
                                               ],
                                             ),

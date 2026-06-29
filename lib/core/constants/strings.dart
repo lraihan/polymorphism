@@ -20,6 +20,10 @@ class AppStrings {
   static const String statusAvailable = 'Available for work';
   static const String ctaViewWork = 'View Work';
   static const String ctaContact = 'Get in Touch';
+  static const String ctaDownloadCv = 'Download CV';
+
+  /// CV served as a static file from `web/` (root URL).
+  static const String cvUrl = 'Raihan_Fadli_CV.pdf';
   static const String scrollHint = 'scroll to explore';
 
   // ── Section headers ────────────────────────────────────────────────────
