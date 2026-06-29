@@ -264,6 +264,7 @@ class _HeroSectionState extends State<HeroSection>
                                                       () =>
                                                           widget.onContact
                                                               ?.call(),
+                                                  keyhole: true,
                                                 ),
                                                 CtaButton.ghost(
                                                   label:
@@ -277,6 +278,7 @@ class _HeroSectionState extends State<HeroSection>
                                                         filename:
                                                             'Raihan_Fadli_CV.pdf',
                                                       ),
+                                                  keyhole: true,
                                                 ),
                                               ],
                                             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:polymorphism/core/theme/app_tokens.dart';
 import 'package:polymorphism/core/theme/app_typography.dart';
 import 'package:polymorphism/shared/widgets/custom_cursor.dart';
+import 'package:polymorphism/shared/widgets/keyhole_reveal.dart';
 import 'package:polymorphism/shared/widgets/magnetic_button.dart';
 
 /// Call-to-action buttons.
@@ -13,13 +14,19 @@ import 'package:polymorphism/shared/widgets/magnetic_button.dart';
 /// Both scale 1.0 → 1.03 over 200 ms ease-out, are magnetic on desktop,
 /// and announce themselves to the custom cursor.
 class CtaButton extends StatefulWidget {
-  const CtaButton.primary({required this.label, required this.onTap, super.key, this.icon}) : _primary = true;
+  const CtaButton.primary({required this.label, required this.onTap, super.key, this.icon, this.keyhole = false})
+    : _primary = true;
 
-  const CtaButton.ghost({required this.label, required this.onTap, super.key, this.icon}) : _primary = false;
+  const CtaButton.ghost({required this.label, required this.onTap, super.key, this.icon, this.keyhole = false})
+    : _primary = false;
 
   final String label;
   final VoidCallback onTap;
   final IconData? icon;
+
+  /// Overlay a dark copy of the label clipped to the hero's keyhole reveal, so
+  /// the text stays readable where the bright reveal sits behind it.
+  final bool keyhole;
   final bool _primary;
 
   @override
@@ -43,31 +50,11 @@ class _CtaButtonState extends State<CtaButton> {
         ? (_hovered ? AppColors.textOnAccent : AppColors.textAccent)
         : AppColors.textPrimary;
 
-    final label = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          widget.label,
-          style: AppTypography.titleS.copyWith(color: labelColor, fontSize: 15),
-        ),
-        // Icon slides in on hover.
-        AnimatedContainer(
-          duration: AppDurations.fast,
-          curve: AppCurves.enter,
-          width: widget.icon != null && _hovered ? 24 : 0,
-          child: widget.icon != null
-              ? ClipRect(
-                  child: AnimatedSlide(
-                    duration: AppDurations.fast,
-                    curve: AppCurves.enter,
-                    offset: _hovered ? Offset.zero : const Offset(-0.6, 0),
-                    child: Icon(widget.icon, size: 16, color: labelColor),
-                  ),
-                )
-              : null,
-        ),
-      ],
-    );
+    // When keyhole is on, overlay a black copy of the label clipped to the
+    // reveal circle so it reads against the bright background under the cursor.
+    final label = widget.keyhole
+        ? KeyholeReveal(revealChild: _label(AppColors.deepSpace), child: _label(labelColor))
+        : _label(labelColor);
 
     final body = widget._primary
         ? AnimatedContainer(
@@ -132,6 +119,31 @@ class _CtaButtonState extends State<CtaButton> {
       ),
     );
   }
+
+  /// The label row (text + slide-in icon) in [color]. Built twice for the
+  /// keyhole reveal — once light, once dark.
+  Widget _label(Color color) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Text(widget.label, style: AppTypography.titleS.copyWith(color: color, fontSize: 15)),
+      // Icon slides in on hover.
+      AnimatedContainer(
+        duration: AppDurations.fast,
+        curve: AppCurves.enter,
+        width: widget.icon != null && _hovered ? 24 : 0,
+        child: widget.icon != null
+            ? ClipRect(
+                child: AnimatedSlide(
+                  duration: AppDurations.fast,
+                  curve: AppCurves.enter,
+                  offset: _hovered ? Offset.zero : const Offset(-0.6, 0),
+                  child: Icon(widget.icon, size: 16, color: color),
+                ),
+              )
+            : null,
+      ),
+    ],
+  );
 
   @override
   void didUpdateWidget(CtaButton oldWidget) {
