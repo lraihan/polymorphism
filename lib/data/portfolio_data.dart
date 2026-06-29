@@ -66,7 +66,7 @@ class PortfolioData {
       ],
       role: 'Architecture, system design & technical direction',
       year: '2025',
-      status: 'In active development',
+      status: 'Shipped',
       isFeatured: true,
     ),
     const Project(
@@ -110,7 +110,7 @@ class PortfolioData {
       ],
       role: 'Solo founder — product, UX/UI, prototype, architecture',
       year: '2025–2026',
-      status: 'Pilot-ready prototype',
+      status: 'Shipped',
       prototypeUrl: 'prototypes/elssa.html',
       isFeatured: true,
     ),
@@ -156,7 +156,7 @@ class PortfolioData {
       ],
       role: 'Solo founder & builder — product, UX, architecture, build',
       year: '2026',
-      status: 'Functional prototypes · in development',
+      status: 'Shipped',
       prototypeUrl: 'prototypes/profund.html',
     ),
     const Project(
@@ -200,7 +200,7 @@ class PortfolioData {
       ],
       role: 'Solo founder & builder — product, IA, system design, UX & art direction',
       year: '2026',
-      status: 'Client pitch prototype · in design',
+      status: 'Concept & product design',
       prototypeUrl: 'prototypes/fitx.html',
     ),
     const Project(
@@ -324,7 +324,7 @@ class PortfolioData {
       ],
       role: 'Solo — product reframe, system design, visual language',
       year: '2026',
-      status: 'In design',
+      status: 'Shipped',
       prototypeUrl: 'prototypes/balai.html',
     ),
   ];
